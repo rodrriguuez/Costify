@@ -35,17 +35,25 @@ body {
     padding: 0;
     transition: background 0.3s ease, color 0.3s ease;
     -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
 }
 
-/* CONTENEDOR PRINCIPAL AL 100% DE ANCHO EN TODAS LAS PANTALLAS */
+/* CONTENEDOR PRINCIPAL ADAPTADO AL 100% */
 .max-w-app {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
-    padding: 20px !important;
+    padding: 12px !important;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* FORZAR QUE LAS TARJETAS Y CONTENEDORES INTERNOS NUNCA SE PASEN DEL ANCHO */
+.card, .ios-card, .pro-widget-card, main > div {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 /* OCULTAR ELEMENTOS */
@@ -57,8 +65,8 @@ body {
 .card, .ios-card, .pro-widget-card {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 24px;
-    padding: 20px;
+    border-radius: 20px;
+    padding: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
     margin-bottom: 16px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -129,6 +137,8 @@ body {
     border-radius: 20px;
     margin-bottom: 16px;
     gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .nav-desktop {
@@ -137,6 +147,7 @@ body {
     overflow-x: auto;
     padding-bottom: 2px;
     max-width: 100%;
+    -webkit-overflow-scrolling: touch;
 }
 
 .nav-tab-btn {
@@ -164,12 +175,7 @@ body {
     grid-template-columns: 1fr;
     gap: 16px;
     margin-bottom: 16px;
-}
-
-@media (min-width: 768px) {
-    .grid-inicio-top {
-        grid-template-columns: 2fr 1fr;
-    }
+    width: 100%;
 }
 
 .grid-inicio-bottom {
@@ -177,9 +183,13 @@ body {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
     margin-bottom: 16px;
+    width: 100%;
 }
 
 @media (min-width: 768px) {
+    .grid-inicio-top {
+        grid-template-columns: 2fr 1fr;
+    }
     .grid-inicio-bottom {
         grid-template-columns: repeat(4, 1fr);
     }
