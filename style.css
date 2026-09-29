@@ -37,21 +37,20 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* CONTENEDOR PRINCIPAL ADAPTADO AL MÓVIL Y ESCRITORIO */
+/* CONTENEDOR PRINCIPAL CENTRADO Y ADAPTADO */
 .max-w-app {
     width: 100%;
-    max-width: 100%;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 12px;
+    padding: 16px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
-@media (min-width: 768px) {
+@media (max-width: 767px) {
     .max-w-app {
-        max-width: 900px;
-        padding: 24px;
+        padding: 8px;
     }
 }
 
