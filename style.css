@@ -116,11 +116,11 @@ body.dark .ios-modal-box { background: rgba(20, 24, 40, 0.92); border-color: rgb
 }
 
 @media (max-width: 900px) {
-    .max-w-app { padding: 12px; }
+    .max-w-app { width: 100%; padding: 12px; }
     .header-app { flex-direction: column; align-items: flex-start; gap: 12px; }
     .nav-desktop { width: 100%; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
     .grid-inicio-top { grid-template-columns: 1fr; }
-    .grid-inicio-bottom { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .grid-inicio-bottom { grid-template-columns: 1fr; gap: 12px; }
     .card { padding: 18px; }
     #inventoryList { grid-template-columns: 1fr !important; }
     
