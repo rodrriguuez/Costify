@@ -63,7 +63,7 @@ body.dark .apple-account-card { background: rgba(30, 35, 55, 0.4); border-color:
 .custom-scroll { -ms-overflow-style: none; scrollbar-width: none; }
 
 .hidden { display: none !important; }
-.max-w-app { width: 100%; max-width: 1150px; margin: 0 auto; padding: 24px; overflow-x: hidden; }
+.max-w-app { width: 100%; max-width: 1400px; margin: 0 auto; padding: 32px; overflow-x: hidden; }
 
 .card { 
     background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 20px; padding: 28px; 
@@ -91,32 +91,33 @@ body.dark #toast { background: #FFF; color: #0F172A; }
 .header-app { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E2E8F0; padding-bottom: 16px; margin-bottom: 24px; }
 body.dark .header-app { border-color: #1E2337; }
 
-/* BARRA DE NAVEGACIÓN (Diseño amplio por defecto para PC) */
+/* BARRA DE NAVEGACIÓN ESTILO APPLE (Amplia y fluida para PC) */
 .nav-desktop { 
     display: flex; 
-    gap: 8px; 
-    background: rgba(241, 245, 249, 0.9); 
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 8px; 
-    border-radius: 18px; 
+    gap: 12px; 
+    background: rgba(241, 245, 249, 0.85); 
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 8px 16px; 
+    border-radius: 20px; 
     flex-wrap: nowrap; 
     overflow-x: auto; 
-    width: auto; 
-    max-width: none;
+    width: 100%; 
+    max-width: 100%;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     scroll-behavior: smooth;
+    align-items: center;
 }
 .nav-desktop::-webkit-scrollbar {
     display: none;
 }
-body.dark .nav-desktop { background: rgba(16, 20, 35, 0.9); border: 1px solid rgba(255, 255, 255, 0.06); }
+body.dark .nav-desktop { background: rgba(16, 20, 35, 0.85); border: 1px solid rgba(255, 255, 255, 0.08); }
 .nav-desktop button { 
     background: transparent; 
     border: none; 
-    padding: 10px 16px; 
-    border-radius: 12px; 
+    padding: 10px 18px; 
+    border-radius: 14px; 
     font-size: 13px; 
     font-weight: 600; 
     color: #64748B; 
@@ -128,8 +129,8 @@ body.dark .nav-desktop { background: rgba(16, 20, 35, 0.9); border: 1px solid rg
 body.dark .nav-desktop button { color: #94A3B8; }
 .nav-desktop button:hover { color: #0F172A; }
 body.dark .nav-desktop button:hover { color: #FFF; }
-.nav-desktop button.active { background: #FFF; color: #4F46E5; font-weight: 700; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-body.dark .nav-desktop button.active { background: #1E1B4B; color: #818CF8; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+.nav-desktop button.active { background: #FFF; color: #4F46E5; font-weight: 700; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+body.dark .nav-desktop button.active { background: #1E1B4B; color: #818CF8; box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
 
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px; }
 .ios-modal-box {
@@ -153,7 +154,6 @@ body.dark .ios-modal-box { background: rgba(20, 24, 40, 0.92); border-color: rgb
     .max-w-app { width: 100% !important; max-width: 100% !important; padding: 10px !important; }
     .header-app { flex-direction: column; align-items: flex-start; gap: 12px; width: 100%; }
     
-    /* En celular se ajusta al tamaño que pediste y mantiene scroll horizontal */
     .nav-desktop { 
         width: 100% !important; 
         max-width: 320px !important; 
