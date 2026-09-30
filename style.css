@@ -1,5 +1,5 @@
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-body { background-color: #F8FAFC; color: #0F172A; min-height: 100vh; padding-bottom: 90px; transition: background 0.3s, color 0.3s; }
+body { background-color: #F8FAFC; color: #0F172A; min-height: 100vh; padding-bottom: 90px; transition: background 0.3s, color 0.3s; overflow-x: hidden; }
 body.dark { background-color: #05050A; color: #F8FAFC; }
 
 .auth-container {
@@ -63,7 +63,7 @@ body.dark .apple-account-card { background: rgba(30, 35, 55, 0.4); border-color:
 .custom-scroll { -ms-overflow-style: none; scrollbar-width: none; }
 
 .hidden { display: none !important; }
-.max-w-app { max-width: 1150px; margin: 0 auto; padding: 24px; }
+.max-w-app { width: 100%; max-width: 1150px; margin: 0 auto; padding: 24px; overflow-x: hidden; }
 
 .card { 
     background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 20px; padding: 28px; 
@@ -91,9 +91,19 @@ body.dark #toast { background: #FFF; color: #0F172A; }
 .header-app { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E2E8F0; padding-bottom: 16px; margin-bottom: 24px; }
 body.dark .header-app { border-color: #1E2337; }
 
-.nav-desktop { display: flex; gap: 6px; background: #F1F5F9; padding: 6px; border-radius: 16px; flex-wrap: wrap; }
+.nav-desktop { 
+    display: flex; 
+    gap: 6px; 
+    background: #F1F5F9; 
+    padding: 6px; 
+    border-radius: 16px; 
+    flex-wrap: nowrap; 
+    overflow-x: auto; 
+    width: 100%; 
+    max-width: 100%;
+}
 body.dark .nav-desktop { background: #101423; border: 1px solid #1E2337; }
-.nav-desktop button { background: none; border: none; padding: 8px 14px; border-radius: 12px; font-size: 12px; font-weight: 600; color: #64748B; cursor: pointer; }
+.nav-desktop button { background: none; border: none; padding: 8px 14px; border-radius: 12px; font-size: 12px; font-weight: 600; color: #64748B; cursor: pointer; white-space: nowrap; }
 body.dark .nav-desktop button { color: #94A3B8; }
 .nav-desktop button.active { background: #FFF; color: #4F46E5; font-weight: 700; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
 body.dark .nav-desktop button.active { background: #1E1B4B; color: #818CF8; }
@@ -116,12 +126,13 @@ body.dark .ios-modal-box { background: rgba(20, 24, 40, 0.92); border-color: rgb
 }
 
 @media (max-width: 900px) {
-    .max-w-app { width: 100%; padding: 12px; }
-    .header-app { flex-direction: column; align-items: flex-start; gap: 12px; }
-    .nav-desktop { width: 100%; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
-    .grid-inicio-top { grid-template-columns: 1fr; }
-    .grid-inicio-bottom { grid-template-columns: 1fr; gap: 12px; }
-    .card { padding: 18px; }
+    body { overflow-x: hidden; }
+    .max-w-app { width: 100% !important; max-width: 100% !important; padding: 10px !important; }
+    .header-app { flex-direction: column; align-items: flex-start; gap: 12px; width: 100%; }
+    .nav-desktop { width: 100% !important; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+    .grid-inicio-top { grid-template-columns: 1fr !important; }
+    .grid-inicio-bottom { grid-template-columns: 1fr !important; gap: 12px; }
+    .card { padding: 16px; width: 100%; }
     #inventoryList { grid-template-columns: 1fr !important; }
     
     #tab-pro div[style*="grid-template-columns: 1fr 1fr"] {
