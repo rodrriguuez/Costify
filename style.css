@@ -123,7 +123,12 @@ body.dark .ios-modal-box { background: rgba(20, 24, 40, 0.92); border-color: rgb
     .grid-inicio-bottom { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .card { padding: 18px; }
     #inventoryList { grid-template-columns: 1fr !important; }
+    
+    #tab-pro div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
     .pro-widget-card[style*="grid-column: span 2"] { grid-column: span 1 !important; }
+    div[style*="grid-template-columns: repeat(3, 1fr)"] { grid-template-columns: 1fr !important; }
 }
 
 .pro-widget-card {
