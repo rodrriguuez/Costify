@@ -91,11 +91,11 @@ body.dark #toast { background: #FFF; color: #0F172A; }
 .header-app { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E2E8F0; padding-bottom: 16px; margin-bottom: 24px; }
 body.dark .header-app { border-color: #1E2337; }
 
-/* BARRA DE NAVEGACIÓN ESTILO APPLE (Elegante, fluida y con scroll horizontal perfecto) */
+/* BARRA DE NAVEGACIÓN ESTILO APPLE (Desplazamiento horizontal fluido en iOS) */
 .nav-desktop { 
     display: flex; 
     gap: 8px; 
-    background: rgba(241, 245, 249, 0.8); 
+    background: rgba(241, 245, 249, 0.9); 
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     padding: 8px; 
@@ -107,11 +107,13 @@ body.dark .header-app { border-color: #1E2337; }
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     scroll-behavior: smooth;
+    position: relative;
+    z-index: 10;
 }
 .nav-desktop::-webkit-scrollbar {
     display: none;
 }
-body.dark .nav-desktop { background: rgba(16, 20, 35, 0.8); border: 1px solid rgba(255, 255, 255, 0.06); }
+body.dark .nav-desktop { background: rgba(16, 20, 35, 0.9); border: 1px solid rgba(255, 255, 255, 0.06); }
 .nav-desktop button { 
     background: transparent; 
     border: none; 
@@ -159,7 +161,7 @@ body.dark .ios-modal-box { background: rgba(20, 24, 40, 0.92); border-color: rgb
         flex-wrap: nowrap !important; 
         overflow-x: auto !important; 
         gap: 8px; 
-        padding: 6px 12px;
+        padding: 8px;
         -webkit-overflow-scrolling: touch;
     }
     
