@@ -91,31 +91,45 @@ body.dark #toast { background: #FFF; color: #0F172A; }
 .header-app { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E2E8F0; padding-bottom: 16px; margin-bottom: 24px; }
 body.dark .header-app { border-color: #1E2337; }
 
-/* BARRA DE NAVEGACIÓN SUPERIOR */
+/* BARRA DE NAVEGACIÓN ESTILO APPLE (Elegante, fluida y con scroll horizontal perfecto) */
 .nav-desktop { 
     display: flex; 
-    gap: 6px; 
-    background: #F1F5F9; 
-    padding: 6px; 
-    border-radius: 16px; 
-    flex-wrap: wrap; 
+    gap: 8px; 
+    background: rgba(241, 245, 249, 0.8); 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 8px; 
+    border-radius: 18px; 
+    flex-wrap: nowrap; 
+    overflow-x: auto; 
     width: 100%; 
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
 }
-body.dark .nav-desktop { background: #101423; border: 1px solid #1E2337; }
+.nav-desktop::-webkit-scrollbar {
+    display: none;
+}
+body.dark .nav-desktop { background: rgba(16, 20, 35, 0.8); border: 1px solid rgba(255, 255, 255, 0.06); }
 .nav-desktop button { 
-    background: none; 
+    background: transparent; 
     border: none; 
-    padding: 8px 12px; 
+    padding: 10px 16px; 
     border-radius: 12px; 
-    font-size: 11px; 
+    font-size: 13px; 
     font-weight: 600; 
     color: #64748B; 
     cursor: pointer; 
     white-space: nowrap; 
+    flex-shrink: 0;
+    transition: all 0.2s ease;
 }
 body.dark .nav-desktop button { color: #94A3B8; }
-.nav-desktop button.active { background: #FFF; color: #4F46E5; font-weight: 700; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-body.dark .nav-desktop button.active { background: #1E1B4B; color: #818CF8; }
+.nav-desktop button:hover { color: #0F172A; }
+body.dark .nav-desktop button:hover { color: #FFF; }
+.nav-desktop button.active { background: #FFF; color: #4F46E5; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+body.dark .nav-desktop button.active { background: #1E1B4B; color: #818CF8; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
 
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px; }
 .ios-modal-box {
@@ -142,9 +156,11 @@ body.dark .ios-modal-box { background: rgba(20, 24, 40, 0.92); border-color: rgb
     .nav-desktop { 
         width: 100% !important; 
         display: flex; 
-        flex-wrap: wrap !important; 
-        gap: 6px; 
-        overflow-x: visible; 
+        flex-wrap: nowrap !important; 
+        overflow-x: auto !important; 
+        gap: 8px; 
+        padding: 6px 12px;
+        -webkit-overflow-scrolling: touch;
     }
     
     .grid-inicio-top { grid-template-columns: 1fr !important; }
