@@ -136,7 +136,7 @@ function abrirModalOlvidoPassword(event) {
 function ejecutarRecuperacionPassword() {
     let email = document.getElementById('inputCorreoOlvido').value.trim();
     if(!email || !email.includes('@')) {
-        showToast('⚠️ Ingresa un correo electrónico válido');
+        showToast('⚠️️ Ingresa un correo electrónico válido');
         return;
     }
 
@@ -315,7 +315,7 @@ function ejecutarRegistro() {
             mostrarPantallaLogin();
         });
     }).catch((error) => {
-        showToast('⚠️️ Error al registrar: ' + error.message);
+        showToast('⚠️ Error al registrar: ' + error.message);
     });
 }
 
@@ -381,7 +381,7 @@ function eliminarDeudor(id) {
     deudoresLista = deudoresLista.filter(d => d.id !== id);
     guardarDatosSesionActual();
     abrirFuncionPro(2);
-    showToast('🗑️ Deudor eliminado');
+    showToast('🗑️️ Deudor eliminado');
 }
 
 function iniciarMicromonoVozReal() {
@@ -402,7 +402,7 @@ function iniciarMicromonoVozReal() {
 
     const btnVoz = document.getElementById('btnMicVozReal');
     if(btnVoz) btnVoz.innerText = "🎙️ Escuchando... Habla ahora...";
-    showToast('🎙️️ Escuchando transacción por voz...');
+    showToast('🎙️ Escuchando transacción por voz...');
 
     recognitionInstance.onresult = (event) => {
         let texto = event.results[0][0].transcript.toLowerCase();
@@ -602,7 +602,7 @@ function abrirFuncionPro(idFn) {
         2: "📝 Control de Deudores",
         3: "📊 Exportar Reportes (Excel / PDF)",
         4: "🎯 Alertas de Presupuesto",
-        5: "🏷️ Códigos de Barras",
+        5: "🏷️️ Códigos de Barras",
         6: "📈 Proyección Anual con IA Predictiva",
         7: "☁️ Respaldo en la Nube"
     };
@@ -1364,7 +1364,6 @@ function guardarNuevoProducto() {
     showToast('📦 Producto guardado con éxito');
 }
 
-// INVENTARIO ACTUALIZADO CON ESTILO APPLE ELEGANTE Y ORDENADO
 function renderInventario() {
     const container = document.getElementById('inventoryList');
     const widgetCount = document.getElementById('widgetProdCount');
