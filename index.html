@@ -5,15 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Costify - Control Financiero e Inventario Comercial</title>
     
-    <!-- Enlace obligatorio para PWA y PWABuilder -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0071E3">
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Chart.js CDN para Gráficos Interactivos Ultra Profesionales -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- jsPDF CDN para Generación de Facturas y Tickets Digitales -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -223,7 +220,7 @@
                     <h2 style="font-size: 18px; font-weight: 800;">Gestión de Inventario & Stock Interactivo</h2>
                     <button onclick="abrirModalProducto()" class="btn-action">+ Nuevo Producto</button>
                 </div>
-                <div id="inventoryList" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;"></div>
+                <div id="inventoryList" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;"></div>
             </div>
 
             <!-- CALCULCOSTOS -->
@@ -297,7 +294,7 @@
                 </div>
             </div>
 
-            <!-- CARRITO ESTILO APPLE CON TEXTOS CORREGIDOS PARA MODO OSCURO/CLARO -->
+            <!-- CARRITO -->
             <div id="tab-carrito" class="tab-content">
                 <div style="max-width: 580px; margin: 0 auto;">
                     <div class="card zoom-card" style="padding: 32px; background: var(--card-bg); border: 1px solid rgba(0, 113, 227, 0.15); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06); border-radius: 28px; backdrop-filter: blur(20px); color: var(--text-primary);">
@@ -460,7 +457,6 @@
                         <p style="font-size: 13px; color: #94A3B8;">Monitoreo conectado estrictamente a los registros reales generados en tu aplicación.</p>
                     </div>
 
-                    <!-- WIDGET EXCLUSIVO DE OPINIONES E IDEAS PARA EL CREADOR -->
                     <div class="card zoom-card" style="background: linear-gradient(135deg, #1E293B, #0F172A); border: 1px solid #38BDF8; color: white; padding: 22px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                             <h3 style="font-size: 16px; font-weight: 800; color: #38BDF8;">📥 Buzón de Comentarios de Usuarios (Widget Exclusivo Creador)</h3>
@@ -516,7 +512,7 @@
             <div id="tab-perfil" class="tab-content">
                 <div class="card zoom-card" style="max-width: 550px; margin: 0 auto; padding: 32px;">
                     <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
-                        <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(0, 113, 227, 0.1); display: flex; align-items: center; justify-content: center; font-size: 20px;">⚙️</div>
+                        <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(0, 113, 227, 0.1); display: flex; align-items: center; justify-content: center; font-size: 20px;">⚙️️</div>
                         <div>
                             <h2 style="font-size: 18px; font-weight: 800; margin: 0;">Ajustes de Cuenta & Negocio</h2>
                             <p style="font-size: 12px; color: var(--text-secondary); margin: 2px 0 0 0;">Gestiona tu perfil y preferencias corporativas</p>
@@ -554,7 +550,7 @@
         </main>
     </div>
 
-    <!-- MODALES ADICIONALES -->
+    <!-- MODALES -->
     <div id="modalOlvidoPassword" class="modal-overlay">
         <div class="ios-modal-box" style="max-width: 400px; text-align: center;">
             <h3 style="font-size: 18px; font-weight: 900; color: #0071E3; margin-bottom: 10px;">🔑 Recuperar Contraseña</h3>
@@ -738,7 +734,6 @@
     
     <script src="app.js"></script>
 
-    <!-- Registro automático del Service Worker para PWA -->
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
