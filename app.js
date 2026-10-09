@@ -45,6 +45,80 @@ let chartSemanalInstance = null;
 let chartGlobalInstance = null;
 let chartMasterInstance = null;
 
+// --- SISTEMA DE DESBLOQUEO INDEPENDIENTE POR ANUNCIOS (2 HORAS) ---
+let anunciosVistosParaPro = 1;
+let funcionProSeleccionadaActual = null;
+let nombreFuncionProSeleccionadaActual = "";
+
+function verificarAccesoPro(idFn, nombreFuncion) {
+    if (esProActivo) return true;
+
+    let expiracion = localStorage.getItem(`pro_access_func_${idFn}`);
+    if (expiracion && new Date().getTime() < parseInt(expiracion)) {
+        return true; // Acceso temporal activo solo para esta función específica
+    }
+
+    // Si expiró o no existe, abrir modal exclusivo para esta función
+    abrirModalVerAnuncioPro(idFn, nombreFuncion);
+    return false;
+}
+
+function abrirModalVerAnuncioPro(idFn, nombreFuncion) {
+    anunciosVistosParaPro = 1;
+    funcionProSeleccionadaActual = idFn;
+    nombreFuncionProSeleccionadaActual = nombreFuncion;
+    
+    let modalExistente = document.getElementById('modalAnunciosPro');
+    if (modalExistente) modalExistente.remove();
+
+    let modalHTML = `
+        <div id="modalAnunciosPro" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;">
+            <div style="background: var(--card-bg, #1E293B); color: var(--text-primary, #FFF); padding: 28px; border-radius: 20px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+                <h3 style="font-size: 18px; font-weight: 800; color: #F59E0B; margin-bottom: 10px;">⭐ Desbloquear ${nombreFuncion}</h3>
+                <p style="font-size: 13px; color: var(--text-secondary, #94A3B8); margin-bottom: 20px;">Mira 3 anuncios cortos para desbloquear <b>exclusivamente esta función</b> gratis durante 2 horas.</p>
+                
+                <div style="font-size: 15px; font-weight: 700; margin-bottom: 20px; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px;">
+                    Anuncios vistos: <span id="contadorAnunciosPro" style="color: #34D399;">1</span> / 3
+                </div>
+
+                <button id="btnVerAnuncioIndividual" onclick="simularVerAnuncioPro()" class="btn-action" style="background: #0071E3; width: 100%; padding: 14px; font-weight: 800; margin-bottom: 10px; cursor: pointer;">📺 Ver Anuncio (2/3)</button>
+                <button onclick="cerrarModalAnunciosPro()" class="ios-btn-secondary" style="width: 100%; padding: 10px;">Cancelar</button>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+function simularVerAnuncioPro() {
+    anunciosVistosParaPro++;
+    let contadorSpan = document.getElementById('contadorAnunciosPro');
+    let btnAnuncio = document.getElementById('btnVerAnuncioIndividual');
+
+    if (anunciosVistosParaPro < 3) {
+        if (contadorSpan) contadorSpan.innerText = anunciosVistosParaPro;
+        if (btnAnuncio) btnAnuncio.innerText = `📺 Ver Anuncio (${anunciosVistosParaPro + 1}/3)`;
+        showToast("¡Anuncio visto! Falta el siguiente.");
+    } else {
+        let tiempoExpiracion = new Date().getTime() + (2 * 60 * 60 * 1000); // 2 horas
+        localStorage.setItem(`pro_access_func_${funcionProSeleccionadaActual}`, tiempoExpiracion);
+        
+        let idFnGuardado = funcionProSeleccionadaActual;
+        let nombreFnGuardado = nombreFuncionProSeleccionadaActual;
+        cerrarModalAnunciosPro();
+        showToast(`¡${nombreFnGuardado} desbloqueada por 2 horas! 🎉`);
+        
+        setTimeout(() => {
+            abrirFuncionPro(idFnGuardado);
+        }, 400);
+    }
+}
+
+function cerrarModalAnunciosPro() {
+    let modal = document.getElementById('modalAnunciosPro');
+    if (modal) modal.remove();
+}
+// ----------------------------------------------------------------
+
 window.addEventListener('DOMContentLoaded', async () => {
     await detectarMonedaSegunUbicacion();
 
@@ -136,7 +210,7 @@ function abrirModalOlvidoPassword(event) {
 function ejecutarRecuperacionPassword() {
     let email = document.getElementById('inputCorreoOlvido').value.trim();
     if(!email || !email.includes('@')) {
-        showToast('⚠️️ Ingresa un correo electrónico válido');
+        showToast('⚠ Ingresa un correo electrónico válido');
         return;
     }
 
@@ -381,7 +455,7 @@ function eliminarDeudor(id) {
     deudoresLista = deudoresLista.filter(d => d.id !== id);
     guardarDatosSesionActual();
     abrirFuncionPro(2);
-    showToast('🗑️️ Deudor eliminado');
+    showToast('🗑 Deudor eliminado');
 }
 
 function iniciarMicromonoVozReal() {
@@ -587,25 +661,26 @@ function cargarIdeasUsuariosCreador() {
 }
 
 function abrirFuncionPro(idFn) {
-    if (!esProActivo) {
-        showToast('🔒 Esta función es exclusiva del Plan Pro+. ¡Adquiere tu membresía!');
-        abrirModalCheckout();
-        return;
-    }
-
-    const modal = document.getElementById('modalFuncionPro');
-    const titulo = document.getElementById('modalProFuncTitulo');
-    const cuerpo = document.getElementById('modalProFuncCuerpo');
-
     let titulos = {
         1: "🎙️ IA por Voz Inteligente",
         2: "📝 Control de Deudores",
         3: "📊 Exportar Reportes (Excel / PDF)",
         4: "🎯 Alertas de Presupuesto",
-        5: "🏷️️ Códigos de Barras",
+        5: "🏷 Códigos de Barras",
         6: "📈 Proyección Anual con IA Predictiva",
         7: "☁️ Respaldo en la Nube"
     };
+
+    let nombreFnStr = titulos[idFn] || "Función Pro+";
+
+    // Validar acceso independiente para esta función específica mediante anuncios
+    if (!verificarAccesoPro(idFn, nombreFnStr)) {
+        return; 
+    }
+
+    const modal = document.getElementById('modalFuncionPro');
+    const titulo = document.getElementById('modalProFuncTitulo');
+    const cuerpo = document.getElementById('modalProFuncCuerpo');
 
     let deudoresHtml = `
         <p>Registra deudas pendientes con fechas límite. Te avisaremos cuando llegue el día de cobro.</p><br>
@@ -637,7 +712,7 @@ function abrirFuncionPro(idFn) {
         7: `<p>Tus datos están respaldados en servidores seguros de Google Cloud.</p><br><button class="btn-action" style="background:#8B5CF6;" onclick="showToast('☁️ Respaldo en la nube verificado.');">Verificar Respaldo</button>`
     };
 
-    if(titulo) titulo.innerText = titulos[idFn] || "Función Pro+";
+    if(titulo) titulo.innerText = nombreFnStr;
     if(cuerpo) cuerpo.innerHTML = contenidos[idFn] || "<p>Herramienta activa.</p>";
     if(modal) modal.style.display = 'flex';
 }
