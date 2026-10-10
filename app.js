@@ -45,6 +45,26 @@ let chartSemanalInstance = null;
 let chartGlobalInstance = null;
 let chartMasterInstance = null;
 
+// --- FUNCIONES DE NAVEGACIÓN PARA LA LANDING PAGE ---
+function irALoginDesdeLanding() {
+    document.getElementById('landingPageContainer').classList.add('hidden');
+    document.getElementById('authScreenRegister').classList.add('hidden');
+    document.getElementById('authScreenLogin').classList.remove('hidden');
+    renderizarCuentasGuardadasLogin();
+}
+
+function irARegistroDesdeLanding() {
+    document.getElementById('landingPageContainer').classList.add('hidden');
+    document.getElementById('authScreenLogin').classList.add('hidden');
+    document.getElementById('authScreenRegister').classList.remove('hidden');
+}
+
+function volverALandingDesdeAuth() {
+    document.getElementById('authScreenLogin').classList.add('hidden');
+    document.getElementById('authScreenRegister').classList.add('hidden');
+    document.getElementById('landingPageContainer').classList.remove('hidden');
+}
+
 // --- SISTEMA DE DESBLOQUEO PRO POR ANUNCIOS (2 HORAS) ---
 let anunciosVistosParaPro = 0;
 let funcionProSeleccionadaActual = null;
@@ -54,10 +74,9 @@ function verificarAccesoPro(idFn, nombreFuncion) {
 
     let expiracion = localStorage.getItem(`pro_access_${idFn}`);
     if (expiracion && new Date().getTime() < parseInt(expiracion)) {
-        return true; // Acceso temporal activo
+        return true;
     }
 
-    // Si expiró o no existe, abrir modal para ver 3 anuncios
     abrirModalVerAnuncioPro(idFn, nombreFuncion);
     return false;
 }
@@ -97,7 +116,7 @@ function simularVerAnuncioPro(nombreFuncion) {
         if (btnAnuncio) btnAnuncio.innerText = `📺 Ver Anuncio (${anunciosVistosParaPro + 1}/3)`;
         showToast("¡Anuncio visto! Falta el siguiente.");
     } else {
-        let tiempoExpiracion = new Date().getTime() + (2 * 60 * 60 * 1000); // 2 horas
+        let tiempoExpiracion = new Date().getTime() + (2 * 60 * 60 * 1000);
         localStorage.setItem(`pro_access_${funcionProSeleccionadaActual}`, tiempoExpiracion);
         
         let idFnGuardado = funcionProSeleccionadaActual;
@@ -114,7 +133,6 @@ function cerrarModalAnunciosPro() {
     let modal = document.getElementById('modalAnunciosPro');
     if (modal) modal.remove();
 }
-// --------------------------------------------------------
 
 window.addEventListener('DOMContentLoaded', async () => {
     await detectarMonedaSegunUbicacion();
@@ -670,9 +688,8 @@ function abrirFuncionPro(idFn) {
 
     let nombreFnStr = titulos[idFn] || "Función Pro+";
 
-    // Validar si tiene Pro o desbloqueo temporal por ver anuncios
     if (!verificarAccesoPro(idFn, nombreFnStr)) {
-        return; // Si no tiene acceso, se abre el modal de ver anuncios
+        return;
     }
 
     const modal = document.getElementById('modalFuncionPro');
@@ -1351,6 +1368,7 @@ function showToast(msg) {
 }
 
 function iniciarApp(msg) {
+    document.getElementById('landingPageContainer').classList.add('hidden');
     document.getElementById('authScreenLogin').classList.add('hidden');
     document.getElementById('authScreenRegister').classList.add('hidden');
     document.getElementById('mainAppContainer').classList.remove('hidden');
