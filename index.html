@@ -12,13 +12,13 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <link rel="stylesheet" href="style.css?v=1.0.2">
+    <link rel="stylesheet" href="style.css?v=1.0.3">
 </head>
 <body>
 
     <div id="toast"><span id="toastMsg">Acción realizada</span></div>
 
-    <!-- 🌟 LANDING PAGE DE PRESENTACIÓN (ANTES DE INGRESAR) -->
+    <!-- 🌟 LANDING PAGE DE PRESENTACIÓN REDISEÑADA Y SUPER PRO -->
     <div id="landingPageContainer" class="landing-hero-container">
         <header class="landing-header">
             <div class="landing-logo-box">
@@ -33,9 +33,9 @@
 
         <section class="landing-hero-content">
             <div class="landing-hero-text">
-                <span class="landing-badge">🚀 Control Financiero & Inventario Inteligente</span>
+                <span class="landing-badge">🚀 Ecosystem Enterprise & Cloud Suite</span>
                 <h1 class="landing-title">La plataforma definitiva para administrar tu negocio y finanzas sin estrés</h1>
-                <p class="landing-subtitle">Lleva el control exacto de tu inventario, calcula márgenes de ganancia ideales al instante, gestiona tu caja diaria y genera tickets de venta en PDF profesional.</p>
+                <p class="landing-subtitle">Lleva el control exacto de tu inventario, calcula márgenes de ganancia ideales al instante, gestiona tu caja diaria, registra transacciones por voz y genera tickets de venta en PDF profesional.</p>
                 
                 <div class="landing-cta-group">
                     <button onclick="irARegistroDesdeLanding()" class="landing-main-btn">Crear cuenta gratis ➔</button>
@@ -56,37 +56,54 @@
                         <span style="font-size: 11px; color: #94A3B8; text-transform: uppercase;">Balance General</span>
                         <div style="font-size: 24px; font-weight: 900; color: #34D399; margin-top: 4px;">$ 1,450,000 COP</div>
                     </div>
-                    <div style="display: flex; gap: 8px; font-size: 12px; color: #94A3B8;">
+                    <div style="display: flex; gap: 8px; font-size: 12px; color: #94A3B8; flex-wrap: wrap;">
                         <span>✓ POS & Tickets PDF</span> • <span>✓ Control de Stock</span> • <span>✓ IA por Voz</span>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- CUADRITOS INTERACTIVOS DE INFORMACIÓN Y BENEFICIOS -->
         <section class="landing-features-section">
-            <h2 class="landing-section-title">¿Por qué elegir Costify?</h2>
-            <p class="landing-section-sub">Diseñado especialmente para emprendedores y comercios que buscan optimizar su tiempo y multiplicar sus ganancias.</p>
+            <h2 class="landing-section-title">¿Qué encontrarás al ingresar a Costify?</h2>
+            <p class="landing-section-sub">Herramientas de nivel corporativo diseñadas para potenciar las ventas y el orden financiero de tu emprendimiento.</p>
             
             <div class="landing-features-grid">
-                <div class="landing-feature-box">
+                <div class="landing-feature-box interactive-box" onclick="showToast('📦 Control de Stock: Monitorea existencias en tiempo real.')">
                     <div class="landing-feature-icon">📦</div>
                     <h3>Control de Inventario</h3>
-                    <p>Gestiona productos, stock en tiempo real y precios con alertas automáticas.</p>
+                    <p>Gestiona productos, stock en tiempo real y precios con alertas automáticas de existencias.</p>
+                    <span class="interactive-hint">Toca para más info ➔</span>
                 </div>
-                <div class="landing-feature-box">
+                <div class="landing-feature-box interactive-box" onclick="showToast('🧮 Calculcostos Pro: Calcula tu margen de ganancia ideal.')">
                     <div class="landing-feature-icon">🧮</div>
                     <h3>Calculcostos Pro</h3>
-                    <p>Calcula automáticamente el precio de venta ideal aplicando tu margen de ganancia exacto.</p>
+                    <p>Calcula automáticamente el precio de venta ideal aplicando tu margen de ganancia exacto y costos fijos.</p>
+                    <span class="interactive-hint">Toca para más info ➔</span>
                 </div>
-                <div class="landing-feature-box">
+                <div class="landing-feature-box interactive-box" onclick="showToast('🛒 POS Digital: Genera tickets y comprobantes en PDF al instante.')">
                     <div class="landing-feature-icon">🛒</div>
                     <h3>Punto de Venta (POS)</h3>
-                    <p>Crea carritos de venta rápidos y genera comprobantes y tickets en PDF profesionales.</p>
+                    <p>Crea carritos de venta rápidos, cobra con un clic y genera comprobantes y tickets en PDF profesionales.</p>
+                    <span class="interactive-hint">Toca para más info ➔</span>
                 </div>
-                <div class="landing-feature-box">
+                <div class="landing-feature-box interactive-box" onclick="showToast('🎙️ Dictado por Voz: Registra ventas y gastos dictándole a la app.')">
+                    <div class="landing-feature-icon">🎙️</div>
+                    <h3>Asistente IA por Voz</h3>
+                    <p>Dicta tus transacciones de caja de forma natural mediante reconocimiento de voz integrado en tiempo real.</p>
+                    <span class="interactive-hint">Toca para más info ➔</span>
+                </div>
+                <div class="landing-feature-box interactive-box" onclick="showToast('📊 Reportes Pro: Exporta tus datos contables a Excel o PDF.')">
+                    <div class="landing-feature-icon">📊</div>
+                    <h3>Reportes Ejecutivos</h3>
+                    <p>Exporta informes financieros completos listos para contabilidad en formatos Excel (.csv) y PDF corporativo.</p>
+                    <span class="interactive-hint">Toca para más info ➔</span>
+                </div>
+                <div class="landing-feature-box interactive-box" onclick="showToast('☁️ Cloud Firebase: Tus datos seguros y sincronizados siempre.')">
                     <div class="landing-feature-icon">☁️</div>
                     <h3>Respaldo en la Nube</h3>
-                    <p>Tus datos sincronizados de forma segura mediante Firebase para acceder desde cualquier dispositivo.</p>
+                    <p>Tus datos sincronizados de forma segura mediante Firebase para acceder desde cualquier dispositivo o computadora.</p>
+                    <span class="interactive-hint">Toca para más info ➔</span>
                 </div>
             </div>
         </section>
@@ -166,7 +183,7 @@
         </div>
     </div>
 
-    <!-- APLICACIÓN PRINCIPAL -->
+    <!-- APLICACIÓN PRINCIPAL (RESTO DE LA APP INTACTO) -->
     <div id="mainAppContainer" class="max-w-app hidden">
         
         <header class="header-app">
@@ -713,14 +730,7 @@
         </div>
     </div>
 
-    <div class="ads-bottom-bar-mobile">
-        <div class="ads-bottom-content">
-            <span style="font-size: 9px; color: #86868B; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Publicidad</span>
-            <div style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">Anuncio Inferior AdSense</div>
-        </div>
-    </div>
-
-    <!-- MODALES ORIGINALES -->
+    <!-- MODALES Y DEMÁS COMPONENTES ORIGINALES INTACTOS -->
     <div id="modalOlvidoPassword" class="modal-overlay">
         <div class="ios-modal-box" style="max-width: 400px; text-align: center;">
             <h3 style="font-size: 18px; font-weight: 900; color: #0071E3; margin-bottom: 10px;">🔑 Recuperar Contraseña</h3>
@@ -902,6 +912,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     
-    <script src="app.js?v=1.0.2"></script>
+    <script src="app.js?v=1.0.3"></script>
 </body>
 </html>
