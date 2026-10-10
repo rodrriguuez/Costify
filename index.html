@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Costify - Control Financiero e Inventario Comercial</title>
     
-    <!-- Google AdSense Verification Script -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7512473512356855" crossorigin="anonymous"></script>
+    <!-- Código de Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7512473512356855"
+         crossorigin="anonymous"></script>
 
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0071E3">
@@ -16,59 +17,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="style.css?v=1.0.1">
-
-    <style>
-        /* Estilos personalizados para la barra de anuncios adaptable (Sidebar en PC, Barra inferior en Móvil) */
-        .ad-container-responsive {
-            display: none; /* Por defecto se oculta hasta definir layout */
-        }
-
-        @media (min-width: 1024px) {
-            /* Diseño para Computadora: Se ubica en la barra lateral derecha que marcaste */
-            .main-layout-with-ads {
-                display: grid;
-                grid-template-columns: 1fr 260px;
-                gap: 20px;
-                align-items: start;
-            }
-            .ad-container-responsive {
-                display: block;
-                position: sticky;
-                top: 90px;
-                height: calc(100vh - 120px);
-                background: var(--card-bg, #1E293B);
-                border: 1px solid var(--border-color, rgba(255,255,255,0.1));
-                border-radius: 16px;
-                padding: 12px;
-                text-align: center;
-                overflow: hidden;
-            }
-        }
-
-        @media (max-width: 1023px) {
-            /* Diseño para Celular: Barra fija pequeña en la parte inferior */
-            .ad-container-responsive {
-                display: flex;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 55px;
-                background: rgba(15, 23, 42, 0.95);
-                backdrop-filter: blur(10px);
-                border-top: 1px solid rgba(255, 255, 255, 0.15);
-                z-index: 9999;
-                align-items: center;
-                justify-content: center;
-                padding: 4px 10px;
-                box-shadow: 0 -4px 12px rgba(0,0,0,0.3);
-            }
-            /* Margen inferior para que el contenido no quede tapado por la barra en móviles */
-            body {
-                padding-bottom: 60px;
-            }
-        }
-    </style>
 </head>
 <body>
 
@@ -176,324 +124,539 @@
             </div>
         </header>
 
-        <!-- Contenedor general estructurado con la barra lateral de anuncios en PC -->
-        <div class="main-layout-with-ads">
-            <main>
-                <!-- INICIO -->
-                <div id="tab-inicio" class="tab-content active">
-                    <div class="grid-inicio-top">
-                        <div class="card zoom-card" style="background: linear-gradient(135deg, #0F172A, #1E293B); color: white; padding: 32px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 10px;">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <span style="font-size: 13px; font-weight: 900; background: rgba(0,113,227,0.3); color: #60A5FA; padding: 4px 10px; border-radius: 8px; letter-spacing: 0.5px;">Costify</span>
-                                    <button onclick="cambiarMesAnterior()" style="background: rgba(255,255,255,0.15); border: none; color: white; width: 28px; height: 28px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Mes anterior">◀</button>
-                                    <span id="labelMesActualGrafica" style="font-size: 14px; font-weight: 800; cursor: pointer; color: #34D399; letter-spacing: 0.5px;" onclick="abrirModalSelectorMeses()" title="Haz clic para seleccionar mes">Septiembre 2026</span>
-                                    <button onclick="cambiarMesSiguiente()" style="background: rgba(255,255,255,0.15); border: none; color: white; width: 28px; height: 28px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Mes siguiente">▶</button>
-                                </div>
-                                <div style="display: flex; gap: 4px;" onclick="event.stopPropagation()">
-                                    <button onclick="cambiarFiltroTiempoInicio('1S')" id="btnFiltro1S" style="background: rgba(255,255,255,0.3); border: none; color: white; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer;">1S</button>
-                                    <button onclick="cambiarFiltroTiempoInicio('1M')" id="btnFiltro1M" style="background: rgba(255,255,255,0.1); border: none; color: white; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer;">1M</button>
-                                    <button onclick="cambiarFiltroTiempoInicio('1A')" id="btnFiltro1A" style="background: rgba(255,255,255,0.1); border: none; color: white; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer;">1A</button>
-                                </div>
+        <!-- CONTENEDOR PRINCIPAL CON DISEÑO DE ANUNCIO LATERAL PARA ESCRITORIO -->
+        <div class="layout-con-ads-pc">
+            <main class="main-content-area">
+            <!-- INICIO -->
+            <div id="tab-inicio" class="tab-content active">
+                <div class="grid-inicio-top">
+                    <div class="card zoom-card" style="background: linear-gradient(135deg, #0F172A, #1E293B); color: white; padding: 32px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 13px; font-weight: 900; background: rgba(0,113,227,0.3); color: #60A5FA; padding: 4px 10px; border-radius: 8px; letter-spacing: 0.5px;">Costify</span>
+                                <button onclick="cambiarMesAnterior()" style="background: rgba(255,255,255,0.15); border: none; color: white; width: 28px; height: 28px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Mes anterior">◀</button>
+                                <span id="labelMesActualGrafica" style="font-size: 14px; font-weight: 800; cursor: pointer; color: #34D399; letter-spacing: 0.5px;" onclick="abrirModalSelectorMeses()" title="Haz clic para seleccionar mes">Septiembre 2026</span>
+                                <button onclick="cambiarMesSiguiente()" style="background: rgba(255,255,255,0.15); border: none; color: white; width: 28px; height: 28px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Mes siguiente">▶</button>
                             </div>
-                            <p style="font-size: 11px; opacity: 0.75; text-transform: uppercase; margin-bottom: 4px;">Rendimiento de tu Empresa</p>
-                            <h2 id="homeSaldo" style="font-size: 38px; font-weight: 900; margin-bottom: 20px;">$0</h2>
-                            <div style="position: relative; height: 140px; width: 100%;">
-                                <canvas id="chartSemanalCanvas"></canvas>
-                            </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; margin-top: 20px; font-size: 13px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.15);">
-                                <div>Ingresos: <strong id="homeVentas" style="color: #A7F3D0;">+$0</strong></div>
-                                <div>Gastos: <strong id="homeGastos" style="color: #FECDD3;">-$0</strong></div>
+                            <div style="display: flex; gap: 4px;" onclick="event.stopPropagation()">
+                                <button onclick="cambiarFiltroTiempoInicio('1S')" id="btnFiltro1S" style="background: rgba(255,255,255,0.3); border: none; color: white; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer;">1S</button>
+                                <button onclick="cambiarFiltroTiempoInicio('1M')" id="btnFiltro1M" style="background: rgba(255,255,255,0.1); border: none; color: white; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer;">1M</button>
+                                <button onclick="cambiarFiltroTiempoInicio('1A')" id="btnFiltro1A" style="background: rgba(255,255,255,0.1); border: none; color: white; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer;">1A</button>
                             </div>
                         </div>
-
-                        <div style="display: flex; flex-direction: column; gap: 20px;">
-                            <div class="card zoom-card" style="padding: 24px; cursor: pointer;" onclick="switchTab('pro')">
-                                <h4 id="widgetProTituloHeader" style="font-size: 14px; font-weight: 800; color: #D97706;">Estado Pro+ (Free)</h4>
-                                <p id="widgetProDescHeader" style="font-size: 12px; color: var(--text-secondary); margin-top: 5px;">Desbloquea herramientas VIP.</p>
-                            </div>
-                            <div class="card zoom-card" style="padding: 24px; cursor: pointer;" onclick="switchTab('inventario')">
-                                <h4 style="font-size: 14px; font-weight: 800;">Control de Inventario</h4>
-                                <p id="widgetProdCount" style="font-size: 12px; color: #059669; font-weight: 700; margin-top: 5px;">0 productos.</p>
-                            </div>
+                        <p style="font-size: 11px; opacity: 0.75; text-transform: uppercase; margin-bottom: 4px;">Rendimiento de tu Empresa</p>
+                        <h2 id="homeSaldo" style="font-size: 38px; font-weight: 900; margin-bottom: 20px;">$0</h2>
+                        <div style="position: relative; height: 140px; width: 100%;">
+                            <canvas id="chartSemanalCanvas"></canvas>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; margin-top: 20px; font-size: 13px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.15);">
+                            <div>Ingresos: <strong id="homeVentas" style="color: #A7F3D0;">+$0</strong></div>
+                            <div>Gastos: <strong id="homeGastos" style="color: #FECDD3;">-$0</strong></div>
                         </div>
                     </div>
 
-                    <div class="grid-inicio-bottom">
-                        <div class="card zoom-card" style="cursor: pointer; padding: 24px;" onclick="switchTab('inventario')">
-                            <div style="font-size: 24px; margin-bottom: 10px;">📦</div>
-                            <h4 style="font-size: 14px; font-weight: 800;">Inventario</h4>
-                            <p style="font-size: 12px; color: var(--text-secondary);">Stock y productos</p>
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div class="card zoom-card" style="padding: 24px; cursor: pointer;" onclick="switchTab('pro')">
+                            <h4 id="widgetProTituloHeader" style="font-size: 14px; font-weight: 800; color: #D97706;">Estado Pro+ (Free)</h4>
+                            <p id="widgetProDescHeader" style="font-size: 12px; color: var(--text-secondary); margin-top: 5px;">Desbloquea herramientas VIP.</p>
                         </div>
-                        <div class="card zoom-card" style="cursor: pointer; padding: 24px;" onclick="switchTab('calculadora')">
-                            <div style="font-size: 24px; margin-bottom: 10px;">🧮</div>
-                            <h4 style="font-size: 14px; font-weight: 800;">Calculcostos</h4>
-                            <p style="font-size: 12px; color: var(--text-secondary);">Margen ideal</p>
+                        <div class="card zoom-card" style="padding: 24px; cursor: pointer;" onclick="switchTab('inventario')">
+                            <h4 style="font-size: 14px; font-weight: 800;">Control de Inventario</h4>
+                            <p id="widgetProdCount" style="font-size: 12px; color: #059669; font-weight: 700; margin-top: 5px;">0 productos.</p>
                         </div>
-                        <div class="card zoom-card" style="cursor: pointer; padding: 24px;" onclick="switchTab('caja')">
-                            <div style="font-size: 24px; margin-bottom: 10px;">💵</div>
-                            <h4 style="font-size: 14px; font-weight: 800;">Caja Rápida</h4>
-                            <p style="font-size: 12px; color: var(--text-secondary);">Ventas y gastos</p>
+                    </div>
+                </div>
+
+                <div class="grid-inicio-bottom">
+                    <div class="card zoom-card" style="cursor: pointer; padding: 24px;" onclick="switchTab('inventario')">
+                        <div style="font-size: 24px; margin-bottom: 10px;">📦</div>
+                        <h4 style="font-size: 14px; font-weight: 800;">Inventario</h4>
+                        <p style="font-size: 12px; color: var(--text-secondary);">Stock y productos</p>
+                    </div>
+                    <div class="card zoom-card" style="cursor: pointer; padding: 24px;" onclick="switchTab('calculadora')">
+                        <div style="font-size: 24px; margin-bottom: 10px;">🧮</div>
+                        <h4 style="font-size: 14px; font-weight: 800;">Calculcostos</h4>
+                        <p style="font-size: 12px; color: var(--text-secondary);">Margen ideal</p>
+                    </div>
+                    <div class="card zoom-card" style="cursor: pointer; padding: 24px;" onclick="switchTab('caja')">
+                        <div style="font-size: 24px; margin-bottom: 10px;">💵</div>
+                        <h4 style="font-size: 14px; font-weight: 800;">Caja Rápida</h4>
+                        <p style="font-size: 12px; color: var(--text-secondary);">Ventas y gastos</p>
+                    </div>
+                    <div class="card zoom-card" style="cursor: pointer; padding: 24px; background: linear-gradient(135deg, #FFFBEB, #FEF3C7); border-color: #FDE68A;" onclick="switchTab('pro')">
+                        <div style="font-size: 24px; margin-bottom: 10px;">👑</div>
+                        <h4 style="font-size: 14px; font-weight: 800; color: #B45309;">Pro+ Suite</h4>
+                        <p style="font-size: 12px; color: #D97706;">Herramientas VIP</p>
+                    </div>
+                </div>
+
+                <!-- RENDIMIENTO FINANCIERO GLOBAL -->
+                <div class="card zoom-card" style="background: #0B0E14; border: 1px solid #1E2329; color: white; margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <span style="font-size: 10px; color: #848E9C; text-transform: uppercase; font-weight: 700;">📊 RENDIMIENTO FINANCIERO GLOBAL</span>
+                            <h3 id="valorRendimientoGlobal" style="font-size: 26px; font-weight: 900; color: #0ECB81; margin-top: 4px;">$0</h3>
                         </div>
-                        <div class="card zoom-card" style="cursor: pointer; padding: 24px; background: linear-gradient(135deg, #FFFBEB, #FEF3C7); border-color: #FDE68A;" onclick="switchTab('pro')">
-                            <div style="font-size: 24px; margin-bottom: 10px;">👑</div>
-                            <h4 style="font-size: 14px; font-weight: 800; color: #B45309;">Pro+ Suite</h4>
-                            <p style="font-size: 12px; color: #D97706;">Herramientas VIP</p>
+
+                        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 10px;">
+                                <button onclick="cambiarMesGlobalAnterior()" style="background: none; border: none; color: white; font-weight: 800; cursor: pointer; font-size: 12px;" title="Mes anterior">◀</button>
+                                <span id="labelMesGlobalGrafica" style="font-size: 13px; font-weight: 800; color: #34D399; cursor: pointer;" onclick="abrirModalSelectorMesesGlobal()" title="Seleccionar mes">Septiembre 2026</span>
+                                <button onclick="cambiarMesGlobalSiguiente()" style="background: none; border: none; color: white; font-weight: 800; cursor: pointer; font-size: 12px;" title="Mes siguiente">▶</button>
+                            </div>
+
+                            <div style="display: flex; gap: 4px; background: rgba(255,255,255,0.06); padding: 4px; border-radius: 10px;">
+                                <button onclick="cambiarFiltroGlobal('1S')" id="btnGlobal1S" style="background: rgba(255,255,255,0.2); border: none; color: white; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer;">1S</button>
+                                <button onclick="cambiarFiltroGlobal('1M')" id="btnGlobal1M" style="background: none; border: none; color: #848E9C; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer;">1M</button>
+                                <button onclick="cambiarFiltroGlobal('1A')" id="btnGlobal1A" style="background: none; border: none; color: #848E9C; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer;">1A</button>
+                            </div>
+
+                            <span style="background:#22C55E; color:#FFF; font-weight:700; padding:4px 10px; border-radius:6px; font-size:11px;">Live Analytics</span>
                         </div>
                     </div>
 
-                    <!-- RENDIMIENTO FINANCIERO GLOBAL -->
-                    <div class="card zoom-card" style="background: #0B0E14; border: 1px solid #1E2329; color: white; margin-top: 20px;">
+                    <div style="position: relative; height: 150px; width: 100%; cursor: pointer;" onclick="abrirModalDetalleGlobalCaja()">
+                        <canvas id="chartGlobalCanvas"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INVENTARIO -->
+            <div id="tab-inventario" class="tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                    <h2 style="font-size: 18px; font-weight: 800;">Gestión de Inventario & Stock Interactivo</h2>
+                    <button onclick="abrirModalProducto()" class="btn-action">+ Nuevo Producto</button>
+                </div>
+                <div id="inventoryList" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;"></div>
+            </div>
+
+            <!-- CALCULCOSTOS -->
+            <div id="tab-calculadora" class="tab-content">
+                <div style="max-width: 650px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+                    <div class="card zoom-card" style="margin-bottom: 0;">
+                        <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 15px;">Calculcostos Inteligente</h2>
+                        <input type="text" id="calcName" placeholder="Nombre del Producto" class="ios-input">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                            <input type="number" id="calcCost" placeholder="Costo ($)" class="ios-input" style="margin-bottom:0;">
+                            <input type="number" id="calcMargin" value="40" placeholder="Margen (%)" class="ios-input" style="margin-bottom:0;">
+                        </div>
+                        <button onclick="calcularPrecio()" class="btn-action" style="width: 100%; padding: 14px; font-size: 14px;">Calcalcular Precio Sugerido</button>
+                        
+                        <div id="calcResultContainer" class="hidden" style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(0, 113, 227, 0.08)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 18px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                                <div>
+                                    <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; display: block;">Precio Sugerido de Venta</span>
+                                    <h3 id="resPrice" style="font-size: 26px; font-weight: 900; color: #10B981; margin-top: 2px;">$0</h3>
+                                </div>
+                                <div style="text-align: right;">
+                                    <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; display: block;">Ganancia Neta</span>
+                                    <h3 id="resGanancia" style="font-size: 20px; font-weight: 800; color: #0071E3; margin-top: 2px;">$0</h3>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <button onclick="copiarPrecioCalculado()" class="ios-btn-secondary" style="flex: 1; padding: 12px; font-size: 12px;">📋 Copiar precio</button>
+                                <button onclick="guardarEnInventarioDesdeCalc()" class="btn-action" style="flex: 1; background: #059669; padding: 12px; font-size: 12px;">🚀 Guardar en inventario</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card zoom-card" style="margin-top: 20px; margin-bottom: 0;">
+                    <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 15px;">📊 Cálculos Recientes</h3>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 450px;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-secondary); font-size: 11px; text-transform: uppercase;">
+                                    <th style="padding: 8px 10px;">Producto</th>
+                                    <th style="padding: 8px 10px;">Costo</th>
+                                    <th style="padding: 8px 10px;">Margen</th>
+                                    <th style="padding: 8px 10px;">Precio Sugerido</th>
+                                    <th style="padding: 8px 10px; text-align: right;">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaCalculosRecientesBody">
+                                <tr><td colspan="5" style="text-align: center; padding: 15px; color: var(--text-secondary);">No hay cálculos recientes.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAJA REGISTRADORA -->
+            <div id="tab-caja" class="tab-content">
+                <div class="card zoom-card" style="max-width: 650px; margin: 0 auto;">
+                    <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 15px;">Caja Registradora Diaria</h2>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                        <button onclick="abrirModalMovimiento('venta')" class="btn-action" style="background: #059669; padding: 14px; font-size: 14px;">+ Venta</button>
+                        <button onclick="abrirModalMovimiento('gasto')" class="btn-action" style="background: #E11D48; padding: 14px; font-size: 14px;">- Gasto</button>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
+                        <input type="date" id="inputFiltroFechaCaja" class="ios-input" style="margin-bottom: 0; flex: 1; min-width: 140px;" onchange="filtrarMovimientosPorFecha()">
+                        <button onclick="limpiarFiltroFechaCaja()" class="ios-btn-secondary" style="width: auto; padding: 12px;">Ver Todo</button>
+                        <button onclick="pedirPasswordEliminarHistorial()" style="background: #FEE2E2; color: #DC2626; border: none; padding: 12px 16px; border-radius: 14px; font-weight: 700; cursor: pointer; font-size: 12px;">🗑️ Borrar Todo</button>
+                    </div>
+
+                    <div id="movimientosList" class="custom-scroll" style="display: flex; flex-direction: column; gap: 10px; max-height: 280px; overflow-y: auto;"></div>
+                </div>
+            </div>
+
+            <!-- CARRITO -->
+            <div id="tab-carrito" class="tab-content">
+                <div style="max-width: 580px; margin: 0 auto;">
+                    <div class="card zoom-card" style="padding: 32px; background: var(--card-bg); border: 1px solid rgba(0, 113, 227, 0.15); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06); border-radius: 28px; backdrop-filter: blur(20px); color: var(--text-primary);">
+                        
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, #0071E3, #4589FF); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 16px rgba(0,113,227,0.25);">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                                </div>
+                                <div>
+                                    <h2 style="font-size: 19px; font-weight: 800; letter-spacing: -0.3px; margin: 0; color: var(--text-primary);">Carrito Comercial</h2>
+                                    <p style="font-size: 12px; color: var(--text-secondary); margin: 2px 0 0 0;">Punto de Venta con Tickets PDF</p>
+                                </div>
+                            </div>
+                            <span style="font-size: 11px; font-weight: 800; background: rgba(0, 113, 227, 0.15); color: #0071E3; padding: 6px 12px; border-radius: 20px; letter-spacing: 0.5px;">OSX POS</span>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px; position: relative;">
+                            <label style="font-size: 11px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">🔍 Buscar Producto en Inventario</label>
+                            <input type="text" id="inputBuscadorCarrito" placeholder="Escribe para buscar rápidamente..." class="ios-input" oninput="filtrarProductosCarrito()" style="margin-bottom: 0; padding-left: 16px; border-radius: 14px; background: rgba(120, 120, 128, 0.08); border: 1.5px solid var(--border-color); color: var(--text-primary);">
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 2.2fr 1fr; gap: 12px; margin-bottom: 18px;">
+                            <div>
+                                <label style="font-size: 11px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Seleccionar Producto</label>
+                                <select id="selectProductoCarrito" class="ios-input" style="margin-bottom:0; border-radius: 14px; background: rgba(120, 120, 128, 0.08); border: 1.5px solid var(--border-color); font-weight: 600; color: var(--text-primary);">
+                                    <option value="" style="background: var(--card-bg); color: var(--text-primary);">-- Elige un producto --</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-size: 11px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Cantidad</label>
+                                <input type="number" id="inputCantidadCarrito" value="1" min="1" class="ios-input" style="margin-bottom:0; border-radius: 14px; text-align: center; font-weight: 700; background: rgba(120, 120, 128, 0.08); border: 1.5px solid var(--border-color); color: var(--text-primary);">
+                            </div>
+                        </div>
+
+                        <button onclick="agregarProductoAlCarritoConCantidad()" class="btn-action" style="background: linear-gradient(135deg, #34C759, #28A745); padding: 14px; font-size: 14px; font-weight: 800; margin-bottom: 20px; width: 100%; border-radius: 14px; box-shadow: 0 10px 20px rgba(52, 199, 89, 0.25); cursor: pointer; color: #FFF;">+ Añadir al Carrito</button>
+
+                        <div style="font-size: 11px; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Resumen de Artículos</div>
+                        <div id="listaItemsCarrito" class="custom-scroll" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; margin-bottom: 20px; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 12px 4px;">
+                            <p style="color: var(--text-secondary); text-align: center; font-size: 13px; padding: 15px 0;">El carrito está vacío.</p>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 16px 20px; background: rgba(0, 113, 227, 0.06); border: 1px solid rgba(0, 113, 227, 0.15); border-radius: 16px;">
+                            <span style="font-size: 14px; font-weight: 700; color: var(--text-secondary);">Total a Pagar:</span>
+                            <span id="carritoTotalMonto" style="font-size: 26px; font-weight: 900; color: #0071E3; letter-spacing: -0.5px;">$0</span>
+                        </div>
+
+                        <button onclick="confirmarVentaDesdeCarritoConTicket()" class="btn-action" style="background: linear-gradient(135deg, #0071E3, #005BB5); padding: 16px; font-size: 15px; font-weight: 800; width: 100%; border-radius: 16px; box-shadow: 0 12px 24px rgba(0,113,227,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: #FFF;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            Cobrar, Registrar y Generar Ticket PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RECOMENDACIONES (VENTANA NUEVA) -->
+            <div id="tab-recomendaciones" class="tab-content">
+                <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+                    <div class="card zoom-card" style="background: linear-gradient(135deg, #0F172A, #1E293B); color: white; padding: 28px;">
+                        <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">💡 Centro de Recomendaciones & Utilidades</h2>
+                        <p style="font-size: 13px; color: #94A3B8;">Soluciones financieras, herramientas y pasarelas de pago para impulsar tu negocio.</p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        
+                        <!-- Tarjeta Shopify (Con tu Partner ID 5242431) -->
+                        <div class="card zoom-card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0; padding: 24px;">
+                            <div>
+                                <span style="font-size: 10px; font-weight: 800; background: rgba(16,185,129,0.15); color: #10B981; padding: 4px 10px; border-radius: 8px; text-transform: uppercase;">Tienda Online</span>
+                                <h3 style="font-size: 16px; font-weight: 800; margin-top: 10px; margin-bottom: 8px;">¿Quieres llevar tu negocio al siguiente nivel creando tu propia tienda virtual?</h3>
+                                <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">Crea una tienda en línea profesional para vender tus productos por internet de forma automática.</p>
+                                
+                                <blockquote style="font-style: italic; font-size: 11px; color: #10B981; border-left: 2px solid #10B981; padding-left: 8px; margin-bottom: 16px;">
+                                    "Un negocio que no está en internet, simplemente no existe."
+                                </blockquote>
+                            </div>
+                            <a href="https://www.shopify.com/?ref=5242431" target="_blank" class="btn-action" style="text-align: center; text-decoration: none; display: block; background: #059669;">Crear Tienda en Shopify ➔</a>
+                        </div>
+
+                        <!-- Tarjeta Nubank (Con tu enlace oficial de referidos) -->
+                        <div class="card zoom-card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0; padding: 24px;">
+                            <div>
+                                <span style="font-size: 10px; font-weight: 800; background: rgba(139,92,246,0.15); color: #8B5CF6; padding: 4px 10px; border-radius: 8px; text-transform: uppercase;">Banca Digital</span>
+                                <h3 style="font-size: 16px; font-weight: 800; margin-top: 10px; margin-bottom: 8px;">¿Necesitas separar las finanzas de tu negocio sin cuotas de manejo?</h3>
+                                <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">Abre tu cuenta digital y cajitas de ahorros para organizar el capital de trabajo de tu empresa.</p>
+                                
+                                <blockquote style="font-style: italic; font-size: 11px; color: #8B5CF6; border-left: 2px solid #8B5CF6; padding-left: 8px; margin-bottom: 16px;">
+                                    "Nunca mezcles el dinero personal con el capital de tu emprendimiento."
+                                </blockquote>
+                            </div>
+                            <a href="https://nu.com.co/mgm/?id=i0M4NIG1ScP8xwHZgcmxiA&msg=e4581&utm_channel=referral&utm_medium=referral&utm_source=mgm" target="_blank" class="btn-action" style="text-align: center; text-decoration: none; display: block; background: #7C3AED;">Abrir Cuenta Nubank ➔</a>
+                        </div>
+
+                        <!-- Tarjeta Binance (Con tu enlace de referido oficial) -->
+                        <div class="card zoom-card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0; padding: 24px; grid-column: span 2;">
+                            <div>
+                                <span style="font-size: 10px; font-weight: 800; background: rgba(245,158,11,0.15); color: #F59E0B; padding: 4px 10px; border-radius: 8px; text-transform: uppercase;">Criptomonedas & Pagos</span>
+                                <h3 style="font-size: 16px; font-weight: 800; margin-top: 10px; margin-bottom: 8px;">Explora el mercado cripto y gestiona pagos digitales seguros a nivel global</h3>
+                                <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">Únete al exchange líder mundial en criptomonedas con tu código de invitación personal (<strong style="color: #F59E0B;">CPA_004C6X932A</strong>).</p>
+                                
+                                <blockquote style="font-style: italic; font-size: 11px; color: #F59E0B; border-left: 2px solid #F59E0B; padding-left: 8px; margin-bottom: 16px;">
+                                    "La diversificación financiera es clave para proteger el futuro de tus activos."
+                                </blockquote>
+                            </div>
+                            <a href="https://www.binance.com/activity/referral/offers?ref=CPA_004C6X932A" target="_blank" class="btn-action" style="text-align: center; text-decoration: none; display: block; background: #D97706; color: #FFF;">Registrarse en Binance ➔</a>
+                        </div>
+
+                        <!-- Tarjeta Hotmart: Calculadora de Finanzas Personales (Con tu Hotlink) -->
+                        <div class="card zoom-card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0; padding: 24px; border: 1.5px solid rgba(255, 115, 0, 0.3);">
+                            <div>
+                                <span style="font-size: 10px; font-weight: 800; background: rgba(255,115,0,0.15); color: #FF7300; padding: 4px 10px; border-radius: 8px; text-transform: uppercase;">Herramientas Digitales (Hotmart)</span>
+                                <h3 style="font-size: 15px; font-weight: 800; margin-top: 10px; margin-bottom: 8px;">Calculadora de Finanzas Personales - Organiza tu plata en solo 2 minutos</h3>
+                                <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">Herramienta práctica para gestionar ingresos, gastos y obtener análisis financieros al instante.</p>
+                                
+                                <blockquote style="font-style: italic; font-size: 11px; color: #FF7300; border-left: 2px solid #FF7300; padding-left: 8px; margin-bottom: 16px;">
+                                    "Controla tus números hoy para asegurar el éxito financiero de mañana."
+                                </blockquote>
+                            </div>
+                            <a href="https://go.hotmart.com/Q107955653D" target="_blank" class="btn-action" style="text-align: center; text-decoration: none; display: block; background: #FF7300; color: #FFF;">Obtener Herramienta ➔</a>
+                        </div>
+
+                        <!-- Tarjeta Hotmart: Finanzas Personales - Mentoría Grupal (Con tu Hotlink) -->
+                        <div class="card zoom-card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0; padding: 24px; border: 1.5px solid rgba(255, 115, 0, 0.3);">
+                            <div>
+                                <span style="font-size: 10px; font-weight: 800; background: rgba(255,115,0,0.15); color: #FF7300; padding: 4px 10px; border-radius: 8px; text-transform: uppercase;">Educación Avanzada (Hotmart)</span>
+                                <h3 style="font-size: 15px; font-weight: 800; margin-top: 10px; margin-bottom: 8px;">Finanzas Personales - Mentoría Grupal Avanzada</h3>
+                                <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">Programa especializado para llevar el control total del dinero y escalar el crecimiento patrimonial.</p>
+                                
+                                <blockquote style="font-style: italic; font-size: 11px; color: #FF7300; border-left: 2px solid #FF7300; padding-left: 8px; margin-bottom: 16px;">
+                                    "Invierte en educación financiera para transformar tu futuro."
+                                </blockquote>
+                            </div>
+                            <a href="https://go.hotmart.com/Y107955661A" target="_blank" class="btn-action" style="text-align: center; text-decoration: none; display: block; background: #FF7300; color: #FFF;">Ver Mentoría Grupal ➔</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRO+ SUITE -->
+            <div id="tab-pro" class="tab-content">
+                <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+                    <div class="card zoom-card" style="background: linear-gradient(135deg, #1E1B4B, #0F172A); color: white; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(245, 158, 11, 0.4); flex-wrap: wrap; gap: 15px;">
+                        <div>
+                            <h2 style="font-size: 20px; font-weight: 800;">⭐ Costify Pro+ Suite Mensual</h2>
+                            <p style="font-size: 12px; color: #94A3B8;" id="textoEstadoPro">Estado actual: Plan Free</p>
+                        </div>
+                        <button onclick="abrirModalCheckout()" class="btn-action" style="background: #F59E0B; color: #000; font-weight: 800;" id="btnAdquirirProText">Adquirir Suscripción</button>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="pro-widget-card" style="--widget-accent: #6366F1;" onclick="abrirFuncionPro(1)">
+                            <div class="pro-widget-header">
+                                <span class="pro-widget-title">🎙️ IA por Voz Inteligente</span>
+                                <span class="pro-widget-badge">Dictado AI</span>
+                            </div>
+                            <p class="pro-widget-desc">Dicta por voz transacciones naturales. El sistema reconoce entradas/salidas mediante micrófono real y actualiza tu caja automáticamente.</p>
+                            <div class="pro-widget-footer">
+                                <span>Probar asistente de voz</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </div>
+                        </div>
+
+                        <div class="pro-widget-card" style="--widget-accent: #F43F5E;" onclick="abrirFuncionPro(2)">
+                            <div class="pro-widget-header">
+                                <span class="pro-widget-title">📝 Control de Deudores</span>
+                                <span class="pro-widget-badge">Alertas</span>
+                            </div>
+                            <p class="pro-widget-desc">Calendario completo de pagos pendientes con fechas límite y notificaciones automáticas de vencimiento.</p>
+                            <div class="pro-widget-footer">
+                                <span>Gestionar deudores</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </div>
+                        </div>
+
+                        <div class="pro-widget-card" style="--widget-accent: #10B981;" onclick="abrirFuncionPro(3)">
+                            <div class="pro-widget-header">
+                                <span class="pro-widget-title">📊 Exportar Reportes</span>
+                                <span class="pro-widget-badge">Excel / PDF</span>
+                            </div>
+                            <p class="pro-widget-desc">Descarga informes contables empresariales super profesionales en formatos Excel y PDF conectados con tu caja.</p>
+                            <div class="pro-widget-footer">
+                                <span>Descargar reportes</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </div>
+                        </div>
+
+                        <div class="pro-widget-card" style="--widget-accent: #F59E0B;" onclick="abrirFuncionPro(4)">
+                            <div class="pro-widget-header">
+                                <span class="pro-widget-title">🎯 Alertas de Presupuesto</span>
+                                <span class="pro-widget-badge">Topes</span>
+                            </div>
+                            <p class="pro-widget-desc">Define topes máximos de gastos mensuales conectados a la caja para recibir alertas preventivas inmediatas.</p>
+                            <div class="pro-widget-footer">
+                                <span>Configurar topes</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </div>
+                        </div>
+
+                        <div class="pro-widget-card" style="--widget-accent: #3B82F6;" onclick="abrirFuncionPro(5)">
+                            <div class="pro-widget-header">
+                                <span class="pro-widget-title">🏷️ Códigos de Barras</span>
+                                <span class="pro-widget-badge">Impresión</span>
+                            </div>
+                            <p class="pro-widget-desc">Genera etiquetas y códigos de barras personalizados para organizar y escanear rápidamente los productos de tu inventario.</p>
+                            <div class="pro-widget-footer">
+                                <span>Generar códigos</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </div>
+                        </div>
+
+                        <div class="pro-widget-card" style="--widget-accent: #8B5CF6;" onclick="abrirFuncionPro(6)">
+                            <div class="pro-widget-header">
+                                <span class="pro-widget-title">📈 Proyección Anual</span>
+                                <span class="pro-widget-badge">IA Predictiva</span>
+                            </div>
+                            <p class="pro-widget-desc">Algoritmo predictivo basado estrictamente en el historial real de tus movimientos para pronosticar tu crecimiento anual.</p>
+                            <div class="pro-widget-footer">
+                                <span>Ver proyecciones</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </div>
+                        </div>
+
+                        <div class="pro-widget-card" style="--widget-accent: #EC4899; grid-column: span 2;" onclick="abrirFuncionPro(7)">
+                            <div class="pro-widget-header">
+                                <span class="pro-widget-title">☁️ Respaldo en la Nube</span>
+                                <span class="pro-widget-badge">Seguro</span>
+                            </div>
+                            <p class="pro-widget-desc">Sincronización automática en tiempo real y copias de seguridad en la nube para garantizar que tus datos nunca se pierdan.</p>
+                            <div class="pro-widget-footer">
+                                <span>Ver estado del respaldo</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL MASTER -->
+            <div id="tab-master" class="tab-content">
+                <div style="max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+                    <div class="card zoom-card" style="background: linear-gradient(135deg, #05050A, #1E1B4B); color: white; border: 1px solid #F59E0B;">
+                        <h2 style="font-size: 24px; font-weight: 900; color: #F59E0B;">👑 Panel Master & Creador (Analítica Real de la App)</h2>
+                        <p style="font-size: 13px; color: #94A3B8;">Monitoreo conectado estrictamente a los registros reales generados en tu aplicación.</p>
+                    </div>
+
+                    <div class="card zoom-card" style="background: linear-gradient(135deg, #1E293B, #0F172A); border: 1px solid #38BDF8; color: white; padding: 22px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <h3 style="font-size: 16px; font-weight: 800; color: #38BDF8;">📥 Buzón de Comentarios de Usuarios (Widget Exclusivo Creador)</h3>
+                            <button onclick="cargarIdeasUsuariosCreador()" class="ios-btn-secondary" style="width: auto; padding: 6px 12px; font-size: 11px;">🔄 Actualizar</button>
+                        </div>
+                        <p style="font-size: 12px; color: #94A3B8; margin-bottom: 15px;">Ideas, opiniones y reportes de fallos enviados por los usuarios de la app:</p>
+                        <div id="contenedorIdeasCreador" class="custom-scroll" style="display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow-y: auto;">
+                            <p style="color: #64748B; text-align: center;">Haz clic en actualizar para ver los comentarios.</p>
+                        </div>
+                    </div>
+
+                    <div class="card zoom-card" style="background: #0B0E14; border: 1px solid #1E2329; color: white;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                             <div>
-                                <span style="font-size: 10px; color: #848E9C; text-transform: uppercase; font-weight: 700;">📊 RENDIMIENTO FINANCIERO GLOBAL</span>
-                                <h3 id="valorRendimientoGlobal" style="font-size: 26px; font-weight: 900; color: #0ECB81; margin-top: 4px;">$0</h3>
+                                <span id="masterHeaderSubLabel" style="font-size: 10px; color: #848E9C; text-transform: uppercase; font-weight: 700;">Ganancias Pro+ Recaudadas</span>
+                                <h3 id="masterLiveCrecimientoVal" style="font-size: 28px; font-weight: 900; color: #0ECB81; margin-top: 4px;">$0</h3>
                             </div>
 
-                            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                                 <div style="display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 10px;">
-                                    <button onclick="cambiarMesGlobalAnterior()" style="background: none; border: none; color: white; font-weight: 800; cursor: pointer; font-size: 12px;" title="Mes anterior">◀</button>
-                                    <span id="labelMesGlobalGrafica" style="font-size: 13px; font-weight: 800; color: #34D399; cursor: pointer;" onclick="abrirModalSelectorMesesGlobal()" title="Seleccionar mes">Septiembre 2026</span>
-                                    <button onclick="cambiarMesGlobalSiguiente()" style="background: none; border: none; color: white; font-weight: 800; cursor: pointer; font-size: 12px;" title="Mes siguiente">▶</button>
+                                    <button onclick="cambiarMesMasterAnterior()" style="background: none; border: none; color: white; font-weight: 800; cursor: pointer; font-size: 12px;" title="Mes anterior">◀</button>
+                                    <span id="labelMasterMesActual" style="font-size: 13px; font-weight: 800; color: #34D399; cursor: pointer;" onclick="abrirModalSelectorMesMaster()" title="Seleccionar mes">Septiembre 2026</span>
+                                    <button onclick="cambiarMesMasterSiguiente()" style="background: none; border: none; color: white; font-weight: 800; cursor: pointer; font-size: 12px;" title="Mes siguiente">▶</button>
                                 </div>
 
                                 <div style="display: flex; gap: 4px; background: rgba(255,255,255,0.06); padding: 4px; border-radius: 10px;">
-                                    <button onclick="cambiarFiltroGlobal('1S')" id="btnGlobal1S" style="background: rgba(255,255,255,0.2); border: none; color: white; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer;">1S</button>
-                                    <button onclick="cambiarFiltroGlobal('1M')" id="btnGlobal1M" style="background: none; border: none; color: #848E9C; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer;">1M</button>
-                                    <button onclick="cambiarFiltroGlobal('1A')" id="btnGlobal1A" style="background: none; border: none; color: #848E9C; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer;">1A</button>
+                                    <button onclick="cambiarFiltroMasterTipo('1S')" id="btnMaster1S" style="background: rgba(255,255,255,0.2); border: none; color: white; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer;">1S</button>
+                                    <button onclick="cambiarFiltroMasterTipo('1M')" id="btnMaster1M" style="background: none; border: none; color: #848E9C; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer;">1M</button>
+                                    <button onclick="cambiarFiltroMasterTipo('1A')" id="btnMaster1A" style="background: none; border: none; color: #848E9C; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer;">1A</button>
                                 </div>
 
-                                <span style="background:#22C55E; color:#FFF; font-weight:700; padding:4px 10px; border-radius:6px; font-size:11px;">Live Analytics</span>
-                            </div>
-                        </div>
-
-                        <div style="position: relative; height: 150px; width: 100%; cursor: pointer;" onclick="abrirModalDetalleGlobalCaja()">
-                            <canvas id="chartGlobalCanvas"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- INVENTARIO -->
-                <div id="tab-inventario" class="tab-content">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
-                        <h2 style="font-size: 18px; font-weight: 800;">Gestión de Inventario & Stock Interactivo</h2>
-                        <button onclick="abrirModalProducto()" class="btn-action">+ Nuevo Producto</button>
-                    </div>
-                    <div id="inventoryList" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;"></div>
-                </div>
-
-                <!-- CALCULCOSTOS -->
-                <div id="tab-calculadora" class="tab-content">
-                    <div style="max-width: 650px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
-                        <div class="card zoom-card" style="margin-bottom: 0;">
-                            <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 15px;">Calculcostos Inteligente</h2>
-                            <input type="text" id="calcName" placeholder="Nombre del Producto" class="ios-input">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
-                                <input type="number" id="calcCost" placeholder="Costo ($)" class="ios-input" style="margin-bottom:0;">
-                                <input type="number" id="calcMargin" value="40" placeholder="Margen (%)" class="ios-input" style="margin-bottom:0;">
-                            </div>
-                            <button onclick="calcularPrecio()" class="btn-action" style="width: 100%; padding: 14px; font-size: 14px;">Calcalcular Precio Sugerido</button>
-                            
-                            <div id="calcResultContainer" class="hidden" style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(0, 113, 227, 0.08)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 18px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 10px; flex-wrap: wrap; gap: 10px;">
-                                    <div>
-                                        <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; display: block;">Precio Sugerido de Venta</span>
-                                        <h3 id="resPrice" style="font-size: 26px; font-weight: 900; color: #10B981; margin-top: 2px;">$0</h3>
-                                    </div>
-                                    <div style="text-align: right;">
-                                        <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; display: block;">Ganancia Neta</span>
-                                        <h3 id="resGanancia" style="font-size: 20px; font-weight: 800; color: #0071E3; margin-top: 2px;">$0</h3>
-                                    </div>
-                                </div>
-                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                    <button onclick="copiarPrecioCalculado()" class="ios-btn-secondary" style="flex: 1; padding: 12px; font-size: 12px;">📋 Copiar precio</button>
-                                    <button onclick="guardarEnInventarioDesdeCalc()" class="btn-action" style="flex: 1; background: #059669; padding: 12px; font-size: 12px;">🚀 Guardar en inventario</button>
+                                <div style="display: flex; gap: 6px; background: rgba(255,255,255,0.06); padding: 4px; border-radius: 10px; flex-wrap: wrap;">
+                                    <button onclick="cambiarModoMasterGrafica('ganancias')" id="btnMasterGanancias" style="background: rgba(34,197,94,0.2); border: none; color: #34D399; font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 8px; cursor: pointer;">📊 Ganancias</button>
+                                    <button onclick="cambiarModoMasterGrafica('pro')" id="btnMasterPro" style="background: none; border: none; color: #848E9C; font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 8px; cursor: pointer;">⭐ Usuarios Pro+</button>
+                                    <button onclick="cambiarModoMasterGrafica('usuarios')" id="btnMasterUsuarios" style="background: none; border: none; color: #848E9C; font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 8px; cursor: pointer;">👥 Usuarios Totales</button>
                                 </div>
                             </div>
                         </div>
+
+                        <div style="position: relative; height: 160px; width: 100%; cursor: pointer;" onclick="abrirModalDetalleMasterExclusivo()">
+                            <canvas id="chartMasterCanvas"></canvas>
+                        </div>
                     </div>
 
-                    <div class="card zoom-card" style="margin-top: 20px; margin-bottom: 0;">
-                        <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 15px;">📊 Cálculos Recientes</h3>
-                        <div style="overflow-x: auto;">
-                            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 450px;">
-                                <thead>
-                                    <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-secondary); font-size: 11px; text-transform: uppercase;">
-                                        <th style="padding: 8px 10px;">Producto</th>
-                                        <th style="padding: 8px 10px;">Costo</th>
-                                        <th style="padding: 8px 10px;">Margen</th>
-                                        <th style="padding: 8px 10px;">Precio Sugerido</th>
-                                        <th style="padding: 8px 10px; text-align: right;">Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tablaCalculosRecientesBody">
-                                    <tr><td colspan="5" style="text-align: center; padding: 15px; color: var(--text-secondary);">No hay cálculos recientes.</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="card zoom-card">
+                        <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 15px;">👥 Cuentas Reales Registradas en el Sistema</h3>
+                        <div id="masterListaUsuariosFull" style="display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto;" class="custom-scroll"></div>
                     </div>
                 </div>
+            </div>
 
-                <!-- CAJA REGISTRADORA -->
-                <div id="tab-caja" class="tab-content">
-                    <div class="card zoom-card" style="max-width: 650px; margin: 0 auto;">
-                        <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 15px;">Caja Registradora Diaria</h2>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-                            <button onclick="abrirModalMovimiento('venta')" class="btn-action" style="background: #059669; padding: 14px; font-size: 14px;">+ Venta</button>
-                            <button onclick="abrirModalMovimiento('gasto')" class="btn-action" style="background: #E11D48; padding: 14px; font-size: 14px;">- Gasto</button>
-                        </div>
-                        
-                        <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
-                            <input type="date" id="inputFiltroFechaCaja" class="ios-input" style="margin-bottom: 0; flex: 1; min-width: 140px;" onchange="filtrarMovimientosPorFecha()">
-                            <button onclick="limpiarFiltroFechaCaja()" class="ios-btn-secondary" style="width: auto; padding: 12px;">Ver Todo</button>
-                            <button onclick="pedirPasswordEliminarHistorial()" style="background: #FEE2E2; color: #DC2626; border: none; padding: 12px 16px; border-radius: 14px; font-weight: 700; cursor: pointer; font-size: 12px;">🗑️ Borrar Todo</button>
-                        </div>
-
-                        <div id="movimientosList" class="custom-scroll" style="display: flex; flex-direction: column; gap: 10px; max-height: 280px; overflow-y: auto;"></div>
-                    </div>
-                </div>
-
-                <!-- CARRITO -->
-                <div id="tab-carrito" class="tab-content">
-                    <div style="max-width: 580px; margin: 0 auto;">
-                        <div class="card zoom-card" style="padding: 32px; background: var(--card-bg); border: 1px solid rgba(0, 113, 227, 0.15); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06); border-radius: 28px; backdrop-filter: blur(20px); color: var(--text-primary);">
-                            
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    <div style="width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, #0071E3, #4589FF); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 16px rgba(0,113,227,0.25);">
-                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                                    </div>
-                                    <div>
-                                        <h2 style="font-size: 19px; font-weight: 800; letter-spacing: -0.3px; margin: 0; color: var(--text-primary);">Carrito Comercial</h2>
-                                        <p style="font-size: 12px; color: var(--text-secondary); margin: 2px 0 0 0;">Punto de Venta con Tickets PDF</p>
-                                    </div>
-                                </div>
-                                <span style="font-size: 11px; font-weight: 800; background: rgba(0, 113, 227, 0.15); color: #0071E3; padding: 6px 12px; border-radius: 20px; letter-spacing: 0.5px;">OSX POS</span>
-                            </div>
-                            
-                            <div style="margin-bottom: 16px; position: relative;">
-                                <label style="font-size: 11px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">🔍 Buscar Producto en Inventario</label>
-                                <input type="text" id="inputBuscadorCarrito" placeholder="Escribe para buscar rápidamente..." class="ios-input" oninput="filtrarProductosCarrito()" style="margin-bottom: 0; padding-left: 16px; border-radius: 14px; background: rgba(120, 120, 128, 0.08); border: 1.5px solid var(--border-color); color: var(--text-primary);">
-                            </div>
-
-                            <div style="display: grid; grid-template-columns: 2.2fr 1fr; gap: 12px; margin-bottom: 18px;">
-                                <div>
-                                    <label style="font-size: 11px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Seleccionar Producto</label>
-                                    <select id="selectProductoCarrito" class="ios-input" style="margin-bottom:0; border-radius: 14px; background: rgba(120, 120, 128, 0.08); border: 1.5px solid var(--border-color); font-weight: 600; color: var(--text-primary);">
-                                        <option value="" style="background: var(--card-bg); color: var(--text-primary);">-- Elige un producto --</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label style="font-size: 11px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Cantidad</label>
-                                    <input type="number" id="inputCantidadCarrito" value="1" min="1" class="ios-input" style="margin-bottom:0; border-radius: 14px; text-align: center; font-weight: 700; background: rgba(120, 120, 128, 0.08); border: 1.5px solid var(--border-color); color: var(--text-primary);">
-                                </div>
-                            </div>
-
-                            <button onclick="agregarProductoAlCarritoConCantidad()" class="btn-action" style="background: linear-gradient(135deg, #34C759, #28A745); padding: 14px; font-size: 14px; font-weight: 800; margin-bottom: 20px; width: 100%; border-radius: 14px; box-shadow: 0 10px 20px rgba(52, 199, 89, 0.25); cursor: pointer; color: #FFF;">+ Añadir al Carrito</button>
-
-                            <div style="font-size: 11px; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Resumen de Artículos</div>
-                            <div id="listaItemsCarrito" class="custom-scroll" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; margin-bottom: 20px; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 12px 4px;">
-                                <p style="color: var(--text-secondary); text-align: center; font-size: 13px; padding: 15px 0;">El carrito está vacío.</p>
-                            </div>
-
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 16px 20px; background: rgba(0, 113, 227, 0.06); border: 1px solid rgba(0, 113, 227, 0.15); border-radius: 16px;">
-                                <span style="font-size: 14px; font-weight: 700; color: var(--text-secondary);">Total a Pagar:</span>
-                                <span id="carritoTotalMonto" style="font-size: 26px; font-weight: 900; color: #0071E3; letter-spacing: -0.5px;">$0</span>
-                            </div>
-
-                            <button onclick="confirmarVentaDesdeCarritoConTicket()" class="btn-action" style="background: linear-gradient(135deg, #0071E3, #005BB5); padding: 16px; font-size: 15px; font-weight: 800; width: 100%; border-radius: 16px; box-shadow: 0 12px 24px rgba(0,113,227,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: #FFF;">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                Cobrar, Registrar y Generar Ticket PDF
-                            </button>
+            <!-- AJUSTES -->
+            <div id="tab-perfil" class="tab-content">
+                <div class="card zoom-card" style="max-width: 550px; margin: 0 auto; padding: 32px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+                        <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(0, 113, 227, 0.1); display: flex; align-items: center; justify-content: center; font-size: 20px;">⚙️</div>
+                        <div>
+                            <h2 style="font-size: 18px; font-weight: 800; margin: 0;">Ajustes de Cuenta & Negocio</h2>
+                            <p style="font-size: 12px; color: var(--text-secondary); margin: 2px 0 0 0;">Gestiona tu perfil y preferencias corporativas</p>
                         </div>
                     </div>
-                </div>
-
-                <!-- RECOMENDACIONES -->
-                <div id="tab-recomendaciones" class="tab-content">
-                    <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
-                        <div class="card zoom-card" style="background: linear-gradient(135deg, #0F172A, #1E293B); color: white; padding: 28px;">
-                            <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">💡 Centro de Recomendaciones & Utilidades</h2>
-                            <p style="font-size: 13px; color: #94A3B8;">Soluciones financieras, herramientas y pasarelas de pago para impulsar tu negocio.</p>
+                    
+                    <div style="padding: 16px; background: rgba(120, 120, 128, 0.06); border-radius: 14px; font-size: 13px; margin-bottom: 20px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <span style="color: var(--text-secondary); font-size: 11px; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 2px;">Cuenta Activa Actual</span>
+                            <strong id="labelUserEmail" style="font-size: 14px; color: var(--text-primary);"></strong>
                         </div>
+                        <span style="background: rgba(52, 211, 153, 0.15); color: #34D399; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 20px;">Conectado</span>
+                    </div>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                            <div class="card zoom-card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0; padding: 24px;">
-                                <div>
-                                    <span style="font-size: 10px; font-weight: 800; background: rgba(16,185,129,0.15); color: #10B981; padding: 4px 10px; border-radius: 8px; text-transform: uppercase;">Tienda Online</span>
-                                    <h3 style="font-size: 16px; font-weight: 800; margin-top: 10px; margin-bottom: 8px;">¿Quieres llevar tu negocio al siguiente nivel creando tu propia tienda virtual?</h3>
-                                    <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">Crea una tienda en línea profesional para vender tus productos por internet de forma automática.</p>
-                                </div>
-                                <a href="https://www.shopify.com/?ref=5242431" target="_blank" class="btn-action" style="text-align: center; text-decoration: none; display: block; background: #059669;">Crear Tienda en Shopify ➔</a>
-                            </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="font-size: 11px; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 6px; text-transform: uppercase;">Nombre de tu Tienda</label>
+                        <input type="text" id="inputNombreEmpresa" class="ios-input" placeholder="Nombre de Tienda">
+                        <button onclick="pedirPasswordCambiarEmpresa()" class="btn-action" style="width: 100%; margin-top: 4px; padding: 12px; font-size: 14px;">Guardar Nombre</button>
+                    </div>
 
-                            <div class="card zoom-card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0; padding: 24px;">
-                                <div>
-                                    <span style="font-size: 10px; font-weight: 800; background: rgba(139,92,246,0.15); color: #8B5CF6; padding: 4px 10px; border-radius: 8px; text-transform: uppercase;">Banca Digital</span>
-                                    <h3 style="font-size: 16px; font-weight: 800; margin-top: 10px; margin-bottom: 8px;">¿Necesitas separar las finanzas de tu negocio sin cuotas de manejo?</h3>
-                                    <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">Abre tu cuenta digital y cajitas de ahorros para organizar el capital de trabajo de tu empresa.</p>
-                                </div>
-                                <a href="https://nu.com.co/mgm/?id=i0M4NIG1ScP8xwHZgcmxiA&msg=e4581&utm_channel=referral&utm_medium=referral&utm_source=mgm" target="_blank" class="btn-action" style="text-align: center; text-decoration: none; display: block; background: #7C3AED;">Abrir Cuenta Nubank ➔</a>
-                            </div>
-                        </div>
+                    <div style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--border-color); padding-top: 20px; margin-bottom: 25px;">
+                        <button onclick="abrirModalCambiarCuenta()" class="ios-btn-secondary" style="width: 100%; padding: 14px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px;">🔄 Cambiar de Cuenta</button>
+                        <button onclick="pedirPasswordEliminarCuentaDispositivo()" style="width: 100%; padding: 14px; background: rgba(239, 68, 68, 0.08); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 14px; font-weight: 700; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px;">🗑️ Eliminar cuenta de este dispositivo</button>
+                        <button onclick="cerrarSesion()" style="width: 100%; padding: 14px; background: rgba(220, 38, 38, 0.12); color: #DC2626; border: none; border-radius: 14px; font-weight: 700; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px;">🚪 Cerrar Sesión</button>
+                    </div>
+
+                    <div style="border-top: 1px solid var(--border-color); padding-top: 22px;">
+                        <h3 style="font-size: 15px; font-weight: 800; margin-bottom: 6px;">💡 Buzón de Ideas, Opiniones & Fallos</h3>
+                        <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">¿Tienes sugerencias de mejora o encontraste algún fallo?</p>
+                        <textarea id="inputIdeaUsuario" placeholder="Escribe tu idea, opinión o reporte de fallo aquí..." class="ios-input" style="height: 80px; resize: none; margin-bottom: 10px; padding: 12px;"></textarea>
+                        <button onclick="enviarIdeaUsuario()" class="btn-action" style="width: auto; padding: 10px 20px; font-size: 13px;">Enviar Comentario</button>
                     </div>
                 </div>
-
-                <!-- PRO+ SUITE -->
-                <div id="tab-pro" class="tab-content">
-                    <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
-                        <div class="card zoom-card" style="background: linear-gradient(135deg, #1E1B4B, #0F172A); color: white; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(245, 158, 11, 0.4); flex-wrap: wrap; gap: 15px;">
-                            <div>
-                                <h2 style="font-size: 20px; font-weight: 800;">⭐ Costify Pro+ Suite Mensual</h2>
-                                <p style="font-size: 12px; color: #94A3B8;" id="textoEstadoPro">Estado actual: Plan Free</p>
-                            </div>
-                            <button onclick="abrirModalCheckout()" class="btn-action" style="background: #F59E0B; color: #000; font-weight: 800;" id="btnAdquirirProText">Adquirir Suscripción</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PANEL MASTER -->
-                <div id="tab-master" class="tab-content">
-                    <div style="max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
-                        <div class="card zoom-card" style="background: linear-gradient(135deg, #05050A, #1E1B4B); color: white; border: 1px solid #F59E0B;">
-                            <h2 style="font-size: 24px; font-weight: 900; color: #F59E0B;">👑 Panel Master & Creador</h2>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- AJUSTES -->
-                <div id="tab-perfil" class="tab-content">
-                    <div class="card zoom-card" style="max-width: 550px; margin: 0 auto; padding: 32px;">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
-                            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(0, 113, 227, 0.1); display: flex; align-items: center; justify-content: center; font-size: 20px;">⚙️</div>
-                            <div>
-                                <h2 style="font-size: 18px; font-weight: 800; margin: 0;">Ajustes de Cuenta & Negocio</h2>
-                            </div>
-                        </div>
-                        <div style="padding: 16px; background: rgba(120, 120, 128, 0.06); border-radius: 14px; font-size: 13px; margin-bottom: 20px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
-                            <div>
-                                <span style="color: var(--text-secondary); font-size: 11px; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 2px;">Cuenta Activa Actual</span>
-                                <strong id="labelUserEmail" style="font-size: 14px; color: var(--text-primary);"></strong>
-                            </div>
-                            <span style="background: rgba(52, 211, 153, 0.15); color: #34D399; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 20px;">Conectado</span>
-                        </div>
-                    </div>
-                </div>
+            </div>
             </main>
 
-            <!-- Espacio Publicitario Adaptativo (Barra lateral derecha en PC, Barra inferior flotante en Celular) -->
-            <aside class="ad-container-responsive">
-                <span style="font-size: 9px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">Publicidad</span>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-7512473512356855"
-                     data-ad-slot="TU_ID_DE_SLOT"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
+            <!-- ANUNCIO VERTICAL DERECHO (PC) -->
+            <aside class="sidebar-ads-pc">
+                <div class="ads-box-vertical">
+                    <span class="ads-label">Publicidad</span>
+                    <div class="ads-placeholder-content">
+                        <p style="font-size: 11px; color: #86868B; text-align: center; font-weight: 600;">Espacio para Anuncio Google AdSense (Vertical)</p>
+                    </div>
+                </div>
             </aside>
+        </div>
+    </div>
+
+    <!-- ANUNCIOS FIJOS INFERIOR (MÓVIL Y ESCRITORIO) -->
+    <div class="ads-bottom-bar-mobile">
+        <div class="ads-bottom-content">
+            <span style="font-size: 9px; color: #86868B; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Publicidad</span>
+            <div style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">Anuncio Inferior AdSense</div>
         </div>
     </div>
 
@@ -501,7 +664,176 @@
     <div id="modalOlvidoPassword" class="modal-overlay">
         <div class="ios-modal-box" style="max-width: 400px; text-align: center;">
             <h3 style="font-size: 18px; font-weight: 900; color: #0071E3; margin-bottom: 10px;">🔑 Recuperar Contraseña</h3>
-            <button onclick="document.getElementById('modalOlvidoPassword').style.display='none'" class="ios-btn-secondary">Cancelar</button>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 15px;">Ingresa tu correo electrónico registrado y te enviaremos un enlace de recuperación.</p>
+            <input type="email" id="inputCorreoOlvido" placeholder="tucorreo@dominio.com" class="ios-input">
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button onclick="document.getElementById('modalOlvidoPassword').style.display='none'" class="ios-btn-secondary" style="flex:1;">Cancelar</button>
+                <button onclick="ejecutarRecuperacionPassword()" class="btn-action" style="flex:1;">Enviar Enlace</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalSelectorMeses" class="modal-overlay">
+        <div class="ios-modal-box" style="max-width: 420px; text-align: center;">
+            <h3 style="font-size: 18px; font-weight: 900; color: #0071E3; margin-bottom: 15px;">📅 Seleccionar Mes</h3>
+            <div id="gridMesesSelector" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;"></div>
+            <button onclick="document.getElementById('modalSelectorMeses').style.display='none'" class="ios-btn-secondary">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="modalSelectorMesesGlobal" class="modal-overlay">
+        <div class="ios-modal-box" style="max-width: 420px; text-align: center;">
+            <h3 style="font-size: 18px; font-weight: 900; color: #34D399; margin-bottom: 15px;">📅 Seleccionar Mes (Global)</h3>
+            <div id="gridMesesSelectorGlobal" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;"></div>
+            <button onclick="document.getElementById('modalSelectorMesesGlobal').style.display='none'" class="ios-btn-secondary">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="modalSelectorMesMaster" class="modal-overlay">
+        <div class="ios-modal-box" style="max-width: 420px; text-align: center;">
+            <h3 style="font-size: 18px; font-weight: 900; color: #F59E0B; margin-bottom: 15px;">📅 Seleccionar Mes (Master)</h3>
+            <div id="gridMesesSelectorMaster" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;"></div>
+            <button onclick="document.getElementById('modalSelectorMesMaster').style.display='none'" class="ios-btn-secondary">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="modalDetalleGlobalCaja" class="modal-overlay">
+        <div class="ios-modal-box" style="max-width: 550px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                <h3 id="modalGlobalTitulo" style="font-size: 18px; font-weight: 900; color: #22C55E;">Detalle Financiero Global</h3>
+                <span id="modalGlobalTotalMonto" style="font-weight: 800; font-size: 14px; color: #22C55E;">$0</span>
+            </div>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 15px;">Transacciones de caja asociadas:</p>
+            <div id="modalGlobalListaMovimientos" class="custom-scroll" style="display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow-y: auto; margin-bottom: 20px;"></div>
+            <button onclick="document.getElementById('modalDetalleGlobalCaja').style.display='none'" class="ios-btn" style="background: #22C55E; color: #000;">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="modalPasswordEmpresa" class="modal-overlay">
+        <div class="ios-modal-box" style="max-width: 400px; text-align: center;">
+            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 10px; color: #0071E3;">🔒 Confirmar Contraseña</h3>
+            <input type="password" id="inputPassCambiarEmpresa" placeholder="Tu contraseña" class="ios-input">
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button onclick="document.getElementById('modalPasswordEmpresa').style.display='none'" class="ios-btn-secondary" style="flex:1;">Cancelar</button>
+                <button onclick="ejecutarGuardarNombreEmpresa()" class="btn-action" style="flex:1;">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalPasswordBorrarUnico" class="modal-overlay">
+        <div class="ios-modal-box" style="max-width: 400px; text-align: center;">
+            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 10px; color: #E11D48;">🔒 Confirmar Contraseña</h3>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 15px;">Ingresa tu contraseña para eliminar esta transacción:</p>
+            <input type="password" id="inputPassBorrarUnico" placeholder="Tu contraseña" class="ios-input">
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button onclick="document.getElementById('modalPasswordBorrarUnico').style.display='none'" class="ios-btn-secondary" style="flex:1;">Cancelar</button>
+                <button onclick="ejecutarBorrarMovimientoUnico()" class="btn-action" style="flex:1; background: #E11D48;">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalFuncionPro" class="modal-overlay">
+        <div class="ios-modal-box" style="text-align: left; max-width: 550px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 id="modalProFuncTitulo" style="font-size: 18px; font-weight: 900; color: #D97706;">Función Pro+</h3>
+                <button onclick="document.getElementById('modalFuncionPro').style.display='none'" style="background:none; border:none; font-size:18px; font-weight:900; cursor:pointer;">✕</button>
+            </div>
+            <div id="modalProFuncCuerpo" style="font-size: 13px; color: inherit; margin-bottom: 20px;"></div>
+            <button onclick="document.getElementById('modalFuncionPro').style.display='none'" class="ios-btn" style="background: #D97706; color: #000;">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="modalCheckout" class="modal-overlay">
+        <div class="ios-modal-box" style="border: 2px solid #F59E0B; text-align: left; max-width: 450px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="font-size: 18px; font-weight: 900; color: #D97706;">⭐ Activar Membresía Pro+</h3>
+                <span id="precioSuscripcionLabel" style="font-weight: 900; font-size: 15px;">$29.900 COP <span style="font-size:11px; color:var(--text-secondary);">/mes</span></span>
+            </div>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 20px;">Paga de forma rápida y segura a través de tu enlace oficial de Wompi.</p>
+            <a id="wompiCheckoutLink" href="https://checkout.wompi.co/l/zlIhQx" target="_blank" class="ios-btn" style="background: #00A859; color: #FFF; text-align: center; display: block; text-decoration: none; padding: 14px; font-weight: 800; border-radius: 14px; margin-bottom: 12px;">Pagar con Wompi (Nequi, Tarjeta, PSE) 🔒</a>
+            <button onclick="document.getElementById('modalCheckout').style.display='none'" class="ios-btn-secondary">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="modalLogo" class="modal-overlay">
+        <div class="ios-modal-box" style="text-align: center;">
+            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 15px;">Logotipo Oficial Costify 🏪</h3>
+            <div style="display: flex; justify-content: center; margin-bottom: 15px;">
+                <img src="logo.png" alt="Logo App" style="width: 100px; height: 100px; border-radius: 20px; object-fit: cover; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
+            </div>
+            <button onclick="document.getElementById('modalLogo').style.display='none'" class="ios-btn-secondary">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="modalCambiarCuenta" class="modal-overlay">
+        <div class="ios-modal-box">
+            <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 10px; color: #0071E3;">Cambiar de Cuenta</h3>
+            <div id="listaCuentasEstiloIOS" class="custom-scroll" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; max-height: 160px; overflow-y: auto;"></div>
+            <button onclick="document.getElementById('modalCambiarCuenta').style.display='none'" class="ios-btn-secondary">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="modalPasswordBorrar" class="modal-overlay">
+        <div class="ios-modal-box" style="max-width: 400px; text-align: center;">
+            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 10px; color: #E11D48;">🔒 Confirmar Contraseña</h3>
+            <input type="password" id="inputPassBorrarHistorial" placeholder="Tu contraseña" class="ios-input">
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button onclick="document.getElementById('modalPasswordBorrar').style.display='none'" class="ios-btn-secondary" style="flex:1;">Cancelar</button>
+                <button onclick="ejecutarBorrarHistorial()" class="btn-action" style="flex:1; background: #E11D48;">Confirmar Borrado</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalPasswordEliminarCuenta" class="modal-overlay">
+        <div class="ios-modal-box" style="max-width: 400px; text-align: center;">
+            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 10px; color: #EF4444;">🗑️ Eliminar Cuenta</h3>
+            <input type="password" id="inputPassEliminarCuenta" placeholder="Tu contraseña" class="ios-input">
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button onclick="document.getElementById('modalPasswordEliminarCuenta').style.display='none'" class="ios-btn-secondary" style="flex:1;">Cancelar</button>
+                <button onclick="ejecutarEliminarCuentaDispositivo()" class="btn-action" style="flex:1; background: #EF4444;">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalDetalleMasterExclusivo" class="modal-overlay">
+        <div class="ios-modal-box" style="max-width: 650px; width: 95%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="font-size: 18px; font-weight: 900; color: #F59E0B;">👑 Reporte Mundial & Analítica Master</h3>
+                <button onclick="document.getElementById('modalDetalleMasterExclusivo').style.display='none'" style="background:none; border:none; font-size:18px; font-weight:900; cursor:pointer;">✕</button>
+            </div>
+            <div style="background: rgba(245,158,11,0.08); padding: 14px; border-radius: 14px; margin-bottom: 15px; font-size: 13px; display: flex; flex-direction: column; gap: 8px;">
+                <div style="display:flex; justify-space-between;"><span>Ganancias Totales Pro+:</span> <strong id="modalMasterGanadoTotal" style="color: #34C759;">$0</strong></div>
+                <div style="display:flex; justify-space-between;"><span>Total Usuarios Pro+:</span> <strong id="modalMasterProCount" style="color: #F59E0B;">0</strong></div>
+                <div style="display:flex; justify-space-between;"><span>Total Usuarios Registrados:</span> <strong id="modalMasterTotalCuentas" style="color: #0ECB81;">0</strong></div>
+            </div>
+            <button onclick="document.getElementById('modalDetalleMasterExclusivo').style.display='none'" class="ios-btn" style="background:#F59E0B; color:#000;">Cerrar Reporte</button>
+        </div>
+    </div>
+
+    <div id="modalProducto" class="modal-overlay">
+        <div class="ios-modal-box">
+            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 15px;">Nuevo Producto</h3>
+            <input type="text" id="nuevoNombre" placeholder="Nombre" class="ios-input">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="number" id="nuevoPrecio" placeholder="Precio ($)" class="ios-input">
+                <input type="number" id="nuevoStock" placeholder="Stock inicial" class="ios-input">
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button onclick="document.getElementById('modalProducto').style.display='none'" class="ios-btn-secondary" style="flex:1;">Cancelar</button>
+                <button onclick="guardarNuevoProducto()" class="ios-btn" style="flex:1;">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalMovimiento" class="modal-overlay">
+        <div class="ios-modal-box">
+            <h3 id="modalMovTitulo" style="font-size: 16px; font-weight: 800; margin-bottom: 15px;">Registrar Transacción</h3>
+            <input type="text" id="movDesc" placeholder="Descripción" class="ios-input">
+            <input type="number" id="movMonto" placeholder="Monto ($)" class="ios-input">
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button onclick="document.getElementById('modalMovimiento').style.display='none'" class="ios-btn-secondary" style="flex:1;">Cancelar</button>
+                <button onclick="guardarMovimiento()" class="btn-action" style="flex:1;">Registrar</button>
+            </div>
         </div>
     </div>
 
