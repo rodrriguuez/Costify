@@ -54,6 +54,7 @@ body.dark { background-color: #05050A; color: #F8FAFC; }
 .interactive-hint { font-size: 11px; font-weight: 700; color: #38BDF8; display: inline-block; margin-top: 6px; }
 
 .landing-footer { max-width: 1200px; width: 100%; margin: 40px auto 20px; text-align: center; font-size: 12px; color: #64748B; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 20px; }
+.landing-footer a:hover { color: #FFF !important; }
 
 @media (max-width: 900px) {
     .landing-hero-content { grid-template-columns: 1fr; gap: 30px; text-align: center; }
@@ -200,7 +201,4 @@ body.dark .ios-modal-box { background: rgba(20, 24, 40, 0.92); border-color: rgb
 .pro-widget-card:hover { transform: translateY(-8px) scale(1.025); border-color: var(--widget-accent, #F59E0B); box-shadow: 0 22px 40px -10px rgba(245, 158, 11, 0.25); }
 .pro-widget-card:hover::before { width: 10px; }
 .pro-widget-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.pro-widget-title { font-weight: 800; font-size: 17px; color: #FFF; display: flex; align-items: center; gap: 10px; }
-.pro-widget-badge { background: rgba(245, 158, 11, 0.2); color: #F59E0B; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-.pro-widget-desc { font-size: 13px; color: #94A3B8; line-height: 1.5; }
-.pro-widget-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 12px; color: var(--widget-accent, #F59E0B); font-weight: 700; }
+.pro-widget-title { font-weight: 800; font-size:
