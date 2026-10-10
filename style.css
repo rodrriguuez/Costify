@@ -2,7 +2,7 @@
 body { background-color: #F8FAFC; color: #0F172A; min-height: 100vh; padding-bottom: 90px; transition: background 0.3s, color 0.3s; overflow-x: hidden; }
 body.dark { background-color: #05050A; color: #F8FAFC; }
 
-/* --- ESTILOS DE LA LANDING PAGE DE PRESENTACIÓN --- */
+/* --- ESTILOS DE LA LANDING PAGE DE PRESENTACIÓN PRO --- */
 .landing-hero-container {
     position: fixed; inset: 0; background: linear-gradient(135deg, #05050A 0%, #0F172A 50%, #1E1B4B 100%);
     z-index: 1000; overflow-y: auto; color: #FFF; padding: 20px 40px; display: flex; flex-direction: column; justify-content: space-between;
@@ -26,7 +26,7 @@ body.dark { background-color: #05050A; color: #F8FAFC; }
 .landing-badge {
     background: rgba(139, 92, 246, 0.15); color: #A78BFA; font-size: 12px; font-weight: 800; padding: 6px 14px; border-radius: 20px; display: inline-block; margin-bottom: 20px; border: 1px solid rgba(139,92,246,0.3);
 }
-.landing-title { font-size: 44px; font-weight: 900; line-height: 1.15; margin-bottom: 16px; letter-spacing: -1px; }
+.landing-title { font-size: 42px; font-weight: 900; line-height: 1.15; margin-bottom: 16px; letter-spacing: -1px; }
 .landing-subtitle { font-size: 15px; color: #94A3B8; line-height: 1.6; margin-bottom: 30px; }
 .landing-cta-group { display: flex; gap: 14px; flex-wrap: wrap; }
 .landing-main-btn { background: linear-gradient(135deg, #0071E3, #3B82F6); color: #FFF; border: none; padding: 14px 28px; border-radius: 14px; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 10px 25px rgba(0,113,227,0.4); transition: transform 0.2s; }
@@ -36,20 +36,22 @@ body.dark { background-color: #05050A; color: #F8FAFC; }
 
 .landing-hero-card-preview { display: flex; justify-content: center; }
 .landing-mockup-card {
-    background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.12); padding: 30px; border-radius: 28px; width: 100%; max-width: 380px; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    background: rgba(30, 41, 59, 0.75); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.12); padding: 30px; border-radius: 28px; width: 100%; max-width: 380px; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
 }
 
-.landing-features-section { max-width: 1200px; width: 100%; margin: 40px auto; text-align: center; }
-.landing-section-title { font-size: 28px; font-weight: 900; margin-bottom: 10px; }
+.landing-features-section { max-width: 1200px; width: 100%; margin: 50px auto; text-align: center; }
+.landing-section-title { font-size: 28px; font-weight: 900; margin-bottom: 10px; color: #FFF; }
 .landing-section-sub { font-size: 14px; color: #94A3B8; margin-bottom: 40px; }
-.landing-features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; text-align: left; }
+.landing-features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: left; }
 .landing-feature-box {
-    background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 24px; border-radius: 20px; transition: transform 0.2s;
+    background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 26px; border-radius: 22px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden;
 }
-.landing-feature-box:hover { transform: translateY(-5px); border-color: rgba(0,113,227,0.4); }
-.landing-feature-icon { font-size: 28px; margin-bottom: 12px; }
-.landing-feature-box h3 { font-size: 16px; font-weight: 800; margin-bottom: 8px; color: #FFF; }
-.landing-feature-box p { font-size: 12px; color: #94A3B8; line-height: 1.5; }
+.landing-feature-box:hover { transform: translateY(-6px); border-color: rgba(0,113,227,0.5); background: rgba(255,255,255,0.07); box-shadow: 0 15px 30px rgba(0,0,0,0.4); }
+.landing-feature-icon { font-size: 30px; margin-bottom: 14px; }
+.landing-feature-box h3 { font-size: 17px; font-weight: 800; margin-bottom: 8px; color: #FFF; }
+.landing-feature-box p { font-size: 13px; color: #94A3B8; line-height: 1.5; margin-bottom: 12px; }
+.interactive-box { cursor: pointer; }
+.interactive-hint { font-size: 11px; font-weight: 700; color: #38BDF8; display: inline-block; margin-top: 6px; }
 
 .landing-footer { max-width: 1200px; width: 100%; margin: 40px auto 20px; text-align: center; font-size: 12px; color: #64748B; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 20px; }
 
