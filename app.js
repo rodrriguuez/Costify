@@ -44,6 +44,15 @@ let carritoItems = [];
 let chartSemanalInstance = null;
 let chartGlobalInstance = null;
 let chartMasterInstance = null;
+let loginBloqueadoTemporalmente = false;
+
+// --- FUNCIÓN DE SANITIZACIÓN (EVITAR XSS) ---
+function escaparHTML(str) {
+    if (!str) return '';
+    return str.replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+    );
+}
 
 // --- FUNCIONES DE NAVEGACIÓN PARA LA LANDING PAGE ---
 function irALoginDesdeLanding() {
@@ -157,6 +166,16 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     renderizarCuentasGuardadasLogin();
+
+    // --- OBSERVADOR DE SESIÓN DE FIREBASE (AUTH STATE CHANGED) ---
+    auth.onAuthStateChanged((user) => {
+        if (user && user.email) {
+            // Si Firebase detecta sesión activa, carga los datos y salta directo al panel
+            if (!correoUsuario) {
+                cargarDatosDesdeNube(user.email);
+            }
+        }
+    });
     
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('status') === 'APPROVED' || urlParams.get('reference')?.startsWith('pro_')) {
@@ -248,7 +267,8 @@ function guardarDatosSesionActual() {
     };
 
     db.collection("usuarios").doc(correoUsuario).set(datosActualizados, { merge: true }).catch((error) => {
-        console.error("Error al sincronizar: ", error);
+        console.error("Error al sincronizar con Firebase: ", error);
+        showToast('⚠️ Sin conexión: Los cambios se guardaron localmente pero no en la nube.');
     });
 }
 
@@ -354,6 +374,8 @@ function cargarDatosDesdeNube(email) {
             switchTab('inicio');
             iniciarApp("¡Conectado a la nube de Costify!");
         }
+    }).catch((error) => {
+        showToast('❌ Error al cargar datos: Comprueba tu conexión a internet.');
     });
 }
 
@@ -369,14 +391,37 @@ function mostrarPantallaLogin() {
 }
 
 function ejecutarLogin() {
+    if (loginBloqueadoTemporalmente) return;
+
     let email = document.getElementById('loginEmail').value.trim();
     let pass = document.getElementById('loginPassword').value.trim();
     if(!email || !pass) { showToast('⚠️ Ingresa correo y contraseña válidos'); return; }
+
+    const btnLogin = document.querySelector('#authScreenLogin .ios-btn');
 
     auth.signInWithEmailAndPassword(email, pass).then(() => {
         cargarDatosDesdeNube(email);
     }).catch(() => {
         showToast('❌ Correo o contraseña incorrectos');
+        
+        if (btnLogin) {
+            loginBloqueadoTemporalmente = true;
+            let segundosRestantes = 5;
+            btnLogin.style.opacity = '0.6';
+            btnLogin.style.cursor = 'not-allowed';
+            
+            let intervalo = setInterval(() => {
+                btnLogin.innerText = `Espera ${segundosRestantes}s...`;
+                segundosRestantes--;
+                if (segundosRestantes < 0) {
+                    clearInterval(intervalo);
+                    loginBloqueadoTemporalmente = false;
+                    btnLogin.innerText = 'Iniciar Sesión';
+                    btnLogin.style.opacity = '1';
+                    btnLogin.style.cursor = 'pointer';
+                }
+            }, 1000);
+        }
     });
 }
 
@@ -402,6 +447,8 @@ function ejecutarRegistro() {
         db.collection("usuarios").doc(email).set(datosIniciales).then(() => {
             showToast('✨ ¡Cuenta creada en la nube con éxito!');
             mostrarPantallaLogin();
+        }).catch((error) => {
+            showToast('⚠️ Error al guardar datos iniciales: ' + error.message);
         });
     }).catch((error) => {
         showToast('⚠️ Error al registrar: ' + error.message);
@@ -455,8 +502,8 @@ function guardarDeudorNuevo() {
     let monto = parseFloat(document.getElementById('deudorMontoInput').value);
     let fechaLimite = document.getElementById('deudorFechaInput').value;
 
-    if(!nombre || isNaN(monto) || !fechaLimite) {
-        showToast('⚠️ Ingresa nombre, monto y fecha límite de pago');
+    if(!nombre || isNaN(monto) || monto <= 0 || !fechaLimite) {
+        showToast('⚠️ Ingresa nombre, monto válido y fecha límite');
         return;
     }
 
@@ -500,7 +547,7 @@ function iniciarMicromonoVozReal() {
         let numeros = texto.match(/\d+/g);
         let monto = numeros ? parseInt(numeros.join('')) : 0;
 
-        if(monto > 0) {
+        if(monto > 0 && monto <= 1000000000) {
             let tipo = texto.includes('gasto') || texto.includes('pagué') || texto.includes('compré') ? 'gasto' : 'venta';
             let fechaHoy = new Date().toISOString().split('T')[0];
             movimientos.unshift({ id: Date.now(), desc: `Voz: "${texto}"`, monto, tipo, fecha: fechaHoy });
@@ -510,7 +557,7 @@ function iniciarMicromonoVozReal() {
             showToast(`✅ Voz procesada: ${tipo === 'venta' ? 'Venta' : 'Gasto'} de ${monedaSimbolo}${monto.toLocaleString()}`);
             document.getElementById('modalFuncionPro').style.display = 'none';
         } else {
-            showToast(`⚠️ No se reconoció un monto en: "${texto}". Intenta de nuevo.`);
+            showToast(`⚠️ No se reconoció un monto válido en: "${texto}". Intenta de nuevo.`);
         }
     };
 
@@ -613,7 +660,7 @@ function exportarReporteExcel() {
 
 function guardarTopePresupuesto() {
     let tope = parseFloat(document.getElementById('inputTopeGasto').value);
-    if(isNaN(tope) || tope <= 0) { showToast('⚠️ Ingresa un tope válido'); return; }
+    if(isNaN(tope) || tope <= 0 || tope > 1000000000) { showToast('⚠️ Ingresa un tope válido (mayor a 0 y menor a 1,000,000,000)'); return; }
     presupuestoLimite = tope;
     guardarDatosSesionActual();
     verificarTopePresupuesto();
@@ -700,7 +747,7 @@ function abrirFuncionPro(idFn) {
         <p>Registra deudas pendientes con fechas límite. Te avisaremos cuando llegue el día de cobro.</p><br>
         <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
             <input type="text" id="deudorNombreInput" placeholder="Nombre de la persona o empresa" class="ios-input" style="margin-bottom:0;">
-            <input type="number" id="deudorMontoInput" placeholder="Monto adeudado ($)" class="ios-input" style="margin-bottom:0;">
+            <input type="number" id="deudorMontoInput" placeholder="Monto adeudado ($)" class="ios-input" style="margin-bottom:0;" min="1">
             <label style="font-size:11px; color:#86868B;">Fecha límite de pago:</label>
             <input type="date" id="deudorFechaInput" class="ios-input" style="margin-bottom:0;">
             <button onclick="guardarDeudorNuevo()" class="btn-action">Guardar Deudor</button>
@@ -720,7 +767,7 @@ function abrirFuncionPro(idFn) {
         1: `<p>Dicta tus transacciones por voz. El sistema usa tu micrófono para escuchar y registrar todo automáticamente.</p><br><button id="btnMicVozReal" class="btn-action" style="background:#6366F1; padding:14px; font-size:14px;" onclick="iniciarMicromonoVozReal()">🎙️ Activar Micrófono Real</button>`,
         2: deudoresHtml,
         3: `<p>Descarga informes contables empresariales super profesionales.</p><br><div style="display:flex; gap:10px;"><button class="btn-action" style="flex:1; background:#10B981;" onclick="exportarReporteExcel()">📊 Descargar Excel</button><button class="btn-action" style="flex:1; background:#EF4444;" onclick="exportarReportePDF()">📄 Descargar PDF</button></div>`,
-        4: `<p>Define el tope máximo de tus gastos mensuales conectados a la caja.</p><br><input type="number" id="inputTopeGasto" value="${presupuestoLimite}" class="ios-input"><button class="btn-action" style="margin-top:10px;" onclick="guardarTopePresupuesto()">Establecer Tope</button>`,
+        4: `<p>Define el tope máximo de tus gastos mensuales conectados a la caja.</p><br><input type="number" id="inputTopeGasto" value="${presupuestoLimite}" class="ios-input" min="1"><button class="btn-action" style="margin-top:10px;" onclick="guardarTopePresupuesto()">Establecer Tope</button>`,
         5: `<p>Genera etiquetas con códigos de barras para tu inventario.</p><br><div style="background:#FFF; padding:15px; border-radius:10px; text-align:center; color:#000; font-family:monospace; font-weight:bold; font-size:18px;">||| | |||| || | ||</div><br><button class="btn-action" onclick="showToast('🖨️ Etiquetas listas para imprimir');">Imprimir Etiquetas</button>`,
         6: calcularProyeccionAnualReal(),
         7: `<p>Tus datos están respaldados en servidores seguros de Google Cloud.</p><br><button class="btn-action" style="background:#8B5CF6;" onclick="showToast('☁️ Respaldo en la nube verificado.');">Verificar Respaldo</button>`
@@ -1341,11 +1388,13 @@ function abrirModalLogo() { document.getElementById('modalLogo').style.display =
 
 function cerrarSesion() {
     guardarDatosSesionActual();
-    correoUsuario = "";
-    document.getElementById('mainAppContainer').classList.add('hidden');
-    document.getElementById('authScreenLogin').classList.remove('hidden');
-    renderizarCuentasGuardadasLogin();
-    showToast('👋 Sesión cerrada');
+    auth.signOut().then(() => {
+        correoUsuario = "";
+        document.getElementById('mainAppContainer').classList.add('hidden');
+        document.getElementById('authScreenLogin').classList.remove('hidden');
+        renderizarCuentasGuardadasLogin();
+        showToast('👋 Sesión cerrada');
+    });
 }
 
 function switchTab(tabId) {
@@ -1379,7 +1428,11 @@ function calcularPrecio() {
     let nombre = document.getElementById('calcName').value.trim();
     let costo = parseFloat(document.getElementById('calcCost').value);
     let margen = parseFloat(document.getElementById('calcMargin').value);
-    if(!nombre || isNaN(costo) || isNaN(margen)) { showToast('⚠️ Ingresa datos válidos'); return; }
+    
+    if(!nombre || isNaN(costo) || costo <= 0 || costo > 1000000000 || isNaN(margen) || margen < 0 || margen > 1000) { 
+        showToast('⚠️ Ingresa un costo válido (>0) y un margen adecuado (0-1000%)'); 
+        return; 
+    }
     
     let precioSugerido = costo * (1 + (margen / 100));
     ultimoPrecioCalculado = Math.round(precioSugerido);
@@ -1439,10 +1492,14 @@ function guardarEnInventarioDesdeCalc() {
 function abrirModalProducto() { document.getElementById('modalProducto').style.display = 'flex'; }
 
 function guardarNuevoProducto() {
-    let nombre = document.getElementById('nuevoNombre').value.trim();
+    let nombre = escaparHTML(document.getElementById('nuevoNombre').value.trim()); // Sanitizado
     let precio = parseFloat(document.getElementById('nuevoPrecio').value);
     let stock = parseInt(document.getElementById('nuevoStock').value);
-    if(!nombre || isNaN(precio) || isNaN(stock)) { showToast('⚠️ Completa todos los campos'); return; }
+    
+    if(!nombre || isNaN(precio) || precio <= 0 || precio > 1000000000 || isNaN(stock) || stock < 0 || stock > 1000000) { 
+        showToast('⚠️ Ingresa un precio válido (>0) y un stock lógico (0-1,000,000)'); 
+        return; 
+    }
 
     productos.push({ id: Date.now(), nombre, precio, stock });
     guardarDatosSesionActual();
@@ -1493,7 +1550,12 @@ function renderInventario() {
 function cambiarStockProducto(id, cambio) {
     let prod = productos.find(p => p.id === id);
     if(prod) {
-        prod.stock = Math.max(0, prod.stock + cambio);
+        let nuevoStock = prod.stock + cambio;
+        if (nuevoStock < 0) {
+            showToast('⚠️ El stock no puede ser menor a 0');
+            return;
+        }
+        prod.stock = nuevoStock;
         guardarDatosSesionActual();
         renderInventario();
         showToast(`📦 Stock actualizado: ${prod.nombre} (${prod.stock})`);
@@ -1515,9 +1577,13 @@ function abrirModalMovimiento(tipo) {
 }
 
 function guardarMovimiento() {
-    let desc = document.getElementById('movDesc').value.trim();
+    let desc = escaparHTML(document.getElementById('movDesc').value.trim()); // Sanitizado
     let monto = parseFloat(document.getElementById('movMonto').value);
-    if(!desc || isNaN(monto)) { showToast('⚠️ Ingresa descripción y monto'); return; }
+    
+    if(!desc || isNaN(monto) || monto <= 0 || monto > 1000000000) { 
+        showToast('⚠️ Ingresa un monto válido mayor a 0 y menor a 1,000,000,000'); 
+        return; 
+    }
 
     let fechaHoy = new Date().toISOString().split('T')[0];
     movimientos.unshift({ id: Date.now(), desc, monto, tipo: tipoMovimientoActual, fecha: fechaHoy });
@@ -1650,13 +1716,18 @@ function agregarProductoAlCarritoConCantidad() {
     let prodId = parseInt(select.value);
     let cantidadAdicionar = parseInt(inputCant.value) || 1;
 
-    if(isNaN(prodId)) {
-        showToast('⚠️ Selecciona un producto válido');
+    if(isNaN(prodId) || cantidadAdicionar <= 0 || cantidadAdicionar > 10000) {
+        showToast('⚠️ Selecciona un producto y una cantidad válida (1-10,000)');
         return;
     }
 
     let productoEncontrado = productos.find(p => p.id === prodId);
     if(!productoEncontrado) return;
+
+    if (productoEncontrado.stock < cantidadAdicionar) {
+        showToast(`⚠️ Stock insuficiente. Stock disponible: ${productoEncontrado.stock}`);
+        return;
+    }
 
     let itemExistente = carritoItems.find(i => i.id === prodId);
     if(itemExistente) {
@@ -1681,9 +1752,11 @@ function agregarProductoAlCarritoConCantidad() {
 function cambiarCantidadItemCarrito(id, cambio) {
     let item = carritoItems.find(i => i.id === id);
     if(item) {
-        item.cantidad += cambio;
-        if(item.cantidad <= 0) {
+        let nuevaCant = item.cantidad + cambio;
+        if(nuevaCant <= 0) {
             carritoItems = carritoItems.filter(i => i.id !== id);
+        } else {
+            item.cantidad = nuevaCant;
         }
     }
     renderizarCarritoItems();
