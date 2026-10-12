@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Costify - Control Financiero e Inventario Comercial</title>
+    
+    <!-- Metadatos de SEO e Indexación para Google Search Console -->
+    <title>Costify - Software de Control Financiero, Inventario y Punto de Venta para Emprendedores</title>
+    <meta name="description" content="Descubre Costify, la plataforma integral en la nube diseñada para emprendedores y pequeños negocios. Administra inventario en tiempo real, calcula márgenes de ganancia con Calculcostos, procesa ventas con el POS y genera reportes profesionales sin complicaciones.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://tu-proyecto.vercel.app/">
+    <meta name="google-site-verification" content="VL8IEVvuQ3OAU-kKwdXPgOT2UC0HtCNqxyEfSjWOKDg" />
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)">
@@ -13,13 +19,13 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <link rel="stylesheet" href="style.css?v=1.0.6">
+    <link rel="stylesheet" href="style.css?v=1.0.7">
 </head>
 <body>
 
     <div id="toast"><span id="toastMsg">Acción realizada</span></div>
 
-    <!-- SCRIPT DE MODALES DIRECTO EN EL HEAD/INICIO PARA EVITAR BLOQUEOS -->
+    <!-- SCRIPT DE MODALES DE INFORMACIÓN Y LEGALES -->
     <script>
         function abrirModalDetalleBeneficio(tipo) {
             const modal = document.getElementById('modalLegal');
@@ -27,46 +33,46 @@
             const cuerpo = document.getElementById('modalLegalCuerpo');
 
             if (tipo === 'inventario') {
-                titulo.innerText = "📦 Control de Inventario y Stock";
+                titulo.innerText = "📦 Control de Inventario y Stock para Emprendedores";
                 cuerpo.innerHTML = `
-                    <p style="margin-bottom: 10px;"><strong>Monitoreo en tiempo real:</strong> Mantén el control absoluto de cada artículo que entra y sale de tu negocio.</p>
-                    <p style="margin-bottom: 10px;"><strong>Alertas automáticas:</strong> Recibe avisos instantáneos cuando las existencias estén bajas para evitar quiebres de stock.</p>
-                    <p><strong>Organización comercial:</strong> Categoriza tus productos con precios de costo y venta sincronizados directamente con el punto de venta.</p>
+                    <p style="margin-bottom: 12px;"><strong>Gestión operativa en tiempo real:</strong> Mantener el control absoluto de las existencias es vital para cualquier negocio comercial. Costify te permite registrar cada entrada y salida de mercancía de manera automatizada.</p>
+                    <p style="margin-bottom: 12px;"><strong>Alertas preventivas de stock:</strong> Evita el desabastecimiento de tus productos más vendidos gracias al sistema de notificaciones de inventario bajo.</p>
+                    <p><strong>Organización corporativa:</strong> Cada artículo se vincula directamente con los precios de costo y venta, facilitando las operaciones del punto de venta diario.</p>
                 `;
             } else if (tipo === 'calculadora') {
-                titulo.innerText = "🧮 Calculcostos Pro (Margen Ideal)";
+                titulo.innerText = "🧮 Calculcostos Pro: Margen de Ganancia Ideal";
                 cuerpo.innerHTML = `
-                    <p style="margin-bottom: 10px;"><strong>Cálculo inteligente de precios:</strong> Olvídate de adivinar cuánto cobrar. Ingresa el costo de producción y tu porcentaje de ganancia deseado.</p>
-                    <p style="margin-bottom: 10px;"><strong>Margen exacto:</strong> El sistema calcula automáticamente el precio de venta sugerido y tu ganancia neta estimada por unidad.</p>
-                    <p><strong>Historial de costos:</strong> Guarda tus cálculos recientes y transfiérelos al inventario con un solo toque.</p>
+                    <p style="margin-bottom: 12px;"><strong>Optimización de precios:</strong> Fijar precios de venta de forma intuitiva suele generar pérdidas financieras. Calculcostos Pro analiza los costos de producción y aplica el porcentaje de ganancia exacto.</p>
+                    <p style="margin-bottom: 12px;"><strong>Rentabilidad neta clara:</strong> Conoce de antemano el margen de utilidad por unidad comercializada para garantizar la sostenibilidad financiera de tu emprendimiento.</p>
+                    <p><strong>Historial automatizado:</strong> Guarda tus cálculos anteriores y transfiérelos al inventario con un solo toque.</p>
                 `;
             } else if (tipo === 'pos') {
-                titulo.innerText = "🛒 Punto de Venta (POS) & Tickets PDF";
+                titulo.innerText = "🛒 Punto de Venta (POS) y Tickets en PDF";
                 cuerpo.innerHTML = `
-                    <p style="margin-bottom: 10px;"><strong>Carritos de venta rápidos:</strong> Selecciona productos del inventario, ajusta cantidades y procesa cobros ágilmente.</p>
-                    <p style="margin-bottom: 10px;"><strong>Tickets profesionales en PDF:</strong> Genera comprobantes de venta listos para descargar o compartir con tus clientes.</p>
-                    <p><strong>Sincronización con caja:</strong> Cada venta procesada en el POS actualiza de forma automática el balance general de tu empresa.</p>
+                    <p style="margin-bottom: 12px;"><strong>Transacciones comerciales ágiles:</strong> Crea carritos de compra rápidos seleccionando artículos directamente desde tu base de datos de inventario.</p>
+                    <p style="margin-bottom: 12px;"><strong>Comprobantes profesionales:</strong> Genera y descarga tickets de venta en formato PDF con la identidad corporativa de tu negocio para entregar a tus clientes.</p>
+                    <p><strong>Sincronización contable:</strong> Cada cobro procesado actualiza instantáneamente los ingresos totales en la caja diaria.</p>
                 `;
             } else if (tipo === 'voz') {
-                titulo.innerText = "🎙️ Asistente IA por Voz";
+                titulo.innerText = "🎙️ Asistente de Inteligencia Artificial por Voz";
                 cuerpo.innerHTML = `
-                    <p style="margin-bottom: 10px;"><strong>Dictado natural:</strong> Registra tus transacciones de caja hablándole directamente a la aplicación mediante reconocimiento de voz.</p>
-                    <p style="margin-bottom: 10px;"><strong>Reconocimiento inteligente:</strong> El sistema detecta automáticamente si se trata de un ingreso (venta) o un egreso (gasto).</p>
-                    <p><strong>Agilidad operativa:</strong> Ahorra tiempo valioso gestionando tus números diarios sin necesidad de escribir en el teclado.</p>
+                    <p style="margin-bottom: 12px;"><strong>Registro por dictado natural:</strong> Optimiza tu tiempo administrativo dictando transacciones financieras de manera hablada mediante el micrófono integrado.</p>
+                    <p style="margin-bottom: 12px;"><strong>Clasificación automática:</strong> El asistente reconoce de forma inteligente si se trata de un ingreso por ventas o un egreso operativo.</p>
+                    <p><strong>Agilidad operativa diaria:</strong> Ideal para emprendedores que necesitan registrar movimientos rápidamente sin apartar la vista de sus clientes.</p>
                 `;
             } else if (tipo === 'reportes') {
-                titulo.innerText = "📊 Reportes Ejecutivos Contables";
+                titulo.innerText = "📊 Reportes Ejecutivos Contables y Financieros";
                 cuerpo.innerHTML = `
-                    <p style="margin-bottom: 10px;"><strong>Informes detallados:</strong> Exporta toda la actividad contable de tu negocio lista para análisis o presentación con tu contador.</p>
-                    <p style="margin-bottom: 10px;"><strong>Formatos profesionales:</strong> Descarga tus reportes en hojas de cálculo Excel (.csv) y documentos corporativos en PDF.</p>
-                    <p><strong>Filtros por fecha:</strong> Consulta el rendimiento semanal, mensual o anual con gráficos dinámicos en tiempo real.</p>
+                    <p style="margin-bottom: 12px;"><strong>Informes detallados para la toma de decisiones:</strong> Analiza el rendimiento financiero de tu empresa mediante gráficos dinámicos semanales, mensuales o anuales.</p>
+                    <p style="margin-bottom: 12px;"><strong>Exportación profesional:</strong> Descarga tus registros en hojas de cálculo Excel (.csv) y reportes en PDF listos para presentar ante socios o contadores.</p>
+                    <p><strong>Transparencia empresarial:</strong> Mantén el historial de transacciones ordenado y accesible en todo momento.</p>
                 `;
             } else if (tipo === 'nube') {
-                titulo.innerText = "☁️ Respaldo Seguro en la Nube";
+                titulo.innerText = "☁️ Respaldo Seguro de Datos en la Nube";
                 cuerpo.innerHTML = `
-                    <p style="margin-bottom: 10px;"><strong>Sincronización con Firebase:</strong> Tus datos de inventario, caja y perfil están respaldados de forma segura en servidores cloud.</p>
-                    <p style="margin-bottom: 10px;"><strong>Acceso multidispositivo:</strong> Inicia sesión desde tu celular, tablet o computadora y encuentra tu información siempre actualizada.</p>
-                    <p><strong>Protección de datos:</strong> Máxima fiabilidad y encriptación para garantizar que la información de tu empresa nunca se pierda.</p>
+                    <p style="margin-bottom: 12px;"><strong>Sincronización en tiempo real con Firebase:</strong> Toda la información de tu inventario, caja y perfil de empresa se almacena de forma cifrada y segura.</p>
+                    <p style="margin-bottom: 12px;"><strong>Acceso multiplataforma:</strong> Administra tu negocio desde tu teléfono celular, tablet o computadora ingresando con tus credenciales.</p>
+                    <p><strong>Protección y continuidad:</strong> Garantiza que la información financiera de tu emprendimiento esté protegida contra pérdidas locales.</p>
                 `;
             }
             if (modal) modal.style.display = 'flex';
@@ -80,24 +86,24 @@
             if (tipo === 'privacidad') {
                 titulo.innerText = "Política de Privacidad";
                 cuerpo.innerHTML = `
-                    <p style="margin-bottom: 10px;"><strong>1. Información que recopilamos:</strong> En Costify recopilamos información básica de registro (correo electrónico y nombre de la empresa) necesaria para gestionar tu cuenta corporativa y sincronizar tus datos de inventario y caja mediante Firebase.</p>
-                    <p style="margin-bottom: 10px;"><strong>2. Uso de la información:</strong> Los datos son utilizados exclusivamente para proveer, mantener y mejorar nuestros servicios de control financiero e inventario.</p>
-                    <p style="margin-bottom: 10px;"><strong>3. Cookies y Publicidad:</strong> Este sitio web utiliza servicios de terceros como Google AdSense para mostrar anuncios. Google puede utilizar cookies (como la cookie DART) para mostrar anuncios basados en las visitas de los usuarios a este y otros sitios web en Internet.</p>
-                    <p><strong>4. Seguridad:</strong> Implementamos medidas de seguridad estándar en la industria a través de Google Cloud y Firebase para proteger la información de nuestros usuarios.</p>
+                    <p style="margin-bottom: 10px;"><strong>1. Información recopilada:</strong> En Costify recopilamos datos básicos de cuenta (nombre de la empresa y correo electrónico) estrictamente necesarios para la gestión corporativa y sincronización de inventarios.</p>
+                    <p style="margin-bottom: 10px;"><strong>2. Uso de los datos:</strong> La información se utiliza exclusivamente para proveer, mantener y optimizar los servicios de control financiero e inventario.</p>
+                    <p style="margin-bottom: 10px;"><strong>3. Publicidad y Cookies:</strong> Este sitio web integra servicios publicitarios de terceros, como Google AdSense, los cuales pueden utilizar cookies para mostrar anuncios personalizados basados en las visitas de los usuarios.</p>
+                    <p><strong>4. Seguridad de la información:</strong> Implementamos protocolos estándar de seguridad mediante Google Cloud y Firebase para salvaguardar los registros de nuestros usuarios.</p>
                 `;
             } else if (tipo === 'terminos') {
                 titulo.innerText = "Términos y Condiciones";
                 cuerpo.innerHTML = `
-                    <p style="margin-bottom: 10px;"><strong>1. Aceptación de los términos:</strong> Al acceder y utilizar Costify, aceptas cumplir con los presentes términos y condiciones de uso.</p>
-                    <p style="margin-bottom: 10px;"><strong>2. Uso del servicio:</strong> Costify es una herramienta de gestión financiera e inventario orientada a emprendedores. Te comprometes a hacer un uso lícito de la plataforma.</p>
-                    <p style="margin-bottom: 10px;"><strong>3. Cuentas y Seguridad:</strong> Eres responsable de mantener la confidencialidad de tu contraseña y de todas las actividades que ocurran bajo tu cuenta.</p>
-                    <p><strong>4. Modificaciones:</strong> Nos reservamos el derecho de modificar estos términos en cualquier momento, notificando a los usuarios mediante la actualización de la plataforma.</p>
+                    <p style="margin-bottom: 10px;"><strong>1. Aceptación del servicio:</strong> Al acceder a la plataforma Costify, el usuario acepta cumplir con las normativas descritas en estos términos.</p>
+                    <p style="margin-bottom: 10px;"><strong>2. Uso comercial legítimo:</strong> Costify es una herramienta de software destinada a apoyar la administración financiera de pequeños negocios y emprendedores.</p>
+                    <p style="margin-bottom: 10px;"><strong>3. Cuentas y credenciales:</strong> El usuario es responsable de la confidencialidad de su contraseña y de la actividad generada bajo su cuenta.</p>
+                    <p><strong>4. Actualizaciones:</strong> Nos reservamos el derecho de modificar o actualizar las características de la plataforma para mejorar el rendimiento del servicio.</p>
                 `;
             } else if (tipo === 'contacto') {
-                titulo.innerText = "Contacto";
+                titulo.innerText = "Contacto y Soporte Técnico";
                 cuerpo.innerHTML = `
-                    <p style="margin-bottom: 10px;">¿Tienes dudas, sugerencias o necesitas soporte con tu cuenta de Costify?</p>
-                    <p style="margin-bottom: 10px;">Puedes ponerte en contacto directamente con nuestro equipo de desarrollo y soporte técnico a través del correo electrónico:</p>
+                    <p style="margin-bottom: 10px;">¿Tienes preguntas sobre el funcionamiento de la plataforma o requieres asistencia técnica con tu cuenta corporativa?</p>
+                    <p style="margin-bottom: 10px;">Puedes comunicarte directamente con nuestro equipo de atención al cliente a través del siguiente correo electrónico:</p>
                     <p style="font-size: 15px; font-weight: 800; color: #0071E3;">soporte@costify.app</p>
                 `;
             }
@@ -110,7 +116,7 @@
         }
     </script>
 
-    <!-- 🌟 LANDING PAGE DE PRESENTACIÓN -->
+    <!-- 🌟 LANDING PAGE DE PRESENTACIÓN OPTIMIZADA PARA ADSENSE Y SEO -->
     <div id="landingPageContainer" class="landing-hero-container">
         <header class="landing-header">
             <div class="landing-logo-box">
@@ -127,8 +133,14 @@
             <div class="landing-hero-text">
                 <span class="landing-badge">🚀 Ecosystem Enterprise & Cloud Suite</span>
                 <h1 class="landing-title">La plataforma definitiva para administrar tu negocio y finanzas sin estrés</h1>
-                <p class="landing-subtitle">Lleva el control exacto de tu inventario, calcula márgenes de ganancia ideales al instante, gestiona tu caja diaria, registra transacciones por voz y genera tickets de venta en PDF profesional.</p>
+                <p class="landing-subtitle">Lleva el control exacto de tu inventario en tiempo real, calcula márgenes de ganancia ideales con Calculcostos al instante, gestiona tu caja diaria, registra transacciones por voz y genera tickets de venta profesionales en PDF.</p>
                 
+                <!-- Párrafos informativos extendidos para cumplir con el texto indexable que exige Google AdSense -->
+                <div style="margin-top: 18px; margin-bottom: 24px; font-size: 13px; color: #94A3B8; line-height: 1.6;">
+                    <p style="margin-bottom: 8px;"><strong>¿Por qué elegir Costify para tu emprendimiento?</strong> Los pequeños y medianos negocios enfrentan grandes desafíos al llevar sus cuentas manuales o en hojas de cálculo dispersas. Costify centraliza la gestión comercial en un entorno intuitivo tipo aplicación nativa, permitiendo optimizar el tiempo operativo y reducir errores financieros.</p>
+                    <p>Diseñado especialmente para emprendedores comerciales, tiendas de retail y prestadores de servicios que buscan formalizar y escalar sus operaciones con tecnología accesible en la nube.</p>
+                </div>
+
                 <div class="landing-cta-group">
                     <button onclick="irARegistroDesdeLanding()" class="landing-main-btn">Crear cuenta gratis ➔</button>
                     <button onclick="irALoginDesdeLanding()" class="landing-secondary-btn">Ya tengo una cuenta</button>
@@ -155,10 +167,10 @@
             </div>
         </section>
 
-        <!-- CUADRITOS INTERACTIVOS -->
+        <!-- CUADRITOS INTERACTIVOS DE BENEFICIOS -->
         <section class="landing-features-section">
-            <h2 class="landing-section-title">¿Qué encontrarás al ingresar a Costify?</h2>
-            <p class="landing-section-sub">Herramientas de nivel corporativo diseñadas para potenciar las ventas y el orden financiero de tu emprendimiento.</p>
+            <h2 class="landing-section-title">¿Qué herramientas encontrarás al ingresar a Costify?</h2>
+            <p class="landing-section-sub">Soluciones de nivel corporativo diseñadas para potenciar las ventas y el orden financiero de tu emprendimiento comercial.</p>
             
             <div class="landing-features-grid">
                 <div class="landing-feature-box interactive-box" onclick="abrirModalDetalleBeneficio('inventario')">
@@ -830,7 +842,7 @@
         </div>
     </div>
 
-    <!-- MODAL ÚNICO DE INFORMACIÓN DETALLADA Y LEGALES (CON Z-INDEX ALTO) -->
+    <!-- MODAL ÚNICO DE INFORMACIÓN DETALLADA Y LEGALES -->
     <div id="modalLegal" class="modal-overlay" style="z-index: 99999;">
         <div class="ios-modal-box" style="max-width: 600px; text-align: left; max-height: 80vh; display: flex; flex-direction: column;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
@@ -1024,6 +1036,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     
-    <script src="app.js?v=1.0.6"></script>
+    <script src="app.js?v=1.0.7"></script>
 </body>
 </html>
