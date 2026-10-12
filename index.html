@@ -8,7 +8,7 @@
     <title>Costify - Software de Control Financiero, Inventario y Punto de Venta para Emprendedores</title>
     <meta name="description" content="Descubre Costify, la plataforma integral en la nube diseñada para emprendedores y pequeños negocios. Administra inventario en tiempo real, calcula márgenes de ganancia con Calculcostos, procesa ventas con el POS y genera reportes profesionales sin complicaciones.">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://tu-proyecto.vercel.app/">
+    <link rel="canonical" href="https://costify-gray.vercel.app/">
     <meta name="google-site-verification" content="VL8IEVvuQ3OAU-kKwdXPgOT2UC0HtCNqxyEfSjWOKDg" />
     
     <link rel="manifest" href="manifest.json">
@@ -1030,6 +1030,40 @@
             </div>
         </div>
     </div>
+
+    <!-- BANNER DE COOKIES Y AVISO LEGAL -->
+    <div id="cookieBanner" style="position: fixed; bottom: 0; left: 0; right: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(255, 255, 255, 0.1); color: #FFF; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; gap: 20px; z-index: 999999; box-shadow: 0 -10px 25px rgba(0,0,0,0.3); flex-wrap: wrap;">
+        <div style="font-size: 13px; line-height: 1.5; max-width: 800px; color: #CBD5E1;">
+            Utilizamos cookies propias y de terceros (como Google AdSense) para analizar el tráfico de navegación y mostrar anuncios personalizados. Al hacer clic en "Aceptar", consientes el uso de todas las cookies. Puedes leer más en nuestra 
+            <a href="javascript:void(0)" onclick="abrirModalLegal('privacidad')" style="color: #34D399; text-decoration: underline; font-weight: 600;">Política de Privacidad</a>.
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <button onclick="aceptarCookies()" style="background: #34C759; color: #FFF; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 800; font-size: 13px; cursor: pointer; transition: opacity 0.2s;">Aceptar</button>
+            <button onclick="rechazarCookies()" style="background: rgba(255,255,255,0.1); color: #FFF; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer;">Rechazar</button>
+        </div>
+    </div>
+
+    <script>
+        function aceptarCookies() {
+            localStorage.setItem('cookieConsent', 'accepted');
+            const banner = document.getElementById('cookieBanner');
+            if (banner) banner.style.display = 'none';
+        }
+
+        function rechazarCookies() {
+            localStorage.setItem('cookieConsent', 'rejected');
+            const banner = document.getElementById('cookieBanner');
+            if (banner) banner.style.display = 'none';
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const consent = localStorage.getItem('cookieConsent');
+            if (consent) {
+                const banner = document.getElementById('cookieBanner');
+                if (banner) banner.style.display = 'none';
+            }
+        });
+    </script>
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
