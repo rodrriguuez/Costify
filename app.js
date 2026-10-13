@@ -22,6 +22,8 @@ let productos = [], movimientos = [];
 let calculosRecientes = [];
 let deudoresLista = [];
 let codigosBarrasLista = [];
+let contactosLista = [];
+let filtroTipoContactoActual = 'todos';
 let presupuestoLimite = 500000;
 let ultimoPrecioCalculado = 0;
 let isDarkMode = false;
@@ -170,7 +172,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     // --- OBSERVADOR DE SESIÓN DE FIREBASE (AUTH STATE CHANGED) ---
     auth.onAuthStateChanged((user) => {
         if (user && user.email) {
-            // Si Firebase detecta sesión activa, carga los datos y salta directo al panel
             if (!correoUsuario) {
                 cargarDatosDesdeNube(user.email);
             }
@@ -262,7 +263,7 @@ function guardarDatosSesionActual() {
     let datosActualizados = {
         saldo, ingresosTotales, gastosTotales, esProActivo, fechaExpiracionPro, empresaNombre, logotipoActual,
         productos: [...productos], movimientos: [...movimientos], calculosRecientes: [...calculosRecientes],
-        deudoresLista: [...deudoresLista], codigosBarrasLista: [...codigosBarrasLista], presupuestoLimite,
+        deudoresLista: [...deudoresLista], codigosBarrasLista: [...codigosBarrasLista], contactosLista: [...contactosLista], presupuestoLimite,
         fechaRegistro: fechaHoy
     };
 
@@ -340,6 +341,7 @@ function cargarDatosDesdeNube(email) {
             calculosRecientes = [...(d.calculosRecientes || [])];
             deudoresLista = [...(d.deudoresLista || [])];
             codigosBarrasLista = [...(d.codigosBarrasLista || [])];
+            contactosLista = [...(d.contactosLista || [])];
             presupuestoLimite = d.presupuestoLimite || 500000;
 
             document.getElementById('headerCompanyName').innerText = empresaNombre;
@@ -363,6 +365,7 @@ function cargarDatosDesdeNube(email) {
             }
 
             renderInventario(); 
+            renderContactosCRM();
             renderMovimientos(); 
             renderCalculosRecientes(); 
             recalcularMetricasDesdeCaja();
@@ -440,7 +443,7 @@ function ejecutarRegistro() {
         let datosIniciales = {
             empresaNombre: empresa, saldo: 0, ingresosTotales: 0, gastosTotales: 0,
             esProActivo: false, fechaExpiracionPro: null, logotipoActual: "logo.png",
-            productos: [], movimientos: [], calculosRecientes: [], deudoresLista: [], codigosBarrasLista: [], presupuestoLimite: 500000,
+            productos: [], movimientos: [], calculosRecientes: [], deudoresLista: [], codigosBarrasLista: [], contactosLista: [], presupuestoLimite: 500000,
             fechaRegistro: fechaHoy
         };
 
@@ -1407,6 +1410,7 @@ function switchTab(tabId) {
     });
     if(tabId === 'master') renderizarPanelMasterReal();
     if(tabId === 'carrito') actualizarSelectProductosCarrito();
+    if(tabId === 'crm') renderContactosCRM();
 }
 
 function showToast(msg) {
@@ -1492,7 +1496,7 @@ function guardarEnInventarioDesdeCalc() {
 function abrirModalProducto() { document.getElementById('modalProducto').style.display = 'flex'; }
 
 function guardarNuevoProducto() {
-    let nombre = escaparHTML(document.getElementById('nuevoNombre').value.trim()); // Sanitizado
+    let nombre = escaparHTML(document.getElementById('nuevoNombre').value.trim());
     let precio = parseFloat(document.getElementById('nuevoPrecio').value);
     let stock = parseInt(document.getElementById('nuevoStock').value);
     
@@ -1547,6 +1551,102 @@ function renderInventario() {
     });
 }
 
+// --- MÓDULO CRM (CLIENTES Y PROVEEDORES) ---
+function abrirModalContacto() {
+    document.getElementById('contactoNombre').value = '';
+    document.getElementById('contactoNit').value = '';
+    document.getElementById('contactoTelefono').value = '';
+    document.getElementById('contactoDireccion').value = '';
+    document.getElementById('modalContacto').style.display = 'flex';
+}
+
+function guardarNuevoContacto() {
+    let nombre = escaparHTML(document.getElementById('contactoNombre').value.trim());
+    let tipo = document.getElementById('contactoTipo').value;
+    let nit = escaparHTML(document.getElementById('contactoNit').value.trim());
+    let telefono = escaparHTML(document.getElementById('contactoTelefono').value.trim());
+    let direccion = escaparHTML(document.getElementById('contactoDireccion').value.trim());
+
+    if(!nombre) {
+        showToast('⚠️ Ingresa al menos el nombre del contacto');
+        return;
+    }
+
+    contactosLista.push({
+        id: Date.now(),
+        nombre,
+        tipo,
+        nit: nit || 'N/A',
+        telefono: telefono || 'N/A',
+        direccion: direccion || 'N/A',
+        historialCompras: []
+    });
+
+    guardarDatosSesionActual();
+    renderContactosCRM();
+    document.getElementById('modalContacto').style.display = 'none';
+    showToast('👤 Contacto guardado con éxito');
+}
+
+function filtrarContactos(tipo) {
+    filtroTipoContactoActual = tipo;
+    ['todos', 'cliente', 'proveedor'].forEach(t => {
+        let btn = document.getElementById(`btnFiltroCRM${t}`);
+        if(btn) {
+            if(t === tipo) {
+                btn.style.background = '#0071E3';
+                btn.style.color = '#FFF';
+            } else {
+                btn.style.background = 'rgba(120, 120, 128, 0.08)';
+                btn.style.color = 'var(--text-primary)';
+            }
+        }
+    });
+    renderContactosCRM();
+}
+
+function renderContactosCRM() {
+    const container = document.getElementById('crmContactosList');
+    if(!container) return;
+
+    container.innerHTML = '';
+    let filtrados = contactosLista.filter(c => filtroTipoContactoActual === 'todos' || c.tipo === filtroTipoContactoActual);
+
+    if(filtrados.length === 0) {
+        container.innerHTML = `
+            <div style="grid-column: span 2; text-align: center; padding: 40px; background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border-color);">
+                <p style="color: var(--text-secondary); font-size: 14px; font-weight: 600;">No hay contactos registrados.</p>
+            </div>`;
+        return;
+    }
+
+    filtrados.forEach(c => {
+        let badgeColor = c.tipo === 'cliente' ? '#10B981' : '#8B5CF6';
+        container.innerHTML += `
+            <div class="card zoom-card" style="padding: 20px 24px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 0; border-radius: 20px; background: var(--card-bg); border: 1px solid var(--border-color);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h4 style="font-size: 16px; font-weight: 800; color: var(--text-primary);">${c.nombre}</h4>
+                        <span style="font-size: 10px; font-weight: 800; background: ${badgeColor}22; color: ${badgeColor}; padding: 2px 8px; border-radius: 6px; text-transform: uppercase;">${c.tipo}</span>
+                    </div>
+                    <button onclick="eliminarContacto(${c.id})" style="background: rgba(239, 68, 68, 0.08); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.2); width: 34px; height: 34px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Eliminar">🗑️</button>
+                </div>
+                <div style="font-size: 12px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 3px; border-top: 1px solid var(--border-color); padding-top: 8px;">
+                    <div><strong>NIT/Cédula:</strong> ${c.nit}</div>
+                    <div><strong>Teléfono:</strong> ${c.telefono}</div>
+                    <div><strong>Dirección:</strong> ${c.direccion}</div>
+                </div>
+            </div>`;
+    });
+}
+
+function eliminarContacto(id) {
+    contactosLista = contactosLista.filter(c => c.id !== id);
+    guardarDatosSesionActual();
+    renderContactosCRM();
+    showToast('🗑️ Contacto eliminado');
+}
+
 function cambiarStockProducto(id, cambio) {
     let prod = productos.find(p => p.id === id);
     if(prod) {
@@ -1577,7 +1677,7 @@ function abrirModalMovimiento(tipo) {
 }
 
 function guardarMovimiento() {
-    let desc = escaparHTML(document.getElementById('movDesc').value.trim()); // Sanitizado
+    let desc = escaparHTML(document.getElementById('movDesc').value.trim());
     let monto = parseFloat(document.getElementById('movMonto').value);
     
     if(!desc || isNaN(monto) || monto <= 0 || monto > 1000000000) { 
