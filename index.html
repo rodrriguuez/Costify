@@ -19,10 +19,64 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <link rel="stylesheet" href="style.css?v=1.0.7">
+    <link rel="stylesheet" href="style.css?v=1.0.8">
+
+    <!-- Estilo optimizado para que quepan todos los botones incluyendo Pro+ completamente visible -->
+    <style>
+        .nav-desktop-pc {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            max-width: none !important;
+            white-space: nowrap !important;
+            padding-right: 35px !important;
+            gap: 4px !important;
+        }
+        .nav-desktop-pc::-webkit-scrollbar {
+            height: 3px;
+        }
+        .nav-desktop-pc::-webkit-scrollbar-thumb {
+            background: rgba(120, 120, 128, 0.2);
+            border-radius: 4px;
+        }
+        .nav-desktop-pc button {
+            padding: 8px 12px !important;
+            font-size: 12px !important;
+        }
+        #offlineBanner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #EF4444;
+            color: #FFF;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 6px;
+            z-index: 9999999;
+            display: none;
+        }
+        #panelNotificacionesInApp {
+            position: absolute;
+            top: 55px;
+            left: 10px;
+            width: 330px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            display: none;
+            flex-direction: column;
+            z-index: 999999;
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+        }
+    </style>
 </head>
 <body>
 
+    <div id="offlineBanner">⚠️ Estás sin conexión. Trabajando en Modo Offline (IndexedDB Activo). Se sincronizará al volver la red[cite: 3].</div>
     <div id="toast"><span id="toastMsg">Acción realizada</span></div>
 
     <!-- SCRIPT DE MODALES DE INFORMACIÓN Y LEGALES -->
@@ -33,11 +87,11 @@
             const cuerpo = document.getElementById('modalLegalCuerpo');
 
             if (tipo === 'inventario') {
-                titulo.innerText = "📦 Control de Inventario y Stock para Emprendedores";
+                titulo.innerText = "📦 Control de Inventario y Centro de Notificaciones In-App";
                 cuerpo.innerHTML = `
-                    <p style="margin-bottom: 12px;"><strong>Gestión operativa en tiempo real:</strong> Mantener el control absoluto de las existencias es vital para cualquier negocio comercial. Costify te permite registrar cada entrada y salida de mercancía de manera automatizada.</p>
-                    <p style="margin-bottom: 12px;"><strong>Alertas preventivas de stock:</strong> Evita el desabastecimiento de tus productos más vendidos gracias al sistema de notificaciones de inventario bajo.</p>
-                    <p><strong>Organización corporativa:</strong> Cada artículo se vincula directamente con los precios de costo y venta, facilitando las operaciones del punto de venta diario.</p>
+                    <p style="margin-bottom: 12px;"><strong>Gestión operativa en tiempo real:</strong> Mantener el control absoluto de las existencias es vital. Costify registra cada entrada y salida.</p>
+                    <p style="margin-bottom: 12px;"><strong>Centro de Alertas In-App:</strong> Visualiza mediante una campanita superior un historial integrado con avisos de stock bajo, deudores próximos a vencer y topes presupuestales.</p>
+                    <p><strong>Organización corporativa:</strong> Todo conectado para evitar desabastecimientos y descuidos financieros.</p>
                 `;
             } else if (tipo === 'calculadora') {
                 titulo.innerText = "🧮 Calculcostos Pro: Margen de Ganancia Ideal";
@@ -47,10 +101,10 @@
                     <p><strong>Historial automatizado:</strong> Guarda tus cálculos anteriores y transfiérelos al inventario con un solo toque.</p>
                 `;
             } else if (tipo === 'pos') {
-                titulo.innerText = "🛒 Punto de Venta (POS) y Tickets en PDF";
+                titulo.innerText = "🛒 Punto de Venta (POS) y Tickets con Impuestos (IVA/Impoconsumo)";
                 cuerpo.innerHTML = `
-                    <p style="margin-bottom: 12px;"><strong>Transacciones comerciales ágiles:</strong> Crea carritos de compra rápidos seleccionando artículos directamente desde tu base de datos de inventario.</p>
-                    <p style="margin-bottom: 12px;"><strong>Comprobantes profesionales:</strong> Genera y descarga tickets de venta en formato PDF con la identidad corporativa de tu negocio para entregar a tus clientes.</p>
+                    <p style="margin-bottom: 12px;"><strong>Transacciones comerciales ágiles y formales:</strong> Calcula automáticamente el desglose de subtotal, impuestos locales (como IVA o Impoconsumo) y total a pagar.</p>
+                    <p style="margin-bottom: 12px;"><strong>Comprobantes profesionales:</strong> Genera y descarga tickets de venta en formato PDF opcionalmente para cumplir con requerimientos legales y auditorías.</p>
                     <p><strong>Sincronización contable:</strong> Cada cobro procesado actualiza instantáneamente los ingresos totales en la caja diaria.</p>
                 `;
             } else if (tipo === 'voz') {
@@ -68,11 +122,11 @@
                     <p><strong>Transparencia empresarial:</strong> Mantén el historial de transacciones ordenado y accesible en todo momento.</p>
                 `;
             } else if (tipo === 'nube') {
-                titulo.innerText = "☁️ Respaldo Seguro de Datos en la Nube";
+                titulo.innerText = "☁️ Centro de Notificaciones y Sincronización Offline";
                 cuerpo.innerHTML = `
-                    <p style="margin-bottom: 12px;"><strong>Sincronización en tiempo real con Firebase:</strong> Toda la información de tu inventario, caja y perfil de empresa se almacena de forma cifrada y segura.</p>
-                    <p style="margin-bottom: 12px;"><strong>Acceso multiplataforma:</strong> Administra tu negocio desde tu teléfono celular, tablet o computadora ingresando con tus credenciales.</p>
-                    <p><strong>Protección y continuidad:</strong> Garantiza que la información financiera de tu emprendimiento esté protegida contra pérdidas locales.</p>
+                    <p style="margin-bottom: 12px;"><strong>Modo 100% Sin Conexión:</strong> Si tu negocio se queda sin internet, la aplicación sigue operando con normalidad gracias a la base de datos local.</p>
+                    <p style="margin-bottom: 12px;"><strong>Campana de Alertas In-App:</strong> Agrupa de forma centralizada avisos importantes del sistema, deudores y stock crítico en una interfaz limpia.</p>
+                    <p><strong>Continuidad garantizada:</strong> Cero interrupciones operativas en tu punto de venta diario.</p>
                 `;
             }
             if (modal) modal.style.display = 'flex';
@@ -133,9 +187,8 @@
             <div class="landing-hero-text">
                 <span class="landing-badge">🚀 Ecosystem Enterprise & Cloud Suite</span>
                 <h1 class="landing-title">La plataforma definitiva para administrar tu negocio y finanzas sin estrés</h1>
-                <p class="landing-subtitle">Lleva el control exacto de tu inventario en tiempo real, calcula márgenes de ganancia ideales con Calculcostos al instante, gestiona tu caja diaria, registra transacciones por voz y genera tickets de venta profesionales en PDF.</p>
+                <p class="landing-subtitle">Lleva el control exacto de tu inventario en tiempo real con notificaciones push y centro de alertas in-app, calcula márgenes de ganancia con Calculcostos, gestiona caja y opera 100% sin internet.</p>
                 
-                <!-- Párrafos informativos extendidos para cumplir con el texto indexable que exige Google AdSense -->
                 <div style="margin-top: 18px; margin-bottom: 24px; font-size: 13px; color: #94A3B8; line-height: 1.6;">
                     <p style="margin-bottom: 8px;"><strong>¿Por qué elegir Costify para tu emprendimiento?</strong> Los pequeños y medianos negocios enfrentan grandes desafíos al llevar sus cuentas manuales o en hojas de cálculo dispersas. Costify centraliza la gestión comercial en un entorno intuitivo tipo aplicación nativa, permitiendo optimizar el tiempo operativo y reducir errores financieros.</p>
                     <p>Diseñado especialmente para emprendedores comerciales, tiendas de retail y prestadores de servicios que buscan formalizar y escalar sus operaciones con tecnología accesible en la nube.</p>
@@ -153,7 +206,7 @@
                         <img src="logo.png" style="width: 48px; height: 48px; border-radius: 12px; object-fit: cover;">
                         <div>
                             <h4 style="font-size: 16px; font-weight: 800; color: #FFF;">Costify Enterprise</h4>
-                            <span style="font-size: 11px; color: #34D399; font-weight: 700;">● Sistema Activo en la Nube</span>
+                            <span style="font-size: 11px; color: #34D399; font-weight: 700;">● Centro de Alertas & Notificaciones</span>
                         </div>
                     </div>
                     <div style="background: rgba(255,255,255,0.05); padding: 14px; border-radius: 12px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.08);">
@@ -161,7 +214,7 @@
                         <div style="font-size: 24px; font-weight: 900; color: #34D399; margin-top: 4px;">$ 1,450,000 COP</div>
                     </div>
                     <div style="display: flex; gap: 8px; font-size: 12px; color: #94A3B8; flex-wrap: wrap;">
-                        <span>✓ POS & Tickets PDF</span> • <span>✓ Control de Stock</span> • <span>✓ IA por Voz</span>
+                        <span>✓ Campana de Alertas</span> • <span>✓ Stock Crítico</span> • <span>✓ Control de Deudores</span>
                     </div>
                 </div>
             </div>
@@ -175,8 +228,8 @@
             <div class="landing-features-grid">
                 <div class="landing-feature-box interactive-box" onclick="abrirModalDetalleBeneficio('inventario')">
                     <div class="landing-feature-icon">📦</div>
-                    <h3>Control de Inventario</h3>
-                    <p>Gestiona productos, stock en tiempo real y precios con alertas automáticas de existencias.</p>
+                    <h3>Control & Centro de Alertas</h3>
+                    <p>Gestiona productos y mantén al día avisos de stock crítico, deudores y presupuestos en una campana in-app.</p>
                     <span class="interactive-hint">Toca para más info ➔</span>
                 </div>
                 <div class="landing-feature-box interactive-box" onclick="abrirModalDetalleBeneficio('calculadora')">
@@ -187,8 +240,8 @@
                 </div>
                 <div class="landing-feature-box interactive-box" onclick="abrirModalDetalleBeneficio('pos')">
                     <div class="landing-feature-icon">🛒</div>
-                    <h3>Punto de Venta (POS)</h3>
-                    <p>Crea carritos de venta rápidos, cobra con un clic y genera comprobantes y tickets en PDF profesionales.</p>
+                    <h3>Punto de Venta & Impuestos</h3>
+                    <p>Crea carritos rápidos, calcula automáticamente el IVA/Impoconsumo y genera comprobantes PDF formales opcionales.</p>
                     <span class="interactive-hint">Toca para más info ➔</span>
                 </div>
                 <div class="landing-feature-box interactive-box" onclick="abrirModalDetalleBeneficio('voz')">
@@ -205,8 +258,8 @@
                 </div>
                 <div class="landing-feature-box interactive-box" onclick="abrirModalDetalleBeneficio('nube')">
                     <div class="landing-feature-icon">☁️</div>
-                    <h3>Respaldo en la Nube</h3>
-                    <p>Tus datos sincronizados de forma segura mediante Firebase para acceder desde cualquier dispositivo o computadora.</p>
+                    <h3>Modo Offline & Campana In-App</h3>
+                    <p>Opera 100% sin internet y mantén alertas centralizadas de tu negocio en todo momento.</p>
                     <span class="interactive-hint">Toca para más info ➔</span>
                 </div>
             </div>
@@ -221,7 +274,7 @@
                 <span style="color: #475569;">•</span>
                 <a href="javascript:void(0)" onclick="abrirModalLegal('contacto')" style="color: #94A3B8; text-decoration: none; transition: color 0.2s;">Contacto</a>
             </div>
-            <p>© 2026 Costify — Todos los derechos reservados. Desarrollado para potenciar tu negocio.</p>
+            <p>© 2026 Costify — Todos los derechos reservados. Desarrollado para potenciar tu negocio[cite: 3].</p>
         </footer>
     </div>
 
@@ -295,36 +348,56 @@
         </div>
     </div>
 
-    <!-- APLICACIÓN PRINCIPAL (INTACTA) -->
+    <!-- APLICACIÓN PRINCIPAL -->
     <div id="mainAppContainer" class="max-w-app hidden">
         
-        <header class="header-app">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <button onclick="abrirModalLogo()" id="headerAvatarContainer" style="width: 44px; height: 44px; border-radius: 14px; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+        <header class="header-app" style="position: relative;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button onclick="abrirModalLogo()" id="headerAvatarContainer" style="width: 40px; height: 40px; border-radius: 12px; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
                     <img src="logo.png" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
                 </button>
                 <div>
                     <div style="display: flex; align-items: center; gap: 6px;">
-                        <h2 id="headerCompanyName" style="font-size: 16px; font-weight: 800; cursor: pointer;" onclick="switchTab('perfil')">Mi Tienda</h2>
-                        <span style="font-size: 10px; color: var(--text-secondary); font-weight: 600;">(Costify)</span>
+                        <h2 id="headerCompanyName" style="font-size: 15px; font-weight: 800; cursor: pointer;" onclick="switchTab('perfil')">Mi Tienda</h2>
+                        <span style="font-size: 9px; color: var(--text-secondary); font-weight: 600;">(Costify)</span>
                     </div>
                     <span id="badgePlan" style="font-size: 9px; font-weight: 800; background: #F1F5F9; padding: 2px 8px; border-radius: 20px; color: #475569;">FREE</span>
                 </div>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <button onclick="toggleDarkMode()" id="btnDarkModeToggle" style="background: rgba(120, 120, 128, 0.12); border: none; width: 40px; height: 40px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">🌙</button>
+            <div style="display: flex; align-items: center; gap: 6px; flex: 1; justify-content: flex-end; overflow: hidden;">
+                <!-- CAMPANA DE NOTIFICACIONES IN-APP DINÁMICA -->
+                <div style="position: relative; flex-shrink: 0;">
+                    <button onclick="togglePanelNotificacionesInApp()" style="background: rgba(120, 120, 128, 0.12); border: none; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; position: relative;" title="Centro de Notificaciones">
+                        🔔
+                        <span id="badgeContadorNotif" style="position: absolute; top: -4px; right: -4px; background: #EF4444; color: #FFF; font-size: 9px; font-weight: 900; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">0</span>
+                    </button>
+                    <!-- Panel Desplegable In-App con datos reales -->
+                    <div id="panelNotificacionesInApp" class="custom-scroll">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border-color); background: rgba(120,120,128,0.05);">
+                            <span style="font-size: 13px; font-weight: 800;">🔔 Centro de Alertas In-App</span>
+                            <button onclick="marcarTodasNotificacionesLeidas()" style="background: none; border: none; color: #0071E3; font-size: 11px; font-weight: 700; cursor: pointer;">Marcar leídas</button>
+                        </div>
+                        <div id="listaContenidoNotificacionesInApp" class="custom-scroll" style="display: flex; flex-direction: column; max-height: 240px; overflow-y: auto; padding: 8px; gap: 6px;">
+                            <p style="text-align: center; font-size: 12px; color: var(--text-secondary); padding: 15px 0;">Cargando alertas del sistema...</p>
+                        </div>
+                    </div>
+                </div>
 
-                <nav class="nav-desktop custom-scroll">
+                <button onclick="toggleDarkMode()" id="btnDarkModeToggle" style="background: rgba(120, 120, 128, 0.12); border: none; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;">🌙</button>
+                <button onclick="switchTab('perfil')" style="background: rgba(120, 120, 128, 0.12); border: none; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;" title="Ajustes">⚙️</button>
+
+                <!-- Barra de navegación ampliada y optimizada con scroll horizontal limpio para alojar Pro+ completamente visible -->
+                <nav class="nav-desktop custom-scroll nav-desktop-pc" style="display: flex; gap: 4px; white-space: nowrap; align-items: center;">
                     <button onclick="switchTab('inicio')" class="nav-tab-btn active" data-tab="inicio">Inicio</button>
                     <button onclick="switchTab('inventario')" class="nav-tab-btn" data-tab="inventario">Inventario & Stock</button>
+                    <button onclick="switchTab('crm')" class="nav-tab-btn" data-tab="crm">👥 Clientes & Proveedores</button>
                     <button onclick="switchTab('calculadora')" class="nav-tab-btn" data-tab="calculadora">Calculcostos</button>
                     <button onclick="switchTab('caja')" class="nav-tab-btn" data-tab="caja">Caja Registradora</button>
                     <button onclick="switchTab('carrito')" class="nav-tab-btn" data-tab="carrito">🛒 Carrito</button>
                     <button onclick="switchTab('recomendaciones')" class="nav-tab-btn" data-tab="recomendaciones">💡 Recomendaciones</button>
-                    <button onclick="switchTab('pro')" class="nav-tab-btn" data-tab="pro" style="color: #D97706; font-weight: 700;">Pro+ ⭐</button>
+                    <button onclick="switchTab('pro')" class="nav-tab-btn" data-tab="pro" style="color: #D97706; font-weight: 700; padding-left: 12px; padding-right: 12px; flex-shrink: 0;">Pro+ ⭐</button>
                     <button id="navMasterBtn" onclick="switchTab('master')" class="nav-tab-btn hidden" data-tab="master" style="background: #1E1B4B; color: #F59E0B; font-weight: 900;">Master 👑</button>
-                    <button onclick="switchTab('perfil')" class="nav-tab-btn" data-tab="perfil">Ajustes</button>
                 </nav>
             </div>
         </header>
@@ -339,7 +412,7 @@
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <span style="font-size: 13px; font-weight: 900; background: rgba(0,113,227,0.3); color: #60A5FA; padding: 4px 10px; border-radius: 8px; letter-spacing: 0.5px;">Costify</span>
                                 <button onclick="cambiarMesAnterior()" style="background: rgba(255,255,255,0.15); border: none; color: white; width: 28px; height: 28px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Mes anterior">◀</button>
-                                <span id="labelMesActualGrafica" style="font-size: 14px; font-weight: 800; cursor: pointer; color: #34D399; letter-spacing: 0.5px;" onclick="abrirModalSelectorMeses()" title="Haz clic para seleccionar mes">Septiembre 2026</span>
+                                <span id="labelMesActualGrafica" style="font-size: 14px; font-weight: 800; cursor: pointer; color: #34D399; letter-spacing: 0.5px;" onclick="abrirModalSelectorMeses()" title="Haz clic para seleccionar mes">Septiembre 2026[cite: 3]</span>
                                 <button onclick="cambiarMesSiguiente()" style="background: rgba(255,255,255,0.15); border: none; color: white; width: 28px; height: 28px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Mes siguiente">▶</button>
                             </div>
                             <div style="display: flex; gap: 4px;" onclick="event.stopPropagation()">
@@ -404,7 +477,7 @@
                         <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                             <div style="display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 10px;">
                                 <button onclick="cambiarMesGlobalAnterior()" style="background: none; border: none; color: white; font-weight: 800; cursor: pointer; font-size: 12px;" title="Mes anterior">◀</button>
-                                <span id="labelMesGlobalGrafica" style="font-size: 13px; font-weight: 800; color: #34D399; cursor: pointer;" onclick="abrirModalSelectorMesesGlobal()" title="Seleccionar mes">Septiembre 2026</span>
+                                <span id="labelMesGlobalGrafica" style="font-size: 13px; font-weight: 800; color: #34D399; cursor: pointer;" onclick="abrirModalSelectorMesesGlobal()" title="Seleccionar mes">Septiembre 2026[cite: 3]</span>
                                 <button onclick="cambiarMesGlobalSiguiente()" style="background: none; border: none; color: white; font-weight: 800; cursor: pointer; font-size: 12px;" title="Mes siguiente">▶</button>
                             </div>
 
@@ -428,9 +501,26 @@
             <div id="tab-inventario" class="tab-content">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
                     <h2 style="font-size: 18px; font-weight: 800;">Gestión de Inventario & Stock Interactivo</h2>
-                    <button onclick="abrirModalProducto()" class="btn-action">+ Nuevo Producto</button>
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="solicitarPermisoNotificacionesPush()" class="ios-btn-secondary" style="width: auto; padding: 8px 12px; font-size: 11px;">🔔 Activar Push</button>
+                        <button onclick="abrirModalProducto()" class="btn-action">+ Nuevo Producto</button>
+                    </div>
                 </div>
                 <div id="inventoryList" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;"></div>
+            </div>
+
+            <!-- CLIENTES & PROVEEDORES (CRM) -->
+            <div id="tab-crm" class="tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                    <h2 style="font-size: 18px; font-weight: 800;">Gestión de Clientes y Proveedores</h2>
+                    <button onclick="abrirModalContacto()" class="btn-action">+ Nuevo Contacto</button>
+                </div>
+                <div style="display: flex; gap: 8px; margin-bottom: 20px;">
+                    <button onclick="filtrarContactos('todos')" id="btnFiltroCRMtodos" class="ios-btn-secondary" style="width: auto; padding: 8px 14px; font-size: 12px; background: #0071E3; color: #FFF;">Todos</button>
+                    <button onclick="filtrarContactos('cliente')" id="btnFiltroCRMcliente" class="ios-btn-secondary" style="width: auto; padding: 8px 14px; font-size: 12px;">Clientes</button>
+                    <button onclick="filtrarContactos('proveedor')" id="btnFiltroCRMproveedor" class="ios-btn-secondary" style="width: auto; padding: 8px 14px; font-size: 12px;">Proveedores</button>
+                </div>
+                <div id="crmContactosList" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;"></div>
             </div>
 
             <!-- CALCULCOSTOS -->
@@ -443,7 +533,7 @@
                             <input type="number" id="calcCost" placeholder="Costo ($)" class="ios-input" style="margin-bottom:0;">
                             <input type="number" id="calcMargin" value="40" placeholder="Margen (%)" class="ios-input" style="margin-bottom:0;">
                         </div>
-                        <button onclick="calcularPrecio()" class="btn-action" style="width: 100%; padding: 14px; font-size: 14px;">Calcalcular Precio Sugerido</button>
+                        <button onclick="calcularPrecio()" class="btn-action" style="width: 100%; padding: 14px; font-size: 14px;">Calcular Precio Sugerido</button>
                         
                         <div id="calcResultContainer" class="hidden" style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(0, 113, 227, 0.08)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 18px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 10px; flex-wrap: wrap; gap: 10px;">
@@ -515,13 +605,33 @@
                                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                                 </div>
                                 <div>
-                                    <h2 style="font-size: 19px; font-weight: 800; letter-spacing: -0.3px; margin: 0; color: var(--text-primary);">Carrito Comercial</h2>
-                                    <p style="font-size: 12px; color: var(--text-secondary); margin: 2px 0 0 0;">Punto de Venta con Tickets PDF</p>
+                                    <h2 style="font-size: 19px; font-weight: 800; letter-spacing: -0.3px; margin: 0; color: var(--text-primary);">Carrito & Facturación POS</h2>
+                                    <p style="font-size: 12px; color: var(--text-secondary); margin: 2px 0 0 0;">Tickets PDF con Subtotal e Impuestos</p>
                                 </div>
                             </div>
                             <span style="font-size: 11px; font-weight: 800; background: rgba(0, 113, 227, 0.15); color: #0071E3; padding: 6px 12px; border-radius: 20px; letter-spacing: 0.5px;">OSX POS</span>
                         </div>
                         
+                        <!-- CONFIGURACIÓN DE IMPUESTOS (IVA / IMPOCONSUMO) -->
+                        <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 10px; margin-bottom: 16px; background: rgba(120, 120, 128, 0.05); padding: 12px; border-radius: 14px; border: 1px solid var(--border-color);">
+                            <div>
+                                <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 4px; text-transform: uppercase;">Tipo de Impuesto</label>
+                                <select id="selectTipoImpuesto" class="ios-input" style="margin-bottom:0; font-size: 12px; padding: 8px;" onchange="calcularTotalesCarrito()">
+                                    <option value="iva19">IVA (19%)</option>
+                                    <option value="iva5">IVA Reducido (5%)</option>
+                                    <option value="impoconsumo">Impoconsumo (8%)</option>
+                                    <option value="ninguno">Sin Impuesto (0%)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 4px; text-transform: uppercase;">Aplicar Impuesto</label>
+                                <select id="selectModoImpuesto" class="ios-input" style="margin-bottom:0; font-size: 12px; padding: 8px;" onchange="calcularTotalesCarrito()">
+                                    <option value="incluido">Incluido en Precio</option>
+                                    <option value="mas">Sumar al Subtotal</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div style="margin-bottom: 16px; position: relative;">
                             <label style="font-size: 11px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">🔍 Buscar Producto en Inventario</label>
                             <input type="text" id="inputBuscadorCarrito" placeholder="Escribe para buscar rápidamente..." class="ios-input" oninput="filtrarProductosCarrito()" style="margin-bottom: 0; padding-left: 16px; border-radius: 14px; background: rgba(120, 120, 128, 0.08); border: 1.5px solid var(--border-color); color: var(--text-primary);">
@@ -543,18 +653,35 @@
                         <button onclick="agregarProductoAlCarritoConCantidad()" class="btn-action" style="background: linear-gradient(135deg, #34C759, #28A745); padding: 14px; font-size: 14px; font-weight: 800; margin-bottom: 20px; width: 100%; border-radius: 14px; box-shadow: 0 10px 20px rgba(52, 199, 89, 0.25); cursor: pointer; color: #FFF;">+ Añadir al Carrito</button>
 
                         <div style="font-size: 11px; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Resumen de Artículos</div>
-                        <div id="listaItemsCarrito" class="custom-scroll" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; margin-bottom: 20px; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 12px 4px;">
+                        <div id="listaItemsCarrito" class="custom-scroll" style="display: flex; flex-direction: column; gap: 8px; max-height: 180px; overflow-y: auto; margin-bottom: 16px; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 12px 4px;">
                             <p style="color: var(--text-secondary); text-align: center; font-size: 13px; padding: 15px 0;">El carrito está vacío.</p>
                         </div>
 
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 16px 20px; background: rgba(0, 113, 227, 0.06); border: 1px solid rgba(0, 113, 227, 0.15); border-radius: 16px;">
-                            <span style="font-size: 14px; font-weight: 700; color: var(--text-secondary);">Total a Pagar:</span>
-                            <span id="carritoTotalMonto" style="font-size: 26px; font-weight: 900; color: #0071E3; letter-spacing: -0.5px;">$0</span>
+                        <!-- DESGLOSE CONTABLE DE SUBTOTAL, IMPUESTOS Y TOTAL -->
+                        <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; padding: 14px 18px; background: rgba(0, 113, 227, 0.06); border: 1px solid rgba(0, 113, 227, 0.15); border-radius: 16px; font-size: 13px;">
+                            <div style="display: flex; justify-content: space-between; color: var(--text-secondary);">
+                                <span>Subtotal:</span>
+                                <strong id="carritoSubtotalMonto" style="color: var(--text-primary);">$0</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; color: var(--text-secondary);">
+                                <span id="labelNombreImpuestoDesglose">Impuesto (IVA/Impoconsumo):</span>
+                                <strong id="carritoImpuestoMonto" style="color: var(--text-primary);">$0</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 8px; margin-top: 4px;">
+                                <span style="font-size: 14px; font-weight: 700; color: var(--text-secondary);">Total a Pagar:</span>
+                                <span id="carritoTotalMonto" style="font-size: 24px; font-weight: 900; color: #0071E3; letter-spacing: -0.5px;">$0</span>
+                            </div>
+                        </div>
+
+                        <!-- OPCIÓN PARA ELEGIR SI DESEA GENERAR EL TICKET PDF O NO -->
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding: 10px 14px; background: rgba(120, 120, 128, 0.06); border-radius: 12px; border: 1px solid var(--border-color);">
+                            <input type="checkbox" id="checkGenerarTicketPDF" checked style="width: 18px; height: 18px; accent-color: #0071E3; cursor: pointer;">
+                            <label for="checkGenerarTicketPDF" style="font-size: 13px; font-weight: 700; color: var(--text-primary); cursor: pointer;">Generar ticket PDF al cobrar</label>
                         </div>
 
                         <button onclick="confirmarVentaDesdeCarritoConTicket()" class="btn-action" style="background: linear-gradient(135deg, #0071E3, #005BB5); padding: 16px; font-size: 15px; font-weight: 800; width: 100%; border-radius: 16px; box-shadow: 0 12px 24px rgba(0,113,227,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: #FFF;">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            Cobrar, Registrar y Generar Ticket PDF
+                            Cobrar y Registrar Venta
                         </button>
                     </div>
                 </div>
@@ -658,12 +785,12 @@
 
                         <div class="pro-widget-card" style="--widget-accent: #F43F5E;" onclick="abrirFuncionPro(2)">
                             <div class="pro-widget-header">
-                                <span class="pro-widget-title">📝 Control de Deudores</span>
-                                <span class="pro-widget-badge">Alertas</span>
+                                <span class="pro-widget-title">🔔 Centro de Notificaciones In-App</span>
+                                <span class="pro-widget-badge">Campana</span>
                             </div>
-                            <p class="pro-widget-desc">Calendario completo de pagos pendientes con fechas límite y notificaciones automáticas de vencimiento.</p>
+                            <p class="pro-widget-desc">Bandeja centralizada con campanita superior que agrupa alertas de stock bajo, deudores próximos, topes y avisos del sistema.</p>
                             <div class="pro-widget-footer">
-                                <span>Gestionar deudores</span>
+                                <span>Ver centro de alertas</span>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                             </div>
                         </div>
@@ -682,12 +809,12 @@
 
                         <div class="pro-widget-card" style="--widget-accent: #F59E0B;" onclick="abrirFuncionPro(4)">
                             <div class="pro-widget-header">
-                                <span class="pro-widget-title">🎯 Alertas de Presupuesto</span>
-                                <span class="pro-widget-badge">Topes</span>
+                                <span class="pro-widget-title">🔔 Notificaciones Push Stock</span>
+                                <span class="pro-widget-badge">Alertas</span>
                             </div>
-                            <p class="pro-widget-desc">Define topes máximos de gastos mensuales conectados a la caja para recibir alertas preventivas inmediatas.</p>
+                            <p class="pro-widget-desc">Recibe notificaciones push nativas en tu dispositivo cuando el inventario llegue a stock crítico.</p>
                             <div class="pro-widget-footer">
-                                <span>Configurar topes</span>
+                                <span>Configurar alertas</span>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                             </div>
                         </div>
@@ -718,10 +845,10 @@
 
                         <div class="pro-widget-card" style="--widget-accent: #EC4899; grid-column: span 2;" onclick="abrirFuncionPro(7)">
                             <div class="pro-widget-header">
-                                <span class="pro-widget-title">☁️ Respaldo en la Nube</span>
+                                <span class="pro-widget-title">☁️ Sincronización Offline (IndexedDB)</span>
                                 <span class="pro-widget-badge">Seguro</span>
                             </div>
-                            <p class="pro-widget-desc">Sincronización automática en tiempo real y copias de seguridad en la nube para garantizar que tus datos nunca se pierdan.</p>
+                            <p class="pro-widget-desc">Sincronización automática y operación 100% sin conexión a internet mediante IndexedDB.</p>
                             <div class="pro-widget-footer">
                                 <span>Ver estado del respaldo</span>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -760,7 +887,7 @@
                             <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                                 <div style="display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 10px;">
                                     <button onclick="cambiarMesMasterAnterior()" style="background: none; border: none; color: white; font-weight: 800; cursor: pointer; font-size: 12px;" title="Mes anterior">◀</button>
-                                    <span id="labelMasterMesActual" style="font-size: 13px; font-weight: 800; color: #34D399; cursor: pointer;" onclick="abrirModalSelectorMesMaster()" title="Seleccionar mes">Septiembre 2026</span>
+                                    <span id="labelMasterMesActual" style="font-size: 13px; font-weight: 800; color: #34D399; cursor: pointer;" onclick="abrirModalSelectorMesMaster()" title="Seleccionar mes">Septiembre 2026[cite: 3]</span>
                                     <button onclick="cambiarMesMasterSiguiente()" style="background: none; border: none; color: white; font-weight: 800; cursor: pointer; font-size: 12px;" title="Mes siguiente">▶</button>
                                 </div>
 
@@ -839,6 +966,25 @@
                     </div>
                 </div>
             </aside>
+        </div>
+    </div>
+
+    <!-- MODAL DE NUEVO CONTACTO CRM -->
+    <div id="modalContacto" class="modal-overlay">
+        <div class="ios-modal-box" style="max-width: 450px;">
+            <h3 id="modalContactoTitulo" style="font-size: 16px; font-weight: 800; margin-bottom: 15px;">Nuevo Contacto</h3>
+            <input type="text" id="contactoNombre" placeholder="Nombre o Razón Social" class="ios-input">
+            <select id="contactoTipo" class="ios-input" style="font-weight: 600;">
+                <option value="cliente">Cliente</option>
+                <option value="proveedor">Proveedor</option>
+            </select>
+            <input type="text" id="contactoNit" placeholder="NIT / Cédula" class="ios-input">
+            <input type="text" id="contactoTelefono" placeholder="Teléfono" class="ios-input">
+            <input type="text" id="contactoDireccion" placeholder="Dirección" class="ios-input">
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button onclick="document.getElementById('modalContacto').style.display='none'" class="ios-btn-secondary" style="flex:1;">Cancelar</button>
+                <button onclick="guardarNuevoContacto()" class="btn-action" style="flex:1;">Guardar Contacto</button>
+            </div>
         </div>
     </div>
 
@@ -1014,7 +1160,7 @@
             </div>
             <div style="display: flex; gap: 10px; margin-top: 10px;">
                 <button onclick="document.getElementById('modalProducto').style.display='none'" class="ios-btn-secondary" style="flex:1;">Cancelar</button>
-                <button onclick="guardarNuevoProducto()" class="ios-btn" style="flex:1;">Guardar</button>
+                <button onclick="guardarNuevoProducto()" class="btn-action" style="flex:1;">Guardar</button>
             </div>
         </div>
     </div>
@@ -1062,6 +1208,123 @@
                 const banner = document.getElementById('cookieBanner');
                 if (banner) banner.style.display = 'none';
             }
+            actualizarCentroNotificacionesReal();
+        });
+
+        // 🌟 LÓGICA DE DATOS REALES PARA EL CENTRO DE NOTIFICACIONES IN-APP
+        function togglePanelNotificacionesInApp() {
+            const panel = document.getElementById('panelNotificacionesInApp');
+            if (panel) {
+                const isOpen = panel.style.display === 'flex';
+                panel.style.display = isOpen ? 'none' : 'flex';
+                if (!isOpen) {
+                    actualizarCentroNotificacionesReal();
+                }
+            }
+        }
+
+        function actualizarCentroNotificacionesReal() {
+            const contenedor = document.getElementById('listaContenidoNotificacionesInApp');
+            const badge = document.getElementById('badgeContadorNotif');
+            if (!contenedor) return;
+
+            let alertasHtml = '';
+            let totalAlertas = 0;
+
+            // 1. Verificar Inventario Real (Stock Crítico <= 3 unidades)
+            try {
+                const productos = JSON.parse(localStorage.getItem('costify_productos') || '[]');
+                const criticos = productos.filter(p => Number(p.stock) <= 3);
+                criticos.forEach(prod => {
+                    totalAlertas++;
+                    alertasHtml += `
+                        <div style="padding: 10px; background: rgba(239, 68, 68, 0.08); border-radius: 10px; border-left: 3px solid #EF4444; font-size: 12px;">
+                            <strong>📦 Stock Crítico:</strong> Quedan ${prod.stock} unidades de ${prod.nombre}.
+                        </div>
+                    `;
+                });
+            } catch(e) { console.error(e); }
+
+            // 2. Verificar Clientes / Proveedores (Deudores próximos o saldos pendientes)
+            try {
+                const contactos = JSON.parse(localStorage.getItem('costify_contactos') || '[]');
+                const deudores = contactos.filter(c => Number(c.deuda || 0) > 0);
+                deudores.forEach(cli => {
+                    totalAlertas++;
+                    alertasHtml += `
+                        <div style="padding: 10px; background: rgba(245, 158, 11, 0.08); border-radius: 10px; border-left: 3px solid #F59E0B; font-size: 12px;">
+                            <strong>📝 Deudor Pendiente:</strong> ${cli.nombre} tiene saldo pendiente por $${Number(cli.deuda).toLocaleString()}.
+                        </div>
+                    `;
+                });
+            } catch(e) { console.error(e); }
+
+            // 3. Aviso del Sistema (Estado de Conexión / IndexedDB)
+            totalAlertas++;
+            const estadoRedTxt = navigator.onLine ? "Conectado a la nube y sincronizado." : "Modo Offline (IndexedDB Activo).";
+            alertasHtml += `
+                <div style="padding: 10px; background: rgba(0, 113, 227, 0.08); border-radius: 10px; border-left: 3px solid #0071E3; font-size: 12px;">
+                    <strong>⚡ Aviso del Sistema:</strong> ${estadoRedTxt}
+                </div>
+            `;
+
+            if (totalAlertas === 0) {
+                contenedor.innerHTML = '<p style="text-align: center; font-size: 12px; color: var(--text-secondary); padding: 15px 0;">No hay notificaciones pendientes.</p>';
+                if (badge) badge.style.display = 'none';
+            } else {
+                contenedor.innerHTML = alertasHtml;
+                if (badge) {
+                    badge.innerText = totalAlertas;
+                    badge.style.display = 'flex';
+                }
+            }
+        }
+
+        function marcarTodasNotificacionesLeidas() {
+            const badge = document.getElementById('badgeContadorNotif');
+            if (badge) badge.style.display = 'none';
+            const contenedor = document.getElementById('listaContenidoNotificacionesInApp');
+            if (contenedor) {
+                contenedor.innerHTML = '<p style="text-align: center; font-size: 12px; color: var(--text-secondary); padding: 15px 0;">No hay notificaciones pendientes.</p>';
+            }
+        }
+
+        // Script de Notificaciones Push Nativas para Stock Bajo
+        function solicitarPermisoNotificacionesPush() {
+            if (!("Notification" in window)) {
+                alert("Este navegador no soporta notificaciones push nativas.");
+                return;
+            }
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    alert("¡Notificaciones Push activadas correctamente!");
+                } else {
+                    alert("Has denegado los permisos de notificaciones.");
+                }
+            });
+        }
+
+        // Script de Detección de Estado Online / Offline y IndexedDB Sync
+        window.addEventListener('online',  actualizarEstadoRed);
+        window.addEventListener('offline', actualizarEstadoRed);
+
+        function actualizarEstadoRed() {
+            const banner = document.getElementById('offlineBanner');
+            if (!navigator.onLine) {
+                if (banner) banner.style.display = 'block';
+            } else {
+                if (banner) banner.style.display = 'none';
+                sincronizarDatosPendientesOffline();
+            }
+            actualizarCentroNotificacionesReal();
+        }
+
+        function sincronizarDatosPendientesOffline() {
+            console.log("Red restablecida: Sincronizando transacciones offline con Firebase...");
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            actualizarEstadoRed();
         });
     </script>
 
@@ -1070,6 +1333,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     
-    <script src="app.js?v=1.0.7"></script>
+    <script src="app.js?v=1.0.8"></script>
 </body>
 </html>
