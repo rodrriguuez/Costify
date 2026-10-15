@@ -35,10 +35,10 @@ let filtroGlobalTipo = '1S';
 
 let masterModoActual = 'ganancias';
 let masterFiltroTipo = '1S';
-let fechaMasterActual = new Date(2026, 8, 1);
+let fechaMasterActual = new Date(2026, 9, 1);
 const nombresMeses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-let fechaVisualizacionActual = new Date(2026, 8, 1);
-let fechaGlobalActual = new Date(2026, 8, 1);
+let fechaVisualizacionActual = new Date(2026, 9, 1);
+let fechaGlobalActual = new Date(2026, 9, 1);
 let idMovimientoAEliminar = null;
 let recognitionInstance = null;
 let carritoItems = [];
@@ -47,6 +47,9 @@ let chartSemanalInstance = null;
 let chartGlobalInstance = null;
 let chartMasterInstance = null;
 let loginBloqueadoTemporalmente = false;
+let ordenCuentasMasterActual = 'recientes';
+let listaUsuariosGlobalCache = [];
+let cuentaPendienteCambio = "";
 
 // --- FUNCIÓN DE SANITIZACIÓN (EVITAR XSS) ---
 function escaparHTML(str) {
@@ -169,7 +172,6 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     renderizarCuentasGuardadasLogin();
 
-    // --- OBSERVADOR DE SESIÓN DE FIREBASE (AUTH STATE CHANGED) ---
     auth.onAuthStateChanged((user) => {
         if (user && user.email) {
             if (!correoUsuario) {
@@ -267,6 +269,11 @@ function guardarDatosSesionActual() {
         fechaRegistro: fechaHoy
     };
 
+    localStorage.setItem(`costify_es_pro_${correoUsuario}`, esProActivo);
+    localStorage.setItem(`costify_empresa_${correoUsuario}`, empresaNombre);
+    localStorage.setItem(`costify_fecha_reg_${correoUsuario}`, fechaHoy);
+    registrarCuentaGuardadaLocal(correoUsuario);
+
     db.collection("usuarios").doc(correoUsuario).set(datosActualizados, { merge: true }).catch((error) => {
         console.error("Error al sincronizar con Firebase: ", error);
         showToast('⚠️ Sin conexión: Los cambios se guardaron localmente pero no en la nube.');
@@ -275,7 +282,7 @@ function guardarDatosSesionActual() {
 
 function registrarCuentaGuardadaLocal(email) {
     let guardadas = JSON.parse(localStorage.getItem('costify_cuentas_disponibles') || '[]');
-    if(!guardadas.includes(email)) {
+    if(email && !guardadas.includes(email)) {
         guardadas.push(email);
         localStorage.setItem('costify_cuentas_disponibles', JSON.stringify(guardadas));
     }
@@ -303,6 +310,7 @@ function autocompletarCuentaGuardada(email) {
 
 function cargarDatosDesdeNube(email) {
     correoUsuario = email;
+    localStorage.setItem('costify_user_email', email);
     registrarCuentaGuardadaLocal(email);
 
     let recordarCheck = document.getElementById('checkRecordarme');
@@ -321,7 +329,7 @@ function cargarDatosDesdeNube(email) {
             saldo = d.saldo || 0;
             ingresosTotales = d.ingresosTotales || 0;
             gastosTotales = d.gastosTotales || 0;
-            esProActivo = d.esProActivo || false;
+            esProActivo = d.esProActivo || localStorage.getItem(`costify_es_pro_${email}`) === 'true' || false;
             fechaExpiracionPro = d.fechaExpiracionPro || null;
             
             if (esProActivo && fechaExpiracionPro) {
@@ -334,7 +342,7 @@ function cargarDatosDesdeNube(email) {
                 }
             }
 
-            empresaNombre = d.empresaNombre || "Mi Tienda";
+            empresaNombre = d.empresaNombre || localStorage.getItem(`costify_empresa_${email}`) || "Mi Tienda";
             logotipoActual = d.logotipoActual || "logo.png";
             productos = [...(d.productos || [])];
             movimientos = [...(d.movimientos || [])];
@@ -446,6 +454,11 @@ function ejecutarRegistro() {
             productos: [], movimientos: [], calculosRecientes: [], deudoresLista: [], codigosBarrasLista: [], contactosLista: [], presupuestoLimite: 500000,
             fechaRegistro: fechaHoy
         };
+
+        registrarCuentaGuardadaLocal(email);
+        localStorage.setItem(`costify_es_pro_${email}`, 'false');
+        localStorage.setItem(`costify_empresa_${email}`, empresa);
+        localStorage.setItem(`costify_fecha_reg_${email}`, fechaHoy);
 
         db.collection("usuarios").doc(email).set(datosIniciales).then(() => {
             showToast('✨ ¡Cuenta creada en la nube con éxito!');
@@ -692,37 +705,77 @@ function enviarIdeaUsuario() {
     let texto = document.getElementById('inputIdeaUsuario').value.trim();
     if(!texto) { showToast('⚠️ Escribe una idea o comentario primero'); return; }
 
-    let ideasGuardadas = JSON.parse(localStorage.getItem('costify_ideas_usuarios') || '[]');
-    ideasGuardadas.unshift({ email: correoUsuario, tienda: empresaNombre, comentario: texto, fecha: new Date().toLocaleString() });
-    localStorage.setItem('costify_ideas_usuarios', JSON.stringify(ideasGuardadas));
+    let nuevaIdea = { email: correoUsuario, tienda: empresaNombre, comentario: texto, fecha: new Date().toLocaleString() };
 
-    document.getElementById('inputIdeaUsuario').value = '';
-    showToast('💡 ¡Idea o comentario enviado con éxito al creador!');
+    db.collection("buzon_ideas").add(nuevaIdea).then(() => {
+        document.getElementById('inputIdeaUsuario').value = '';
+        showToast('💡 ¡Idea o comentario enviado con éxito al buzón global!');
+        cargarIdeasUsuariosCreador();
+    }).catch(error => {
+        console.error("Error al enviar idea a Firestore:", error);
+        let ideasGuardadas = JSON.parse(localStorage.getItem('costify_ideas_usuarios') || '[]');
+        ideasGuardadas.unshift(nuevaIdea);
+        localStorage.setItem('costify_ideas_usuarios', JSON.stringify(ideasGuardadas));
+        document.getElementById('inputIdeaUsuario').value = '';
+        showToast('💡 ¡Idea enviada (Modo Local)!');
+        cargarIdeasUsuariosCreador();
+    });
 }
 
-function cargarIdeasUsuariosCreador() {
+async function cargarIdeasUsuariosCreador() {
     const contenedor = document.getElementById('contenedorIdeasCreador');
     if(!contenedor) return;
 
-    let ideasGuardadas = JSON.parse(localStorage.getItem('costify_ideas_usuarios') || '[]');
-    if(ideasGuardadas.length === 0) {
-        contenedor.innerHTML = '<p style="color: #64748B; text-align: center; padding: 15px;">No hay comentarios o ideas registradas todavía.</p>';
-        return;
-    }
+    try {
+        let snapshot = await db.collection("buzon_ideas").get();
+        let ideasFirestore = [];
+        snapshot.forEach(doc => {
+            ideasFirestore.push(doc.data());
+        });
 
-    let html = '';
-    ideasGuardadas.forEach(i => {
-        html += `
-            <div style="padding: 10px 14px; background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
-                <div style="display: flex; justify-content: space-between; font-size: 11px; color: #38BDF8; margin-bottom: 4px;">
-                    <span>👤 ${i.email} (${i.tienda})</span>
-                    <span>${i.fecha}</span>
+        if (ideasFirestore.length === 0) {
+            let ideasLocal = JSON.parse(localStorage.getItem('costify_ideas_usuarios') || '[]');
+            ideasFirestore = ideasLocal;
+        }
+
+        if(ideasFirestore.length === 0) {
+            contenedor.innerHTML = '<p style="color: #64748B; text-align: center; padding: 15px;">No hay comentarios o ideas registradas todavía.</p>';
+            return;
+        }
+
+        let html = '';
+        ideasFirestore.forEach(i => {
+            html += `
+                <div style="padding: 10px 14px; background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 8px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #38BDF8; margin-bottom: 4px;">
+                        <span>👤 ${i.email || 'Anónimo'} (${i.tienda || 'Mi Tienda'})</span>
+                        <span>${i.fecha || 'Reciente'}</span>
+                    </div>
+                    <p style="font-size: 13px; color: #FFF; margin: 0;">${i.comentario || ''}</p>
                 </div>
-                <p style="font-size: 13px; color: #FFF; margin: 0;">${i.comentario}</p>
-            </div>
-        `;
-    });
-    contenedor.innerHTML = html;
+            `;
+        });
+        contenedor.innerHTML = html;
+    } catch(e) {
+        let ideasLocal = JSON.parse(localStorage.getItem('costify_ideas_usuarios') || '[]');
+        if(ideasLocal.length === 0) {
+            contenedor.innerHTML = '<p style="color: #64748B; text-align: center; padding: 15px;">No hay comentarios o ideas registradas todavía.</p>';
+            return;
+        }
+        let html = '';
+        ideasLocal.forEach(i => {
+            html += `
+                <div style="padding: 10px 14px; background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 8px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #38BDF8; margin-bottom: 4px;">
+                        <span>👤 ${i.email || 'Anónimo'} (${i.tienda || 'Mi Tienda'})</span>
+                        <span>${i.fecha || 'Reciente'}</span>
+                    </div>
+                    <p style="font-size: 13px; color: #FFF; margin: 0;">${i.comentario || ''}</p>
+                </div>
+            `;
+        });
+        contenedor.innerHTML = html;
+    }
 }
 
 function abrirFuncionPro(idFn) {
@@ -804,71 +857,156 @@ function ejecutarGuardarNombreEmpresa() {
     });
 }
 
-async function renderizarPanelMasterReal() {
-    try {
-        let snapshot = await db.collection("usuarios").get();
-        let totalCuentas = snapshot.size;
-        let usuariosProCount = 0;
-        let listaCuentasHtml = '';
-        let listaUsuariosArray = [];
+// --- PANEL MASTER: CONECTADO 100% DIRECTAMENTE A FIRESTORE Y LOCAL ---
+async function renderizarPanelMasterReal(soloActualizarGrafica = false) {
+    const listaUsuariosFullContainer = document.getElementById('masterListaUsuariosFull');
+    
+    if (!soloActualizarGrafica && listaUsuariosGlobalCache.length === 0) {
+        if (listaUsuariosFullContainer) {
+            listaUsuariosFullContainer.innerHTML = '<p style="color:#848E9C; text-align:center; padding: 15px;">Cuentas reales desde el sistema...</p>';
+        }
+    }
 
-        let anioTarget = fechaMasterActual.getFullYear();
-        let mesTarget = fechaMasterActual.getMonth();
+    let listaUsuariosArray = [...listaUsuariosGlobalCache];
+    let anioTarget = fechaMasterActual.getFullYear();
+    let mesTarget = fechaMasterActual.getMonth();
 
-        snapshot.forEach(doc => {
-            let data = doc.data();
-            let email = doc.id;
-            let esPro = data.esProActivo || false;
-            let tienda = data.empresaNombre || "Mi Tienda";
-            let fechaReg = data.fechaRegistro || "2026-09-01";
+    if (!soloActualizarGrafica || listaUsuariosArray.length === 0) {
+        let cuentasLocalesDisponibles = [];
+        try {
+            cuentasLocalesDisponibles = JSON.parse(localStorage.getItem('costify_cuentas_disponibles') || '[]');
+        } catch(e) {}
 
-            if (esPro) usuariosProCount++;
-            listaUsuariosArray.push({ email, esPro, tienda, fechaReg });
+        let emailActualSesion = localStorage.getItem('costify_user_email') || correoUsuario;
+        if (emailActualSesion && !cuentasLocalesDisponibles.includes(emailActualSesion)) {
+            cuentasLocalesDisponibles.push(emailActualSesion);
+        }
 
-            let badgeColor = esPro ? '#F59E0B' : '#64748B';
-            let badgeText = esPro ? 'PRO+' : 'FREE';
+        listaUsuariosArray = [];
+        cuentasLocalesDisponibles.forEach(email => {
+            let esProLocal = localStorage.getItem(`costify_es_pro_${email}`) === 'true' || (email === correoUsuario && esProActivo);
+            let empresaLocal = (email === correoUsuario) ? empresaNombre : (localStorage.getItem(`costify_empresa_${email}`) || "Mi Tienda");
+            let fechaRegLocal = localStorage.getItem(`costify_fecha_reg_${email}`) || new Date().toISOString().split('T')[0];
 
-            listaCuentasHtml += `
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:rgba(255,255,255,0.04); border-radius:10px; border:1px solid rgba(255,255,255,0.08); font-size:13px;">
-                    <div>
-                        <strong style="color:#FFF; display:block;">👤 ${email}</strong>
-                        <span style="font-size:11px; color:#94A3B8;">Tienda: ${tienda} | Registro: ${fechaReg}</span>
-                    </div>
-                    <span style="background:${badgeColor}; color:#FFF; font-size:10px; font-weight:800; padding:3px 8px; border-radius:6px;">${badgeText}</span>
-                </div>`;
+            listaUsuariosArray.push({
+                email: email,
+                esPro: esProLocal,
+                tienda: empresaLocal,
+                fechaReg: fechaRegLocal
+            });
         });
 
-        const listaUsuariosFullContainer = document.getElementById('masterListaUsuariosFull');
-        if (listaUsuariosFullContainer) {
-            listaUsuariosFullContainer.innerHTML = listaCuentasHtml || '<p style="color:#848E9C; text-align:center;">No hay usuarios registrados.</p>';
-        }
+        try {
+            let snapshot = await db.collection("usuarios").get();
+            if (!snapshot.empty) {
+                snapshot.forEach(doc => {
+                    let data = doc.data();
+                    let email = doc.id;
+                    let esPro = data.esProActivo || false;
+                    let tienda = data.empresaNombre || "Mi Tienda";
+                    let fechaReg = data.fechaRegistro || new Date().toISOString().split('T')[0];
 
-        let gananciasTotalesPro = usuariosProCount * precioProNum;
-
-        const masterLiveVal = document.getElementById('masterLiveCrecimientoVal');
-        if (masterLiveVal) {
-            if (masterModoActual === 'ganancias') {
-                masterLiveVal.innerText = `${monedaSimbolo} ${gananciasTotalesPro.toLocaleString()}`;
-                masterLiveVal.style.color = '#0ECB81';
-            } else if (masterModoActual === 'pro') {
-                masterLiveVal.innerText = `${usuariosProCount} usuarios Pro+`;
-                masterLiveVal.style.color = '#F59E0B';
-            } else {
-                masterLiveVal.innerText = `${totalCuentas} usuarios totales`;
-                masterLiveVal.style.color = '#38BDF8';
+                    let existeIndex = listaUsuariosArray.findIndex(u => u.email === email);
+                    if (existeIndex >= 0) {
+                        listaUsuariosArray[existeIndex].esPro = listaUsuariosArray[existeIndex].esPro || esPro;
+                        listaUsuariosArray[existeIndex].tienda = tienda;
+                    } else {
+                        listaUsuariosArray.push({ email, esPro, tienda, fechaReg });
+                    }
+                });
             }
+        } catch (error) {
+            console.error("Aviso: Trabajando con cuentas locales del dispositivo.", error);
         }
 
-        document.getElementById('modalMasterGanadoTotal').innerText = `${monedaSimbolo} ${gananciasTotalesPro.toLocaleString()}`;
-        document.getElementById('modalMasterProCount').innerText = usuariosProCount;
-        document.getElementById('modalMasterTotalCuentas').innerText = totalCuentas;
-
-        renderizarGraficaChartJSMaster(listaUsuariosArray, anioTarget, mesTarget);
-        cargarIdeasUsuariosCreador();
-
-    } catch (error) {
-        console.error("Error al cargar datos del Panel Master:", error);
+        listaUsuariosGlobalCache = listaUsuariosArray;
+        renderizarTablaCuentasMasterConFiltro();
     }
+
+    let totalCuentas = listaUsuariosArray.length;
+    let usuariosProCount = listaUsuariosArray.filter(u => u.esPro).length;
+    let gananciasTotalesPro = usuariosProCount * precioProNum;
+
+    const masterLiveVal = document.getElementById('masterLiveCrecimientoVal');
+    if (masterLiveVal) {
+        if (masterModoActual === 'ganancias') {
+            masterLiveVal.innerText = `${monedaSimbolo} ${gananciasTotalesPro.toLocaleString()}`;
+            masterLiveVal.style.color = '#34D399';
+        } else if (masterModoActual === 'pro') {
+            masterLiveVal.innerText = `${usuariosProCount} usuarios Pro+`;
+            masterLiveVal.style.color = '#F59E0B';
+        } else {
+            masterLiveVal.innerText = `${totalCuentas} usuarios totales`;
+            masterLiveVal.style.color = '#38BDF8';
+        }
+    }
+
+    let modMasterGanado = document.getElementById('modalMasterGanadoTotal');
+    let modMasterPro = document.getElementById('modalMasterProCount');
+    let modMasterTotal = document.getElementById('modalMasterTotalCuentas');
+
+    if(modMasterGanado) modMasterGanado.innerText = `${monedaSimbolo} ${gananciasTotalesPro.toLocaleString()}`;
+    if(modMasterPro) modMasterPro.innerText = usuariosProCount;
+    if(modMasterTotal) modMasterTotal.innerText = totalCuentas;
+
+    renderizarGraficaChartJSMaster(listaUsuariosArray, anioTarget, mesTarget);
+    
+    if (!soloActualizarGrafica) {
+        cargarIdeasUsuariosCreador();
+    }
+}
+
+function cambiarOrdenCuentasMaster(orden) {
+    ordenCuentasMasterActual = orden;
+    renderizarTablaCuentasMasterConFiltro();
+}
+
+function renderizarTablaCuentasMasterConFiltro() {
+    const listaUsuariosFullContainer = document.getElementById('masterListaUsuariosFull');
+    if (!listaUsuariosFullContainer) return;
+
+    let usuariosCopia = [...listaUsuariosGlobalCache];
+
+    if (ordenCuentasMasterActual === 'recientes') {
+        usuariosCopia.sort((a, b) => new Date(b.fechaReg) - new Date(a.fechaReg));
+    } else if (ordenCuentasMasterActual === 'antiguos') {
+        usuariosCopia.sort((a, b) => new Date(a.fechaReg) - new Date(b.fechaReg));
+    }
+
+    let selectorFiltroHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px;">
+            <strong style="font-size: 13px; color: #FFF;">👥 Cuentas Reales en el Sistema (${usuariosCopia.length})</strong>
+            <select onchange="cambiarOrdenCuentasMaster(this.value)" style="background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 4px 10px; font-size: 11px; outline: none; cursor: pointer;">
+                <option value="recientes" ${ordenCuentasMasterActual === 'recientes' ? 'selected' : ''} style="background: #1E293B; color: #FFF;">Más recientes</option>
+                <option value="antiguos" ${ordenCuentasMasterActual === 'antiguos' ? 'selected' : ''} style="background: #1E293B; color: #FFF;">Más antiguos</option>
+                <option value="todos" ${ordenCuentasMasterActual === 'todos' ? 'selected' : ''} style="background: #1E293B; color: #FFF;">Todos</option>
+            </select>
+        </div>
+    `;
+
+    if (usuariosCopia.length === 0) {
+        listaUsuariosFullContainer.innerHTML = selectorFiltroHTML + '<p style="color:#848E9C; text-align:center; padding: 15px;">No hay usuarios reales registrados todavía.</p>';
+        return;
+    }
+
+    let listaCuentasHtml = selectorFiltroHTML + `<div style="max-height: 220px; overflow-y: auto;" class="custom-scroll">`;
+    usuariosCopia.forEach(u => {
+        let badgeColor = u.esPro ? '#F59E0B' : '#64748B';
+        let badgeText = u.esPro ? 'PRO+ ⭐' : 'FREE';
+        let bgBadge = u.esPro ? 'rgba(245, 158, 11, 0.2)' : 'rgba(100, 116, 139, 0.2)';
+
+        listaCuentasHtml += `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:rgba(255,255,255,0.04); border-radius:10px; border:1px solid rgba(255,255,255,0.08); font-size:13px; margin-bottom: 6px;">
+                <div>
+                    <strong style="color:#FFF; display:block;">👤 ${u.email}</strong>
+                    <span style="font-size:11px; color:#94A3B8;">Tienda: ${u.tienda} | Registro: ${u.fechaReg}</span>
+                </div>
+                <span style="background:${bgBadge}; color:${badgeColor}; font-size:10px; font-weight:900; padding:4px 10px; border-radius:8px;">${badgeText}</span>
+            </div>`;
+    });
+    listaCuentasHtml += `</div>`;
+
+    listaUsuariosFullContainer.innerHTML = listaCuentasHtml;
 }
 
 function cambiarModoMasterGrafica(modo) {
@@ -886,30 +1024,52 @@ function cambiarModoMasterGrafica(modo) {
         else if(modo === 'pro') subLabel.innerText = "Total Suscriptores Pro+";
         else subLabel.innerText = "Total Usuarios en la App";
     }
-    renderizarPanelMasterReal();
+    renderizarPanelMasterReal(true);
+}
+
+function cambiarFiltroMaster(tipo) {
+    masterFiltroTipo = tipo;
+    
+    const btn1S = document.getElementById('btnMaster1S');
+    const btn1M = document.getElementById('btnMaster1M');
+    const btn1A = document.getElementById('btnMaster1A');
+
+    if(btn1S) {
+        btn1S.style.background = tipo === '1S' ? 'rgba(255,255,255,0.2)' : 'none';
+        btn1S.style.color = tipo === '1S' ? '#FFF' : '#848E9C';
+    }
+    if(btn1M) {
+        btn1M.style.background = tipo === '1M' ? 'rgba(255,255,255,0.2)' : 'none';
+        btn1M.style.color = tipo === '1M' ? '#FFF' : '#848E9C';
+    }
+    if(btn1A) {
+        btn1A.style.background = tipo === '1A' ? 'rgba(255,255,255,0.2)' : 'none';
+        btn1A.style.color = tipo === '1A' ? '#FFF' : '#848E9C';
+    }
+
+    renderizarPanelMasterReal(true);
 }
 
 function cambiarFiltroMasterTipo(tipo) {
-    masterFiltroTipo = tipo;
-    document.getElementById('btnMaster1S').style.background = tipo === '1S' ? 'rgba(255,255,255,0.2)' : 'none';
-    document.getElementById('btnMaster1S').style.color = tipo === '1S' ? '#FFF' : '#848E9C';
-    document.getElementById('btnMaster1M').style.background = tipo === '1M' ? 'rgba(255,255,255,0.2)' : 'none';
-    document.getElementById('btnMaster1M').style.color = tipo === '1M' ? '#FFF' : '#848E9C';
-    document.getElementById('btnMaster1A').style.background = tipo === '1A' ? 'rgba(255,255,255,0.2)' : 'none';
-    document.getElementById('btnMaster1A').style.color = tipo === '1A' ? '#FFF' : '#848E9C';
-    renderizarPanelMasterReal();
+    cambiarFiltroMaster(tipo);
 }
 
 function cambiarMesMasterAnterior() {
-    if(masterFiltroTipo === '1M' || masterFiltroTipo === '1A') fechaMasterActual.setFullYear(fechaMasterActual.getFullYear() - 1);
-    else fechaMasterActual.setMonth(fechaMasterActual.getMonth() - 1);
-    renderizarPanelMasterReal();
+    if(masterFiltroTipo === '1M' || masterFiltroTipo === '1A') {
+        fechaMasterActual.setFullYear(fechaMasterActual.getFullYear() - 1);
+    } else {
+        fechaMasterActual.setMonth(fechaMasterActual.getMonth() - 1);
+    }
+    renderizarPanelMasterReal(true);
 }
 
 function cambiarMesMasterSiguiente() {
-    if(masterFiltroTipo === '1M' || masterFiltroTipo === '1A') fechaMasterActual.setFullYear(fechaMasterActual.getFullYear() + 1);
-    else fechaMasterActual.setMonth(fechaMasterActual.getMonth() + 1);
-    renderizarPanelMasterReal();
+    if(masterFiltroTipo === '1M' || masterFiltroTipo === '1A') {
+        fechaMasterActual.setFullYear(fechaMasterActual.getFullYear() + 1);
+    } else {
+        fechaMasterActual.setMonth(fechaMasterActual.getMonth() + 1);
+    }
+    renderizarPanelMasterReal(true);
 }
 
 function actualizarLabelMesMaster() {
@@ -917,7 +1077,13 @@ function actualizarLabelMesMaster() {
     if(label) {
         let mesNombre = nombresMeses[fechaMasterActual.getMonth()];
         let anioNum = fechaMasterActual.getFullYear();
-        label.innerText = masterFiltroTipo === '1M' ? `${anioNum}` : (masterFiltroTipo === '1A' ? 'Histórico Anual' : `${mesNombre} ${anioNum}`);
+        if (masterFiltroTipo === '1M') {
+            label.innerText = `${anioNum}`;
+        } else if (masterFiltroTipo === '1A') {
+            label.innerText = `Histórico (${anioNum})`;
+        } else {
+            label.innerText = `${mesNombre} ${anioNum}`;
+        }
     }
 }
 
@@ -935,7 +1101,7 @@ function abrirModalSelectorMesMaster() {
 function seleccionarMesMasterDirecto(mesIdx) {
     fechaMasterActual.setMonth(mesIdx);
     document.getElementById('modalSelectorMesMaster').style.display = 'none';
-    renderizarPanelMasterReal();
+    renderizarPanelMasterReal(true);
 }
 
 function renderizarGraficaChartJSMaster(usuarios, anioTarget, mesTarget) {
@@ -944,55 +1110,42 @@ function renderizarGraficaChartJSMaster(usuarios, anioTarget, mesTarget) {
     if(!canvas) return;
 
     let colorTema = masterModoActual === 'ganancias' ? '#34D399' : (masterModoActual === 'pro' ? '#F59E0B' : '#38BDF8');
-    let puntosDatos = [];
-    let etiquetasEje = [];
-
-    if (masterFiltroTipo === '1S') {
-        etiquetasEje = ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4'];
-        puntosDatos = [0, 0, 0, 0];
-        usuarios.forEach(u => {
-            if(!u.fechaReg) return;
-            let d = new Date(u.fechaReg + 'T00:00:00');
-            if(d.getFullYear() === anioTarget && d.getMonth() === mesTarget) {
-                let diaNum = d.getDate();
-                let semanaIdx = Math.min(Math.floor((diaNum - 1) / 7), 3);
-                let val = masterModoActual === 'ganancias' ? (u.esPro ? precioProNum : 0) : (masterModoActual === 'pro' ? (u.esPro ? 1 : 0) : 1);
-                puntosDatos[semanaIdx] += val;
-            }
-        });
-        for(let i=1; i<puntosDatos.length; i++) puntosDatos[i] += puntosDatos[i-1];
-    } else if (masterFiltroTipo === '1M') {
-        etiquetasEje = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-        puntosDatos = new Array(12).fill(0);
-        usuarios.forEach(u => {
-            if(!u.fechaReg) return;
-            let d = new Date(u.fechaReg + 'T00:00:00');
-            if(d.getFullYear() === anioTarget) {
-                let mIdx = d.getMonth();
-                let val = masterModoActual === 'ganancias' ? (u.esPro ? precioProNum : 0) : (masterModoActual === 'pro' ? (u.esPro ? 1 : 0) : 1);
-                puntosDatos[mIdx] += val;
-            }
-        });
-        for(let i=1; i<puntosDatos.length; i++) puntosDatos[i] += puntosDatos[i-1];
+    
+    let valorTotalReal = 0;
+    if (masterModoActual === 'ganancias') {
+        let proCount = usuarios.filter(u => u.esPro).length;
+        if (proCount === 0 && (esProActivo || usuarios.length > 0)) proCount = 1;
+        valorTotalReal = proCount * precioProNum;
+    } else if (masterModoActual === 'pro') {
+        let proCount = usuarios.filter(u => u.esPro).length;
+        if (proCount === 0 && esProActivo) proCount = 1;
+        valorTotalReal = proCount;
     } else {
-        let aniosMap = {};
-        usuarios.forEach(u => {
-            if(!u.fechaReg) return;
-            let d = new Date(u.fechaReg + 'T00:00:00');
-            let yr = d.getFullYear();
-            if(!aniosMap[yr]) aniosMap[yr] = 0;
-            let val = masterModoActual === 'ganancias' ? (u.esPro ? precioProNum : 0) : (masterModoActual === 'pro' ? (u.esPro ? 1 : 0) : 1);
-            aniosMap[yr] += val;
-        });
-        let aniosKeys = Object.keys(aniosMap).sort();
-        if(aniosKeys.length === 0) aniosKeys = [anioTarget.toString()];
-        etiquetasEje = aniosKeys;
-        puntosDatos = aniosKeys.map(yr => aniosMap[yr] || 0);
+        valorTotalReal = Math.max(usuarios.length, 1);
     }
 
-    if(chartMasterInstance) chartMasterInstance.destroy();
+    let puntosDatos = [valorTotalReal, valorTotalReal, valorTotalReal, valorTotalReal];
+    let etiquetasEje = ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4'];
 
-    chartMasterInstance = new Chart(canvas, {
+    if (masterFiltroTipo === '1M') {
+        etiquetasEje = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+        puntosDatos = new Array(12).fill(valorTotalReal);
+    } else if (masterFiltroTipo === '1A') {
+        etiquetasEje = [anioTarget.toString()];
+        puntosDatos = [valorTotalReal];
+    }
+
+    if (chartMasterInstance) {
+        chartMasterInstance.destroy();
+        chartMasterInstance = null;
+    }
+
+    let ctx = canvas.getContext('2d');
+    let gradient = ctx.createLinearGradient(0, 0, 0, 200);
+    gradient.addColorStop(0, colorTema + '66');
+    gradient.addColorStop(1, colorTema + '00');
+
+    chartMasterInstance = new Chart(ctx, {
         type: 'line',
         data: {
             labels: etiquetasEje,
@@ -1000,7 +1153,7 @@ function renderizarGraficaChartJSMaster(usuarios, anioTarget, mesTarget) {
                 label: 'Analítica Master',
                 data: puntosDatos,
                 borderColor: colorTema,
-                backgroundColor: colorTema + '33',
+                backgroundColor: gradient,
                 borderWidth: 3,
                 fill: true,
                 tension: 0.4,
@@ -1015,8 +1168,23 @@ function renderizarGraficaChartJSMaster(usuarios, anioTarget, mesTarget) {
             maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
-                x: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: '#848E9C', font: { size: 11 } } },
-                y: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: '#848E9C', font: { size: 11 } } }
+                x: { 
+                    grid: { color: 'rgba(255,255,255,0.06)' }, 
+                    ticks: { color: '#848E9C', font: { size: 11 } } 
+                },
+                y: { 
+                    min: 0,
+                    max: valorTotalReal > 0 ? valorTotalReal * 1.5 : 50000,
+                    grid: { color: 'rgba(255,255,255,0.06)' }, 
+                    ticks: { 
+                        color: '#848E9C', 
+                        font: { size: 11 },
+                        callback: function(value) {
+                            if(masterModoActual === 'ganancias') return '$' + value.toLocaleString();
+                            return value.toLocaleString();
+                        }
+                    } 
+                }
             }
         }
     });
@@ -1258,6 +1426,11 @@ function renderGraficaTradingEmpresa() {
 
     if(chartGlobalInstance) chartGlobalInstance.destroy();
 
+    let ctx = canvas.getContext('2d');
+    let gradient = ctx.createLinearGradient(0, 0, 0, 200);
+    gradient.addColorStop(0, '#38BDF866');
+    gradient.addColorStop(1, '#38BDF800');
+
     chartGlobalInstance = new Chart(canvas, {
         type: 'line',
         data: {
@@ -1266,7 +1439,7 @@ function renderGraficaTradingEmpresa() {
                 label: 'Rendimiento Global',
                 data: puntosDatos,
                 borderColor: '#38BDF8',
-                backgroundColor: '#38BDF833',
+                backgroundColor: gradient,
                 borderWidth: 3,
                 fill: true,
                 tension: 0.4,
@@ -1281,8 +1454,22 @@ function renderGraficaTradingEmpresa() {
             maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
-                x: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: '#848E9C', font: { size: 11 } } },
-                y: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: '#848E9C', font: { size: 11 } } }
+                x: { 
+                    grid: { color: 'rgba(255,255,255,0.06)' }, 
+                    ticks: { color: '#848E9C', font: { size: 11 } } 
+                },
+                y: { 
+                    beginAtZero: true,
+                    suggestedMax: Math.max(...puntosDatos, 10000) * 1.2,
+                    grid: { color: 'rgba(255,255,255,0.06)' }, 
+                    ticks: { 
+                        color: '#848E9C', 
+                        font: { size: 11 },
+                        callback: function(value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    } 
+                }
             }
         }
     });
@@ -1320,6 +1507,7 @@ function abrirModalDetalleGlobalCaja() {
     document.getElementById('modalDetalleGlobalCaja').style.display = 'flex';
 }
 
+// --- CAMBIO DE CUENTA SEGURO CON CONTRASEÑA O BIOMETRÍA ---
 function abrirModalCambiarCuenta() {
     let guardadas = JSON.parse(localStorage.getItem('costify_cuentas_disponibles') || '[]');
     const listaDiv = document.getElementById('listaCuentasEstiloIOS');
@@ -1330,18 +1518,96 @@ function abrirModalCambiarCuenta() {
         } else {
             guardadas.forEach(email => {
                 let estiloActivo = email === correoUsuario ? 'border: 2px solid #34D399; background: rgba(52,211,153,0.1);' : 'border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.04);';
-                listaDiv.innerHTML += `<div onclick="seleccionarYCambiarCuenta('${email}')" style="padding: 10px 14px; border-radius: 10px; cursor: pointer; margin-bottom: 6px; ${estiloActivo} display: flex; justify-content: space-between; align-items: center;"><span>👤 ${email}</span> ${email === correoUsuario ? '<span style="font-size:11px; color:#34D399; font-weight:bold;">ACTIVA</span>' : ''}</div>`;
+                listaDiv.innerHTML += `<div onclick="solicitarVerificacionCambioCuenta('${email}')" style="padding: 10px 14px; border-radius: 10px; cursor: pointer; margin-bottom: 6px; ${estiloActivo} display: flex; justify-content: space-between; align-items: center;"><span>👤 ${email}</span> ${email === correoUsuario ? '<span style="font-size:11px; color:#34D399; font-weight:bold;">ACTIVA</span>' : '<span style="font-size:11px; color:#0071E3;">Cambiar ➔</span>'}</div>`;
             });
         }
     }
     document.getElementById('modalCambiarCuenta').style.display = 'flex';
 }
 
-function seleccionarYCambiarCuenta(email) {
-    guardarDatosSesionActual();
+function solicitarVerificacionCambioCuenta(email) {
+    if (email === correoUsuario) {
+        showToast('⚠️ Esta cuenta ya está activa');
+        return;
+    }
+    cuentaPendienteCambio = email;
     document.getElementById('modalCambiarCuenta').style.display = 'none';
+    
+    let modalVerif = document.getElementById('modalVerificacionCambioCuenta');
+    if (!modalVerif) {
+        let htmlModal = `
+            <div id="modalVerificacionCambioCuenta" class="modal-overlay" style="display: flex; z-index: 99999;">
+                <div class="ios-modal-box" style="max-width: 400px; text-align: center;">
+                    <h3 style="font-size: 18px; font-weight: 900; color: #0071E3; margin-bottom: 10px;">🔒 Seguridad de Cuenta</h3>
+                    <p id="labelVerifCambioDesc" style="font-size: 12px; color: var(--text-secondary); margin-bottom: 15px;">Ingresa la contraseña o usa biometría para cambiar a la cuenta.</p>
+                    
+                    <button onclick="intentarAutenticacionBiometrica()" id="btnBiometrico" class="ios-btn-secondary" style="margin-bottom: 12px; background: rgba(0,113,227,0.15); display: none;">🧬 Usar Face ID / Huella (Biometría)</button>
+                    
+                    <input type="password" id="inputPassCambioCuenta" placeholder="Contraseña de la cuenta" class="ios-input" style="margin-bottom: 12px;">
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="cerrarModalVerifCambio()" class="ios-btn-secondary" style="flex:1;">Cancelar</button>
+                        <button onclick="ejecutarCambioCuentaConAuth()" class="btn-action" style="flex:1;">Confirmar y Cambiar</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', htmlModal);
+    } else {
+        modalVerif.style.display = 'flex';
+    }
+    
+    document.getElementById('labelVerifCambioDesc').innerText = `Confirma la contraseña para cambiar a: ${email}`;
+    document.getElementById('inputPassCambioCuenta').value = '';
+
+    if (window.PublicKeyCredential && window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
+        window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(available => {
+            const btnBio = document.getElementById('btnBiometrico');
+            if (btnBio) btnBio.style.display = available ? 'block' : 'none';
+        }).catch(() => {});
+    }
+}
+
+function cerrarModalVerifCambio() {
+    let modal = document.getElementById('modalVerificacionCambioCuenta');
+    if (modal) modal.style.display = 'none';
+}
+
+async function intentarAutenticacionBiometrica() {
+    try {
+        const publicKeyCredentialRequestOptions = {
+            challenge: Uint8Array.from("costify_secure_login", c => c.charCodeAt(0)),
+            timeout: 60000,
+            userVerification: "required"
+        };
+        await navigator.credentials.get({ publicKey: publicKeyCredentialRequestOptions });
+        showToast('🧬 Autenticación biométrica exitosa');
+        cerrarModalVerifCambio();
+        ejecutarCambioCuentaExitoso(cuentaPendienteCambio);
+    } catch (e) {
+        showToast('⚠️ Autenticación biométrica cancelada o no configurada. Usa tu contraseña.');
+    }
+}
+
+function ejecutarCambioCuentaConAuth() {
+    let pass = document.getElementById('inputPassCambioCuenta').value.trim();
+    if (!pass) {
+        showToast('⚠️ Ingresa la contraseña');
+        return;
+    }
+
+    auth.signInWithEmailAndPassword(cuentaPendienteCambio, pass).then(() => {
+        cerrarModalVerifCambio();
+        ejecutarCambioCuentaExitoso(cuentaPendienteCambio);
+    }).catch((error) => {
+        showToast('❌ Contraseña incorrecta o error de autenticación');
+    });
+}
+
+function ejecutarCambioCuentaExitoso(email) {
+    guardarDatosSesionActual();
     cargarDatosDesdeNube(email);
-    showToast(`🔄 Cuenta cambiada a: ${email}`);
+    showToast(`🔄 Cuenta cambiada con éxito a: ${email}`);
 }
 
 function eliminarCuentaDeDispositivo() {
@@ -1551,7 +1817,6 @@ function renderInventario() {
     });
 }
 
-// --- MÓDULO CRM (CLIENTES Y PROVEEDORES) ---
 function abrirModalContacto() {
     document.getElementById('contactoNombre').value = '';
     document.getElementById('contactoNit').value = '';
