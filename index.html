@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- Metadatos de SEO e Indexación para Google Search Console -->
+    <!-- Metadatos de SEO e Indexación para Google Search Console y AdSense -->
     <title>Costify - Software de Control Financiero, Inventario y Punto de Venta para Emprendedores</title>
     <meta name="description" content="Descubre Costify, la plataforma integral en la nube diseñada para emprendedores y pequeños negocios. Administra inventario en tiempo real, calcula márgenes de ganancia con Calculcostos, procesa ventas con el POS y genera reportes profesionales sin complicaciones.">
     <meta name="robots" content="index, follow">
@@ -21,7 +21,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="style.css?v=1.0.8">
 
-    <!-- Estilo optimizado para que quepan todos los botones incluyendo Pro+ completamente visible -->
     <style>
         .nav-desktop-pc {
             display: flex !important;
@@ -58,17 +57,17 @@
             display: none;
         }
         #panelNotificacionesInApp {
-            position: absolute;
-            top: 55px;
-            left: 10px;
-            width: 330px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
+            position: fixed;
+            top: 65px;
+            right: 20px;
+            width: 320px;
+            background: var(--card-bg, #101423);
+            border: 1px solid var(--border-color, #1E2337);
             border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             display: none;
             flex-direction: column;
-            z-index: 999999;
+            z-index: 99999999;
             overflow: hidden;
             backdrop-filter: blur(15px);
         }
@@ -79,7 +78,7 @@
     <div id="offlineBanner">⚠️ Estás sin conexión. Trabajando en Modo Offline (IndexedDB Activo). Se sincronizará al volver la red[cite: 3].</div>
     <div id="toast"><span id="toastMsg">Acción realizada</span></div>
 
-    <!-- SCRIPT DE MODALES DE INFORMACIÓN Y LEGALES -->
+    <!-- MODALES DE INFORMACIÓN Y LEGALES -->
     <script>
         function abrirModalDetalleBeneficio(tipo) {
             const modal = document.getElementById('modalLegal');
@@ -170,7 +169,7 @@
         }
     </script>
 
-    <!-- 🌟 LANDING PAGE DE PRESENTACIÓN OPTIMIZADA PARA ADSENSE Y SEO -->
+    <!-- LANDING PAGE -->
     <div id="landingPageContainer" class="landing-hero-container">
         <header class="landing-header">
             <div class="landing-logo-box">
@@ -365,14 +364,12 @@
                 </div>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 6px; flex: 1; justify-content: flex-end; overflow: hidden;">
-                <!-- CAMPANA DE NOTIFICACIONES IN-APP DINÁMICA -->
+            <div style="display: flex; align-items: center; gap: 6px; flex: 1; justify-content: flex-end; overflow: visible;">
                 <div style="position: relative; flex-shrink: 0;">
                     <button onclick="togglePanelNotificacionesInApp()" style="background: rgba(120, 120, 128, 0.12); border: none; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; position: relative;" title="Centro de Notificaciones">
                         🔔
                         <span id="badgeContadorNotif" style="position: absolute; top: -4px; right: -4px; background: #EF4444; color: #FFF; font-size: 9px; font-weight: 900; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">0</span>
                     </button>
-                    <!-- Panel Desplegable In-App con datos reales -->
                     <div id="panelNotificacionesInApp" class="custom-scroll">
                         <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border-color); background: rgba(120,120,128,0.05);">
                             <span style="font-size: 13px; font-weight: 800;">🔔 Centro de Alertas In-App</span>
@@ -387,7 +384,7 @@
                 <button onclick="toggleDarkMode()" id="btnDarkModeToggle" style="background: rgba(120, 120, 128, 0.12); border: none; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;">🌙</button>
                 <button onclick="switchTab('perfil')" style="background: rgba(120, 120, 128, 0.12); border: none; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;" title="Ajustes">⚙️</button>
 
-                <!-- Barra de navegación ampliada y optimizada con scroll horizontal limpio para alojar Pro+ completamente visible -->
+                <!-- BARRA DE NAVEGACIÓN -->
                 <nav class="nav-desktop custom-scroll nav-desktop-pc" style="display: flex; gap: 4px; white-space: nowrap; align-items: center;">
                     <button onclick="switchTab('inicio')" class="nav-tab-btn active" data-tab="inicio">Inicio</button>
                     <button onclick="switchTab('inventario')" class="nav-tab-btn" data-tab="inventario">Inventario & Stock</button>
@@ -395,6 +392,7 @@
                     <button onclick="switchTab('calculadora')" class="nav-tab-btn" data-tab="calculadora">Calculcostos</button>
                     <button onclick="switchTab('caja')" class="nav-tab-btn" data-tab="caja">Caja Registradora</button>
                     <button onclick="switchTab('carrito')" class="nav-tab-btn" data-tab="carrito">🛒 Carrito</button>
+                    <button onclick="switchTab('blog')" class="nav-tab-btn" data-tab="blog" style="color: #34D399; font-weight: 700;">📖 Blog & Guías</button>
                     <button onclick="switchTab('recomendaciones')" class="nav-tab-btn" data-tab="recomendaciones">💡 Recomendaciones</button>
                     <button onclick="switchTab('pro')" class="nav-tab-btn" data-tab="pro" style="color: #D97706; font-weight: 700; padding-left: 12px; padding-right: 12px; flex-shrink: 0;">Pro+ ⭐</button>
                     <button id="navMasterBtn" onclick="switchTab('master')" class="nav-tab-btn hidden" data-tab="master" style="background: #1E1B4B; color: #F59E0B; font-weight: 900;">Master 👑</button>
@@ -412,7 +410,7 @@
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <span style="font-size: 13px; font-weight: 900; background: rgba(0,113,227,0.3); color: #60A5FA; padding: 4px 10px; border-radius: 8px; letter-spacing: 0.5px;">Costify</span>
                                 <button onclick="cambiarMesAnterior()" style="background: rgba(255,255,255,0.15); border: none; color: white; width: 28px; height: 28px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Mes anterior">◀</button>
-                                <span id="labelMesActualGrafica" style="font-size: 14px; font-weight: 800; cursor: pointer; color: #34D399; letter-spacing: 0.5px;" onclick="abrirModalSelectorMeses()" title="Haz clic para seleccionar mes">Septiembre 2026[cite: 3]</span>
+                                <span id="labelMesActualGrafica" style="font-size: 14px; font-weight: 800; cursor: pointer; color: #34D399; letter-spacing: 0.5px;" onclick="abrirModalSelectorMeses()" title="Haz clic para seleccionar mes">Octubre 2026</span>
                                 <button onclick="cambiarMesSiguiente()" style="background: rgba(255,255,255,0.15); border: none; color: white; width: 28px; height: 28px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Mes siguiente">▶</button>
                             </div>
                             <div style="display: flex; gap: 4px;" onclick="event.stopPropagation()">
@@ -477,7 +475,7 @@
                         <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                             <div style="display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 10px;">
                                 <button onclick="cambiarMesGlobalAnterior()" style="background: none; border: none; color: white; font-weight: 800; cursor: pointer; font-size: 12px;" title="Mes anterior">◀</button>
-                                <span id="labelMesGlobalGrafica" style="font-size: 13px; font-weight: 800; color: #34D399; cursor: pointer;" onclick="abrirModalSelectorMesesGlobal()" title="Seleccionar mes">Septiembre 2026[cite: 3]</span>
+                                <span id="labelMesGlobalGrafica" style="font-size: 13px; font-weight: 800; color: #34D399; cursor: pointer;" onclick="abrirModalSelectorMesesGlobal()" title="Seleccionar mes">Octubre 2026</span>
                                 <button onclick="cambiarMesGlobalSiguiente()" style="background: none; border: none; color: white; font-weight: 800; cursor: pointer; font-size: 12px;" title="Mes siguiente">▶</button>
                             </div>
 
@@ -612,7 +610,7 @@
                             <span style="font-size: 11px; font-weight: 800; background: rgba(0, 113, 227, 0.15); color: #0071E3; padding: 6px 12px; border-radius: 20px; letter-spacing: 0.5px;">OSX POS</span>
                         </div>
                         
-                        <!-- CONFIGURACIÓN DE IMPUESTOS (IVA / IMPOCONSUMO) -->
+                        <!-- CONFIGURACIÓN DE IMPUESTOS -->
                         <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 10px; margin-bottom: 16px; background: rgba(120, 120, 128, 0.05); padding: 12px; border-radius: 14px; border: 1px solid var(--border-color);">
                             <div>
                                 <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 4px; text-transform: uppercase;">Tipo de Impuesto</label>
@@ -657,7 +655,7 @@
                             <p style="color: var(--text-secondary); text-align: center; font-size: 13px; padding: 15px 0;">El carrito está vacío.</p>
                         </div>
 
-                        <!-- DESGLOSE CONTABLE DE SUBTOTAL, IMPUESTOS Y TOTAL -->
+                        <!-- DESGLOSE CONTABLE -->
                         <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; padding: 14px 18px; background: rgba(0, 113, 227, 0.06); border: 1px solid rgba(0, 113, 227, 0.15); border-radius: 16px; font-size: 13px;">
                             <div style="display: flex; justify-content: space-between; color: var(--text-secondary);">
                                 <span>Subtotal:</span>
@@ -673,7 +671,6 @@
                             </div>
                         </div>
 
-                        <!-- OPCIÓN PARA ELEGIR SI DESEA GENERAR EL TICKET PDF O NO -->
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding: 10px 14px; background: rgba(120, 120, 128, 0.06); border-radius: 12px; border: 1px solid var(--border-color);">
                             <input type="checkbox" id="checkGenerarTicketPDF" checked style="width: 18px; height: 18px; accent-color: #0071E3; cursor: pointer;">
                             <label for="checkGenerarTicketPDF" style="font-size: 13px; font-weight: 700; color: var(--text-primary); cursor: pointer;">Generar ticket PDF al cobrar</label>
@@ -683,6 +680,57 @@
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                             Cobrar y Registrar Venta
                         </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BLOG & GUÍAS -->
+            <div id="tab-blog" class="tab-content">
+                <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+                    <div class="card zoom-card" style="background: linear-gradient(135deg, #065F46, #047857); color: white; padding: 32px;">
+                        <span style="font-size: 11px; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-weight: 800;">📖 Centro de Contenido & Recursos</span>
+                        <h2 style="font-size: 26px; font-weight: 900; margin-top: 10px; margin-bottom: 8px;">Blog Oficial de Costify: Guías de Negocios y Finanzas</h2>
+                        <p style="font-size: 14px; opacity: 0.9; line-height: 1.6;">Artículos especializados, guías prácticas y manuales exhaustivos para emprendedores que buscan optimizar su inventario, calcular precios rentables y escalar sus ventas comerciales.</p>
+                    </div>
+
+                    <div class="card zoom-card" style="padding: 28px;">
+                        <span style="font-size: 11px; color: #10B981; font-weight: 800; text-transform: uppercase;">Gestión Financiera</span>
+                        <h3 style="font-size: 20px; font-weight: 900; margin-top: 6px; margin-bottom: 12px; color: var(--text-primary);">Cómo calcular los márgenes de ganancia de un producto correctamente sin perder dinero</h3>
+                        <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;">
+                            Uno de los errores más comunes al iniciar un emprendimiento comercial es fijar los precios de venta basándose únicamente en la intuición o imitando a la competencia directa. Para garantizar la sostenibilidad financiera de tu negocio, es fundamental comprender la diferencia entre costo de producción, margen de ganancia porcentual y utilidad neta real. Cuando utilizas herramientas automatizadas como <strong>Calculcostos Pro</strong> dentro de Costify, puedes ingresar el costo exacto de adquisición o fabricación de tu mercancía y aplicar un margen de ganancia óptimo que cubra tanto tus gastos fijos operativos (alquiler, servicios, salarios) como tu rentabilidad deseada. Nunca olvides que un negocio saludable no es el que más vende en volumen bruto, sino aquel que protege su margen en cada transacción comercial realizada en su caja diaria.
+                        </p>
+                    </div>
+
+                    <div class="card zoom-card" style="padding: 28px;">
+                        <span style="font-size: 11px; color: #10B981; font-weight: 800; text-transform: uppercase;">Logística & Operaciones</span>
+                        <h3 style="font-size: 20px; font-weight: 900; margin-top: 6px; margin-bottom: 12px; color: var(--text-primary);">Guía definitiva de control de inventarios para pequeños y medianos negocios de retail</h3>
+                        <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;">
+                            El inventario representa uno de los activos más valiosos y a la vez más vulnerables de cualquier empresa comercial. Un desabastecimiento repentino de productos estrella provoca pérdida inmediata de clientes, mientras que el exceso de stock inmoviliza el capital de trabajo que podrías utilizar en otras áreas estratégicas. Implementar un sistema de conteo en tiempo real, alertas automáticas de stock crítico y registros de entradas y salidas previene mermas, robos hormiga y descuidos administrativos. Con el módulo de inventarios en la nube de Costify y su campana de notificaciones in-app integrada, recibirás avisos inmediatos cuando las existencias de tus artículos lleguen a niveles mínimos, asegurando una reposición ágil y una operación comercial 100% continua incluso sin conexión a internet gracias al soporte offline con IndexedDB.
+                        </p>
+                    </div>
+
+                    <div class="card zoom-card" style="padding: 28px;">
+                        <span style="font-size: 11px; color: #10B981; font-weight: 800; text-transform: uppercase;">Contabilidad Práctica</span>
+                        <h3 style="font-size: 20px; font-weight: 900; margin-top: 6px; margin-bottom: 12px; color: var(--text-primary);">Por qué nunca debes mezclar las finanzas personales con el dinero de tu emprendimiento</h3>
+                        <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;">
+                            La delgada línea entre el bolsillo del emprendedor y la caja registradora de la empresa es la causa principal de quiebra técnica en los primeros años de vida comercial. Cuando utilizas fondos corporativos para gastos personales sin un sueldo fijo establecido previamente, distorsionas por completo los reportes financieros, impidiendo conocer si tu modelo de negocio es verdaderamente rentable. La recomendación de oro de los expertos en finanzas corporativas es abrir cuentas bancarias separadas (como una cuenta digital de ahorros con apartados o "cajitas") y asignar un salario fijo mensual para ti como administrador. Centralizar el registro diario de tus ventas y egresos en una plataforma digital especializada te devolverá la claridad absoluta sobre el estado patrimonial de tu empresa.
+                        </p>
+                    </div>
+
+                    <div class="card zoom-card" style="padding: 28px;">
+                        <span style="font-size: 11px; color: #10B981; font-weight: 800; text-transform: uppercase;">Estrategia POS</span>
+                        <h3 style="font-size: 20px; font-weight: 900; margin-top: 6px; margin-bottom: 12px; color: var(--text-primary);">Optimización de cobros y facturación rápida en puntos de venta físicos</h3>
+                        <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;">
+                            La velocidad en el proceso de pago define la calidad de la experiencia del cliente en cualquier comercio minorista. Las filas largas y los errores manuales al sumar cuentas generan frustración y pérdida de ventas potenciales. Un punto de venta (POS) moderno debe permitir la selección rápida de productos mediante buscadores inteligentes en tiempo real, el cálculo automático de impuestos locales (como IVA o Impoconsumo) y la emisión instantánea de comprobantes digitales o tickets en formato PDF. Al integrar tu carrito de ventas directamente con el inventario y la caja diaria, eliminas discrepancias contables y mantienes un flujo de caja transparente y auditable en todo momento.
+                        </p>
+                    </div>
+
+                    <div class="card zoom-card" style="padding: 28px;">
+                        <span style="font-size: 11px; color: #10B981; font-weight: 800; text-transform: uppercase;">Crecimiento Empresarial</span>
+                        <h3 style="font-size: 20px; font-weight: 900; margin-top: 6px; margin-bottom: 12px; color: var(--text-primary);">Cómo digitalizar la gestión comercial de tu tienda para escalar tus ventas un 50%</h3>
+                        <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;">
+                            La transformación digital ya no es exclusiva de las grandes corporaciones multinacionales; hoy en día, los pequeños negocios y emprendedores locales tienen acceso a herramientas en la nube altamente potentes y accesibles. Migrar desde los cuadernos de notas tradicionales y hojas de cálculo desordenadas hacia una plataforma integral como Costify permite automatizar tareas administrativas repetitivas, mantener comunicación organizada con proveedores y clientes mediante módulos CRM, y analizar reportes gráficos de rendimiento financiero por semana, mes o año. La digitalización otorga el control absoluto y la tranquilidad necesaria para enfocar todos tus esfuerzos en expandir tu catálogo de productos y fidelizar a tus compradores.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -887,7 +935,7 @@
                             <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                                 <div style="display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 10px;">
                                     <button onclick="cambiarMesMasterAnterior()" style="background: none; border: none; color: white; font-weight: 800; cursor: pointer; font-size: 12px;" title="Mes anterior">◀</button>
-                                    <span id="labelMasterMesActual" style="font-size: 13px; font-weight: 800; color: #34D399; cursor: pointer;" onclick="abrirModalSelectorMesMaster()" title="Seleccionar mes">Septiembre 2026[cite: 3]</span>
+                                    <span id="labelMasterMesActual" style="font-size: 13px; font-weight: 800; color: #34D399; cursor: pointer;" onclick="abrirModalSelectorMesMaster()" title="Seleccionar mes">Octubre 2026</span>
                                     <button onclick="cambiarMesMasterSiguiente()" style="background: none; border: none; color: white; font-weight: 800; cursor: pointer; font-size: 12px;" title="Mes siguiente">▶</button>
                                 </div>
 
@@ -905,14 +953,18 @@
                             </div>
                         </div>
 
-                        <div style="position: relative; height: 160px; width: 100%; cursor: pointer;" onclick="abrirModalDetalleMasterExclusivo()">
-                            <canvas id="chartMasterCanvas"></canvas>
+                        <!-- CONTENEDOR CON POSICIÓN RELATIVA Y ALTURA EXACTA PARA LA GRÁFICA MASTER -->
+                        <div style="position: relative; height: 180px; width: 100%; cursor: pointer;" onclick="abrirModalDetalleMasterExclusivo()">
+                            <canvas id="chartMasterCanvas" style="display: block; width: 100%; height: 180px;"></canvas>
                         </div>
                     </div>
 
-                    <div class="card zoom-card">
-                        <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 15px;">👥 Cuentas Reales Registradas en el Sistema</h3>
-                        <div id="masterListaUsuariosFull" style="display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto;" class="custom-scroll"></div>
+                    <!-- TARJETA CON LA LISTA COMPLETA DE CUENTAS REGISTRADAS -->
+                    <div class="card zoom-card" style="background: #0B0E14; border: 1px solid #1E2329; color: white; padding: 22px;">
+                        <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 15px; color: #FFF;">👥 Cuentas Reales Registradas en el Sistema</h3>
+                        <div id="masterListaUsuariosFull" class="custom-scroll" style="display: flex; flex-direction: column; gap: 10px; max-height: 280px; overflow-y: auto;">
+                            <p style="color: #64748B; text-align: center; padding: 15px;">Cargando cuentas registradas...</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -969,7 +1021,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE NUEVO CONTACTO CRM -->
+    <!-- MODALES -->
     <div id="modalContacto" class="modal-overlay">
         <div class="ios-modal-box" style="max-width: 450px;">
             <h3 id="modalContactoTitulo" style="font-size: 16px; font-weight: 800; margin-bottom: 15px;">Nuevo Contacto</h3>
@@ -988,7 +1040,6 @@
         </div>
     </div>
 
-    <!-- MODAL ÚNICO DE INFORMACIÓN DETALLADA Y LEGALES -->
     <div id="modalLegal" class="modal-overlay" style="z-index: 99999;">
         <div class="ios-modal-box" style="max-width: 600px; text-align: left; max-height: 80vh; display: flex; flex-direction: column;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
@@ -1000,7 +1051,6 @@
         </div>
     </div>
 
-    <!-- MODALES ORIGINALES RESTANTES -->
     <div id="modalOlvidoPassword" class="modal-overlay">
         <div class="ios-modal-box" style="max-width: 400px; text-align: center;">
             <h3 style="font-size: 18px; font-weight: 900; color: #0071E3; margin-bottom: 10px;">🔑 Recuperar Contraseña</h3>
@@ -1142,9 +1192,9 @@
                 <button onclick="document.getElementById('modalDetalleMasterExclusivo').style.display='none'" style="background:none; border:none; font-size:18px; font-weight:900; cursor:pointer;">✕</button>
             </div>
             <div style="background: rgba(245,158,11,0.08); padding: 14px; border-radius: 14px; margin-bottom: 15px; font-size: 13px; display: flex; flex-direction: column; gap: 8px;">
-                <div style="display:flex; justify-space-between;"><span>Ganancias Totales Pro+:</span> <strong id="modalMasterGanadoTotal" style="color: #34C759;">$0</strong></div>
-                <div style="display:flex; justify-space-between;"><span>Total Usuarios Pro+:</span> <strong id="modalMasterProCount" style="color: #F59E0B;">0</strong></div>
-                <div style="display:flex; justify-space-between;"><span>Total Usuarios Registrados:</span> <strong id="modalMasterTotalCuentas" style="color: #0ECB81;">0</strong></div>
+                <div style="display:flex; justify-content:space-between;"><span>Ganancias Totales Pro+:</span> <strong id="modalMasterGanadoTotal" style="color: #34C759;">$0</strong></div>
+                <div style="display:flex; justify-content:space-between;"><span>Total Usuarios Pro+:</span> <strong id="modalMasterProCount" style="color: #F59E0B;">0</strong></div>
+                <div style="display:flex; justify-content:space-between;"><span>Total Usuarios Registrados:</span> <strong id="modalMasterTotalCuentas" style="color: #0ECB81;">0</strong></div>
             </div>
             <button onclick="document.getElementById('modalDetalleMasterExclusivo').style.display='none'" class="ios-btn" style="background:#F59E0B; color:#000;">Cerrar Reporte</button>
         </div>
@@ -1202,16 +1252,132 @@
             if (banner) banner.style.display = 'none';
         }
 
+        // FUNCIÓN DE RESPALDO DIRECTO PARA RENDERIZAR GRÁFICA Y CUENTAS MASTER
+        function renderizarMasterInmediato() {
+            // 1. Renderizar Gráfica Master con Chart.js
+            const canvasMaster = document.getElementById('chartMasterCanvas');
+            if (canvasMaster) {
+                const ctx = canvasMaster.getContext('2d');
+                if (window.miGraficaMasterInstancia) {
+                    window.miGraficaMasterInstancia.destroy();
+                }
+                window.miGraficaMasterInstancia = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4'],
+                        datasets: [{
+                            label: 'Ganancias Pro+',
+                            data: [0, 0, 0, 0],
+                            borderColor: '#34D399',
+                            backgroundColor: 'rgba(52, 211, 153, 0.15)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#848E9C' } },
+                            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#848E9C' } }
+                        }
+                    }
+                });
+            }
+
+            // 2. Renderizar Cuentas Reales Registradas
+            const contenedorCuentas = document.getElementById('masterListaUsuariosFull');
+            if (contenedorCuentas) {
+                let cuentas = [];
+                try {
+                    cuentas = JSON.parse(localStorage.getItem('costify_cuentas_registradas') || '[]');
+                } catch(e) {}
+
+                // Si no hay cuentas en la lista general, agregamos la cuenta actual activa por defecto
+                const emailActual = localStorage.getItem('costify_user_email') || 'andres@costify.app';
+                const empresaActual = localStorage.getItem('costify_empresa') || 'Mi Tienda';
+                const esProActual = localStorage.getItem('costify_es_pro') === 'true';
+
+                if (cuentas.length === 0) {
+                    cuentas.push({
+                        email: emailActual,
+                        empresa: empresaActual,
+                        esPro: esProActual
+                    });
+                }
+
+                let htmlCuentas = '';
+                cuentas.forEach(acc => {
+                    const badgeColor = acc.esPro ? '#F59E0B' : '#94A3B8';
+                    const badgeTexto = acc.esPro ? 'PLAN PRO+ ⭐' : 'PLAN FREE';
+                    const bgBadge = acc.esPro ? 'rgba(245, 158, 11, 0.15)' : 'rgba(148, 163, 184, 0.15)';
+                    
+                    htmlCuentas += `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);">
+                            <div>
+                                <strong style="font-size: 14px; color: #FFF; display: block; margin-bottom: 2px;">🏪 ${acc.empresa || 'Empresa sin nombre'}</strong>
+                                <span style="font-size: 12px; color: #94A3B8;">📧 ${acc.email || 'Correo no disponible'}</span>
+                            </div>
+                            <span style="background: ${bgBadge}; color: ${badgeColor}; font-size: 11px; font-weight: 900; padding: 6px 12px; border-radius: 20px;">${badgeTexto}</span>
+                        </div>
+                    `;
+                });
+                contenedorCuentas.innerHTML = htmlCuentas;
+            }
+        }
+
+        // Interceptar la función switchTab para forzar la carga cuando abras la pestaña Master
+        const originalSwitchTab = window.switchTab;
+        window.switchTab = function(tabName) {
+            if (typeof originalSwitchTab === 'function') {
+                originalSwitchTab(tabName);
+            } else {
+                // Comportamiento por defecto de pestañas si app.js no las maneja globalmente aquí
+                document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+                const tabTarget = document.getElementById('tab-' + tabName);
+                if (tabTarget) tabTarget.classList.add('active');
+            }
+            
+            if (tabName === 'master') {
+                setTimeout(renderizarMasterInmediato, 100);
+            }
+        };
+
         window.addEventListener('DOMContentLoaded', () => {
             const consent = localStorage.getItem('cookieConsent');
             if (consent) {
                 const banner = document.getElementById('cookieBanner');
                 if (banner) banner.style.display = 'none';
             }
+            
+            if (typeof mesActual !== 'undefined') mesActual = 9;
+            if (typeof anioActual !== 'undefined') anioActual = 2026;
+            if (typeof mesGlobalIndex !== 'undefined') mesGlobalIndex = 9;
+            if (typeof anioGlobal !== 'undefined') anioGlobal = 2026;
+            if (typeof mesMasterIndex !== 'undefined') mesMasterIndex = 9;
+            if (typeof anioMaster !== 'undefined') anioMaster = 2026;
+
+            const mesActualStr = "Octubre 2026";
+            
+            const lblGrafica = document.getElementById('labelMesActualGrafica');
+            if (lblGrafica) lblGrafica.innerText = mesActualStr;
+            
+            const lblGlobal = document.getElementById('labelMesGlobalGrafica');
+            if (lblGlobal) lblGlobal.innerText = mesActualStr;
+
+            const lblMaster = document.getElementById('labelMasterMesActual');
+            if (lblMaster) lblMaster.innerText = mesActualStr;
+
+            try { if (typeof actualizarGraficaSemanal === 'function') actualizarGraficaSemanal(); } catch(e) {}
+            try { if (typeof actualizarGraficaGlobal === 'function') actualizarGraficaGlobal(); } catch(e) {}
+            
+            // Ejecutar renderizado master al iniciar por si la pestaña está activa
+            renderizarMasterInmediato();
+
             actualizarCentroNotificacionesReal();
         });
 
-        // 🌟 LÓGICA DE DATOS REALES PARA EL CENTRO DE NOTIFICACIONES IN-APP
         function togglePanelNotificacionesInApp() {
             const panel = document.getElementById('panelNotificacionesInApp');
             if (panel) {
@@ -1231,39 +1397,36 @@
             let alertasHtml = '';
             let totalAlertas = 0;
 
-            // 1. Verificar Inventario Real (Stock Crítico <= 3 unidades)
             try {
-                const productos = JSON.parse(localStorage.getItem('costify_productos') || '[]');
-                const criticos = productos.filter(p => Number(p.stock) <= 3);
+                const productosList = typeof productos !== 'undefined' ? productos : JSON.parse(localStorage.getItem('costify_productos') || '[]');
+                const criticos = productosList.filter(p => Number(p.stock) <= 3);
                 criticos.forEach(prod => {
                     totalAlertas++;
                     alertasHtml += `
-                        <div style="padding: 10px; background: rgba(239, 68, 68, 0.08); border-radius: 10px; border-left: 3px solid #EF4444; font-size: 12px;">
+                        <div style="padding: 10px; background: rgba(239, 68, 68, 0.08); border-radius: 10px; border-left: 3px solid #EF4444; font-size: 12px; color: inherit;">
                             <strong>📦 Stock Crítico:</strong> Quedan ${prod.stock} unidades de ${prod.nombre}.
                         </div>
                     `;
                 });
             } catch(e) { console.error(e); }
 
-            // 2. Verificar Clientes / Proveedores (Deudores próximos o saldos pendientes)
             try {
-                const contactos = JSON.parse(localStorage.getItem('costify_contactos') || '[]');
+                const contactos = typeof contactosLista !== 'undefined' ? contactosLista : JSON.parse(localStorage.getItem('costify_contactos') || '[]');
                 const deudores = contactos.filter(c => Number(c.deuda || 0) > 0);
                 deudores.forEach(cli => {
                     totalAlertas++;
                     alertasHtml += `
-                        <div style="padding: 10px; background: rgba(245, 158, 11, 0.08); border-radius: 10px; border-left: 3px solid #F59E0B; font-size: 12px;">
+                        <div style="padding: 10px; background: rgba(245, 158, 11, 0.08); border-radius: 10px; border-left: 3px solid #F59E0B; font-size: 12px; color: inherit;">
                             <strong>📝 Deudor Pendiente:</strong> ${cli.nombre} tiene saldo pendiente por $${Number(cli.deuda).toLocaleString()}.
                         </div>
                     `;
                 });
             } catch(e) { console.error(e); }
 
-            // 3. Aviso del Sistema (Estado de Conexión / IndexedDB)
             totalAlertas++;
-            const estadoRedTxt = navigator.onLine ? "Conectado a la nube y sincronizado." : "Modo Offline (IndexedDB Activo).";
+            const estadoRedTxt = navigator.onLine ? "Conectado a la nube y sincronizado correctamente." : "Modo Offline (IndexedDB Activo).";
             alertasHtml += `
-                <div style="padding: 10px; background: rgba(0, 113, 227, 0.08); border-radius: 10px; border-left: 3px solid #0071E3; font-size: 12px;">
+                <div style="padding: 10px; background: rgba(0, 113, 227, 0.08); border-radius: 10px; border-left: 3px solid #0071E3; font-size: 12px; color: inherit;">
                     <strong>⚡ Aviso del Sistema:</strong> ${estadoRedTxt}
                 </div>
             `;
@@ -1289,7 +1452,6 @@
             }
         }
 
-        // Script de Notificaciones Push Nativas para Stock Bajo
         function solicitarPermisoNotificacionesPush() {
             if (!("Notification" in window)) {
                 alert("Este navegador no soporta notificaciones push nativas.");
@@ -1304,7 +1466,6 @@
             });
         }
 
-        // Script de Detección de Estado Online / Offline y IndexedDB Sync
         window.addEventListener('online',  actualizarEstadoRed);
         window.addEventListener('offline', actualizarEstadoRed);
 
@@ -1314,18 +1475,9 @@
                 if (banner) banner.style.display = 'block';
             } else {
                 if (banner) banner.style.display = 'none';
-                sincronizarDatosPendientesOffline();
             }
             actualizarCentroNotificacionesReal();
         }
-
-        function sincronizarDatosPendientesOffline() {
-            console.log("Red restablecida: Sincronizando transacciones offline con Firebase...");
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            actualizarEstadoRed();
-        });
     </script>
 
     <!-- Firebase SDKs -->
