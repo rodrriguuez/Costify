@@ -79,73 +79,13 @@ function volverALandingDesdeAuth() {
     document.getElementById('landingPageContainer').classList.remove('hidden');
 }
 
-// --- SISTEMA DE DESBLOQUEO PRO POR ANUNCIOS (2 HORAS) ---
-let anunciosVistosParaPro = 0;
-let funcionProSeleccionadaActual = null;
-
+// --- VERIFICACIÓN DE ACCESO PRO (DIRECTO SIN ANUNCIOS) ---
 function verificarAccesoPro(idFn, nombreFuncion) {
     if (esProActivo) return true;
 
-    let expiracion = localStorage.getItem(`pro_access_${idFn}`);
-    if (expiracion && new Date().getTime() < parseInt(expiracion)) {
-        return true;
-    }
-
-    abrirModalVerAnuncioPro(idFn, nombreFuncion);
+    // Se eliminó por completo el sistema de ver 3 anuncios. Si no es Pro, abre directo el checkout o muestra aviso.
+    abrirModalCheckout();
     return false;
-}
-
-function abrirModalVerAnuncioPro(idFn, nombreFuncion) {
-    anunciosVistosParaPro = 0;
-    funcionProSeleccionadaActual = idFn;
-    
-    let modalExistente = document.getElementById('modalAnunciosPro');
-    if (modalExistente) modalExistente.remove();
-
-    let modalHTML = `
-        <div id="modalAnunciosPro" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;">
-            <div style="background: var(--card-bg, #1E293B); color: var(--text-primary, #FFF); padding: 28px; border-radius: 20px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
-                <h3 style="font-size: 18px; font-weight: 800; color: #F59E0B; margin-bottom: 10px;">⭐ Desbloquear ${nombreFuncion}</h3>
-                <p style="font-size: 13px; color: var(--text-secondary, #94A3B8); margin-bottom: 20px;">Mira 3 anuncios cortos para desbloquear esta función gratis durante 2 horas.</p>
-                
-                <div style="font-size: 15px; font-weight: 700; margin-bottom: 20px; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px;">
-                    Anuncios vistos: <span id="contadorAnunciosPro" style="color: #34D399;">0</span> / 3
-                </div>
-
-                <button id="btnVerAnuncioIndividual" onclick="simularVerAnuncioPro('${nombreFuncion}')" class="btn-action" style="background: #0071E3; width: 100%; padding: 14px; font-weight: 800; margin-bottom: 10px; cursor: pointer;">📺 Ver Anuncio (1/3)</button>
-                <button onclick="cerrarModalAnunciosPro()" class="ios-btn-secondary" style="width: 100%; padding: 10px;">Cancelar</button>
-            </div>
-        </div>
-    `;
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-}
-
-function simularVerAnuncioPro(nombreFuncion) {
-    anunciosVistosParaPro++;
-    let contadorSpan = document.getElementById('contadorAnunciosPro');
-    let btnAnuncio = document.getElementById('btnVerAnuncioIndividual');
-
-    if (anunciosVistosParaPro < 3) {
-        if (contadorSpan) contadorSpan.innerText = anunciosVistosParaPro;
-        if (btnAnuncio) btnAnuncio.innerText = `📺 Ver Anuncio (${anunciosVistosParaPro + 1}/3)`;
-        showToast("¡Anuncio visto! Falta el siguiente.");
-    } else {
-        let tiempoExpiracion = new Date().getTime() + (2 * 60 * 60 * 1000);
-        localStorage.setItem(`pro_access_${funcionProSeleccionadaActual}`, tiempoExpiracion);
-        
-        let idFnGuardado = funcionProSeleccionadaActual;
-        cerrarModalAnunciosPro();
-        showToast(`¡Función ${nombreFuncion} desbloqueada por 2 horas! 🎉`);
-        
-        setTimeout(() => {
-            abrirFuncionPro(idFnGuardado);
-        }, 400);
-    }
-}
-
-function cerrarModalAnunciosPro() {
-    let modal = document.getElementById('modalAnunciosPro');
-    if (modal) modal.remove();
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
